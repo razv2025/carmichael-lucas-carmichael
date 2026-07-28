@@ -65,8 +65,9 @@ def run_config(cfg: dict, mitm_seconds: float, max_hits: int) -> dict:
         rec["log2_phi_M"] = round(stats["log2_phi_M"], 2)
         rec["margin"] = round(stats["margin"], 2)
         rec["subpool_primes"] = [r.p for r in sub] if len(sub) <= 60 else None
-        if stats["margin"] > -8 and len(sub) >= 3:
-            # even at slightly negative margin a lucky hit is possible
+        if stats["margin"] > -14 and len(sub) >= 3:
+            # even at negative margin a lucky hit is possible, and for the
+            # small pools that dominate this regime the MITM is nearly free
             hits = list(
                 mitm_search(sub, max_hits=max_hits, time_limit=mitm_seconds)
             )
