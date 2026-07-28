@@ -103,11 +103,18 @@ def mitm_search(
     left_size: int | None = None,
     time_limit: float | None = None,
     verbose: bool = False,
+    system: tuple[int, int] | None = None,
 ):
-    """Meet-in-the-middle subset-product search. Yields verified hits as dicts."""
+    """Meet-in-the-middle subset-product search. Yields verified hits as dicts.
+
+    `system` = (M, t) overrides the default modulus/target construction (used
+    by split.py, whose splits build their own residue systems)."""
     if not pool:
         return
-    M, t, stats = build_system(pool)
+    if system is not None:
+        M, t = system
+    else:
+        M, t, _stats = build_system(pool)
     n_pool = len(pool)
     if left_size is None:
         left_size = min(n_pool // 2, 21)
