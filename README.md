@@ -54,6 +54,13 @@ coupling (d | O1 and (d+1) | 2^a·O2 simultaneously) is the entire difficulty.
   Breaking the wall needs structurally cheaper primes (low ω(p∓1) "golden"
   twins via Pell/Størmer–CHM enumeration), subset-lcm (not pool-lcm)
   formulations, or a fundamentally better selection method.
+- 2026-07-29 (overnight run): wall confirmed and worsening with scale.
+  y=200, X=1e10: 25,660 twin-smooth primes harvested (27s), but 351 hill-climb
+  restarts × 1500 iters over 3h: best margin **−36.9**, median −37.9, top-5
+  identical — the optimizer saturates the landscape, it isn't under-trained.
+  Margin by y: 60 → −29.0, 100 → −30.6, 140 → −31.0, 200 → −36.9.
+  **Optimum y is low (~60–100); the fixed-split method bottoms out at ≈ −29.**
+  Conclusion: fixed-split pool-lcm construction is a characterized dead end.
 
 ## Roadmap
 
