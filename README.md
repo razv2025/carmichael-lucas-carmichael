@@ -61,6 +61,15 @@ coupling (d | O1 and (d+1) | 2^a·O2 simultaneously) is the entire difficulty.
   Margin by y: 60 → −29.0, 100 → −30.6, 140 → −31.0, 200 → −36.9.
   **Optimum y is low (~60–100); the fixed-split method bottoms out at ≈ −29.**
   Conclusion: fixed-split pool-lcm construction is a characterized dead end.
+- 2026-07-29/30: **parametric (Chernick-style) families.** For
+  n(k) = ∏(aᵢk + bᵢ), the CLC conditions reduce to
+  ∏_{j≠i}(aⱼ + D_ij) = ∏_{j≠i}(D_ij − aⱼ) = aᵢ^(m−1) with D_ij = aᵢbⱼ − aⱼbᵢ.
+  **Proved impossible:** m = 3 (any offsets, via rank identity), and *all
+  uniform-sign (bᵢ = ±1) families for every m* (max-element argument).
+  **Empty by exhaustive divisor-pruned search:** m = 4 general offsets,
+  aᵢ ≤ 250. Open: m ≥ 5 general offsets, and m = 4 beyond 250.
+  (Also: fixed a divisor-enumeration performance bug — powers must be
+  factored via the base, never trial-divided.)
 
 ## Roadmap
 

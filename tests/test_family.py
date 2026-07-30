@@ -50,3 +50,10 @@ def test_instantiate_smoke():
     # no true CLC family known; instantiate must simply not crash / not yield
     hits = list(instantiate((6, 12, 18), (1, 1, 1), 50))
     assert hits == []  # Chernick gives Carmichael, never Lucas-Carmichael too
+
+
+def test_signed_divisors_pow_matches_naive():
+    from agrawal.family import signed_divisors, signed_divisors_pow
+
+    for x, e in [(12, 2), (30, 3), (7, 4), (1, 5)]:
+        assert signed_divisors_pow(x, e) == signed_divisors(x**e)

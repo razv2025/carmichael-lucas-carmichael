@@ -20,6 +20,15 @@ constant term, never simultaneously prime beyond k' = 1).
 Special case b_i = -1 for all i ("all-minus", m odd): D_ij = a_j - a_i and
 both conditions reduce to prod_{j != i} (2 a_j - a_i) = a_i^(m-1).
 
+THEOREM (uniform-sign impossibility, every m): the all-minus system
+prod_{j != i} (2 a_j - a_i) = a_i^(m-1) and the all-plus system
+prod_{j != i} (a_i - 2 a_j) = a_i^(m-1) have no solutions in distinct
+positive integers. Proof: take i with a_i = max_j a_j. For every j != i,
+0 < a_j < a_i gives -a_i < 2 a_j - a_i < a_i, so |2 a_j - a_i| < a_i
+strictly; hence |prod_{j != i} (2 a_j - a_i)| < a_i^(m-1). Same bound for
+a_i - 2 a_j. QED. (The searches below over these systems serve as
+independent verification of the algebra.)
+
 Key pruning fact: each factor of a product equal to a_i^(m-1) divides
 a_i^(m-1), so all candidate factors live among signed divisors of a_i^(m-1).
 
@@ -47,6 +56,25 @@ def signed_divisors(n: int) -> list[int]:
             if d * d != n:
                 small.append(n // d)
     return sorted(small + [-d for d in small])
+
+
+def signed_divisors_pow(x: int, e: int) -> list[int]:
+    """Signed divisors of x^e, generated from the factorization of x —
+    O(number of divisors), never trial-dividing the (huge) power itself."""
+    fac = {}
+    n = x
+    d = 2
+    while d * d <= n:
+        while n % d == 0:
+            fac[d] = fac.get(d, 0) + 1
+            n //= d
+        d += 1
+    if n > 1:
+        fac[n] = fac.get(n, 0) + 1
+    divs = [1]
+    for q, a in fac.items():
+        divs = [dv * q**i for dv in divs for i in range(a * e + 1)]
+    return sorted(divs + [-dv for dv in divs])
 
 
 # ---------------------------------------------------------------- m = 4 general
@@ -114,7 +142,7 @@ def search_m4(a_max: int, progress: bool = False):
         for i in range(4):
             x = a[i]
             if x not in divs_cache:
-                divs_cache[x] = set(signed_divisors(x**3))
+                divs_cache[x] = set(signed_divisors_pow(x, 3))
             ys = tuple(a[j] for j in range(4) if j != i)
             tri = per_index_triples(x, ys, divs_cache[x])
             if not tri:
@@ -180,7 +208,7 @@ def search_pm1(m: int, a_max: int):
     partner: dict[int, set[int]] = {}
     for x in range(1, a_max + 1):
         s = set()
-        for d in signed_divisors(x ** (m - 1)):
+        for d in signed_divisors_pow(x, m - 1):
             if (d + x) % 2 == 0:
                 y = (d + x) // 2
                 if 1 <= y <= a_max and y != x:
