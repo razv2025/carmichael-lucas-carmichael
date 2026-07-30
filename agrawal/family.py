@@ -20,6 +20,21 @@ constant term, never simultaneously prime beyond k' = 1).
 Special case b_i = -1 for all i ("all-minus", m odd): D_ij = a_j - a_i and
 both conditions reduce to prod_{j != i} (2 a_j - a_i) = a_i^(m-1).
 
+THEOREM (generic-position impossibility, every m): let s_i = (b_i - 1)/a_i
+and t_i = (b_i + 1)/a_i (the C- and L-roots). If the s_i are pairwise
+distinct and the t_i are pairwise distinct, no CLC family exists.
+Proof: G(tau) := n(-tau) has leading coefficient c' = (-1)^m prod a_i;
+G(s_i) = 1 and G(t_i) = -1 for all i. Distinctness gives the complete
+factorizations G - 1 = c' prod(tau - s_i) and G + 1 = c' prod(tau - t_i);
+subtracting, 2 = c'[prod(tau - t_i) - prod(tau - s_i)] identically, and the
+tau^(m-1) coefficient forces sum(t_i - s_i) = sum 2/a_i = 0 — impossible
+for positive a_i. QED. Moreover if only the s_i are distinct, G is already
+determined as c' prod(tau - s_i) + 1, and t-distinctness would re-trigger
+the contradiction — so EVERY family (any m) needs a repeated s-value or a
+repeated t-value: two indices with p_j - 1 = (a_j/a_i)(p_i - 1) or
+p_j + 1 = (a_j/a_i)(p_i + 1) as identities ("proportional shifted forms").
+The searches below cover these degenerate strata automatically.
+
 THEOREM (uniform-sign impossibility, every m): the all-minus system
 prod_{j != i} (2 a_j - a_i) = a_i^(m-1) and the all-plus system
 prod_{j != i} (a_i - 2 a_j) = a_i^(m-1) have no solutions in distinct
@@ -77,32 +92,46 @@ def signed_divisors_pow(x: int, e: int) -> list[int]:
     return sorted(divs + [-dv for dv in divs])
 
 
-# ---------------------------------------------------------------- m = 4 general
+# ------------------------------------------------------- general m search
 
 
-def pair_candidates(x: int, y: int, x3_divs: set[int]) -> list[int]:
+def pair_candidates(x: int, y: int, xd: set[int]) -> list[int]:
     """Possible u = a_j + D_ij values for a_i = x, a_j = y:
-    u | x^3 and (u - 2y) | x^3 (both factors of products equal to x^3)."""
-    return [u for u in x3_divs if u != 0 and (u - 2 * y) in x3_divs and u != 2 * y]
+    u | x^(m-1) and (u - 2y) | x^(m-1) (both are factors of products equal
+    to x^(m-1); xd is the signed-divisor set of x^(m-1))."""
+    return [u for u in xd if u != 0 and (u - 2 * y) in xd and u != 2 * y]
 
 
-def per_index_triples(x: int, ys: tuple[int, int, int], x3_divs: set[int]):
-    """Triples (u_1, u_2, u_3), u_t = a_{j_t} + D_{i j_t}, with
-    prod u = x^3 and prod (u - 2 y_t) = x^3."""
-    target = x**3
-    c0 = pair_candidates(x, ys[0], x3_divs)
-    c1 = pair_candidates(x, ys[1], x3_divs)
+def per_index_tuples(x: int, ys: tuple[int, ...], xd: set[int], pc):
+    """(m-1)-tuples (u_t), u_t = a_{j_t} + D_{i j_t}, with prod u = x^(m-1)
+    and prod (u - 2 y_t) = x^(m-1). pc caches pair_candidates by (x, y)."""
+    target = x ** len(ys)
+    cands = []
+    for y in ys:
+        key = (x, y)
+        if key not in pc:
+            pc[key] = pair_candidates(x, y, xd)
+        if not pc[key]:
+            return []
+        cands.append(pc[key])
     out = []
-    for u0 in c0:
-        for u1 in c1:
-            r, rem = divmod(target, u0 * u1)
-            if rem:
-                continue
-            u2 = r
-            if u2 not in x3_divs or u2 == 2 * ys[2]:
-                continue
-            if (u0 - 2 * ys[0]) * (u1 - 2 * ys[1]) * (u2 - 2 * ys[2]) == target:
-                out.append((u0, u1, u2))
+
+    def rec(pos: int, upartial: list[int], prod_u: int):
+        if pos == len(ys) - 1:
+            u_last, rem = divmod(target, prod_u)
+            if rem == 0 and u_last in cands[pos] :
+                us = upartial + [u_last]
+                v = 1
+                for u, y in zip(us, ys):
+                    v *= u - 2 * y
+                if v == target:
+                    out.append(tuple(us))
+            return
+        for u in cands[pos]:
+            if target % (prod_u * u) == 0:
+                rec(pos + 1, upartial + [u], prod_u * u)
+
+    rec(0, [], 1)
     return out
 
 
@@ -130,72 +159,74 @@ def realize_b(a: tuple[int, ...], D: dict[tuple[int, int], int]):
     return None
 
 
-def search_m4(a_max: int, progress: bool = False):
-    """Exhaustive search for m = 4 general-offset families with a_i <= a_max."""
+def search_general(m: int, a_max: int, progress_every: int = 0):
+    """Exhaustive search for general-offset m-factor families, a_i <= a_max.
+
+    Covers ALL offset vectors b (including the degenerate proportional-form
+    strata that the generic-position theorem does not exclude), because the
+    per-index divisor conditions constrain D directly."""
     hits = []
     divs_cache: dict[int, set[int]] = {}
-    for a in combinations_with_replacement(range(1, a_max + 1), 4):
-        if gcd(gcd(a[0], a[1]), gcd(a[2], a[3])) != 1:
+    pc: dict[tuple[int, int], list[int]] = {}
+    seen = 0
+    for a in combinations_with_replacement(range(1, a_max + 1), m):
+        g = 0
+        for v in a:
+            g = gcd(g, v)
+        if g != 1:
             continue
+        seen += 1
+        if progress_every and seen % progress_every == 0:
+            print(f"  ... {seen} tuples, at a={a}", file=sys.stderr, flush=True)
         cand = []
         feasible = True
-        for i in range(4):
+        for i in range(m):
             x = a[i]
             if x not in divs_cache:
-                divs_cache[x] = set(signed_divisors_pow(x, 3))
-            ys = tuple(a[j] for j in range(4) if j != i)
-            tri = per_index_triples(x, ys, divs_cache[x])
-            if not tri:
+                divs_cache[x] = set(signed_divisors_pow(x, m - 1))
+            ys = tuple(a[j] for j in range(m) if j != i)
+            tup = per_index_tuples(x, ys, divs_cache[x], pc)
+            if not tup:
                 feasible = False
                 break
-            cand.append(tri)
+            cand.append(tup)
         if not feasible:
             continue
-        others = [[j for j in range(4) if j != i] for i in range(4)]
-        # match antisymmetric D across the four index-local triples
-        for t0 in cand[0]:
-            D = {}
-            for pos, j in enumerate(others[0]):
-                D[(0, j)] = t0[pos] - a[j]
-            for t1 in cand[1]:
-                D1 = {}
-                for pos, j in enumerate(others[1]):
-                    D1[(1, j)] = t1[pos] - a[j]
-                if D1[(1, 0)] != -D[(0, 1)]:
-                    continue
-                for t2 in cand[2]:
-                    D2 = {}
-                    for pos, j in enumerate(others[2]):
-                        D2[(2, j)] = t2[pos] - a[j]
-                    if D2[(2, 0)] != -D[(0, 2)] or D2[(2, 1)] != -D1[(1, 2)]:
-                        continue
-                    for t3 in cand[3]:
-                        D3 = {}
-                        for pos, j in enumerate(others[3]):
-                            D3[(3, j)] = t3[pos] - a[j]
-                        if (
-                            D3[(3, 0)] != -D[(0, 3)]
-                            or D3[(3, 1)] != -D1[(1, 3)]
-                            or D3[(3, 2)] != -D2[(2, 3)]
-                        ):
-                            continue
-                        full = {
-                            (0, 1): D[(0, 1)],
-                            (0, 2): D[(0, 2)],
-                            (0, 3): D[(0, 3)],
-                            (1, 2): D1[(1, 2)],
-                            (1, 3): D1[(1, 3)],
-                            (2, 3): D2[(2, 3)],
-                        }
-                        if all(v == 0 for v in full.values()):
-                            continue  # degenerate (b || a)
-                        b = realize_b(a, full)
-                        if b is not None:
-                            hits.append((a, b))
-                            print(f"FAMILY FOUND: a={a} b={b}", flush=True)
-        if progress and a[0] == a[1] == a[2] == 1:
-            print(f"  ... a={a}", file=sys.stderr, flush=True)
+        others = [[j for j in range(m) if j != i] for i in range(m)]
+
+        def match(i: int, D: dict):
+            if i == m:
+                if all(v == 0 for v in D.values()):
+                    return  # degenerate (b proportional to a)
+                b = realize_b(a, D)
+                if b is not None:
+                    hits.append((a, b))
+                    print(f"FAMILY FOUND: m={m} a={a} b={b}", flush=True)
+                return
+            for tup in cand[i]:
+                Di = {}
+                ok = True
+                for pos, j in enumerate(others[i]):
+                    d = tup[pos] - a[j]
+                    if j < i:
+                        if D[(j, i)] != -d:
+                            ok = False
+                            break
+                    else:
+                        Di[(i, j)] = d
+                if ok:
+                    D.update(Di)
+                    match(i + 1, D)
+                    for key in Di:
+                        del D[key]
+
+        match(0, {})
     return hits
+
+
+def search_m4(a_max: int, progress: bool = False):
+    """Backward-compatible wrapper."""
+    return search_general(4, a_max)
 
 
 # ------------------------------------------------------------- all-minus, odd m
@@ -252,14 +283,18 @@ def instantiate(a, b, k_max: int, k_min: int = 1):
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--mode", choices=["m4", "pm1"], required=True)
+    ap.add_argument("--mode", choices=["m4", "pm1", "gen"], required=True)
     ap.add_argument("--m", type=int, default=5)
     ap.add_argument("--amax", type=int, required=True)
     args = ap.parse_args()
     t0 = time.time()
     if args.mode == "m4":
-        hits = search_m4(args.amax)
+        hits = search_general(4, args.amax, progress_every=2_000_000)
         print(f"m4 search a<={args.amax}: {len(hits)} families, "
+              f"{time.time()-t0:.0f}s", flush=True)
+    elif args.mode == "gen":
+        hits = search_general(args.m, args.amax, progress_every=2_000_000)
+        print(f"general m={args.m} search a<={args.amax}: {len(hits)} families, "
               f"{time.time()-t0:.0f}s", flush=True)
     else:
         hits = search_pm1(args.m, args.amax)
