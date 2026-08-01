@@ -104,9 +104,9 @@ Results (all **empty**):
 
 | system | bound | time |
 |---|---|---|
-| m = 4, general offsets | aᵢ ≤ 250 (extended run: 400) | 10 min |
-| m = 5, general offsets | aᵢ ≤ 150 (run in progress) | — |
-| m = 6, general offsets | aᵢ ≤ 60 (run in progress) | — |
+| m = 4, general offsets | aᵢ ≤ 400 | 20 min |
+| m = 5, general offsets | aᵢ ≤ 150 | 1.8 h |
+| m = 6, general offsets | aᵢ ≤ 60 | 54 h |
 | bᵢ = −1, m = 5/7/9/11 | aᵢ ≤ 20000/5000/3000/1500 | seconds (verifies Thm 2) |
 
 ## 6. Discussion
