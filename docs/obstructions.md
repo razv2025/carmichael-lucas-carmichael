@@ -104,7 +104,7 @@ Results (all **empty**):
 
 | system | bound | time |
 |---|---|---|
-| m = 4, general offsets | aᵢ ≤ 400 | 20 min |
+| m = 4, general offsets | aᵢ ≤ 500 | 45 min |
 | m = 5, general offsets | aᵢ ≤ 150 | 1.8 h |
 | m = 6, general offsets | aᵢ ≤ 60 | 54 h |
 | bᵢ = −1, m = 5/7/9/11 | aᵢ ≤ 20000/5000/3000/1500 | seconds (verifies Thm 2) |
@@ -149,7 +149,7 @@ fourth root ρ and imposing G(tᵢ) = −1 gives four polynomial conditions
 E₁–E₄; E₁, E₂ are linear in ρ, and eliminating ρ yields an explicit
 compatibility polynomial divisible by (a₁ − a₂) ≠ 0 (derivation reproducible
 via `python3 -m agrawal.strata_m4`). No rational solution with positive aᵢ is
-known; the integer search covers aᵢ ≤ 400 exhaustively. Deciding this system
+known; the integer search covers aᵢ ≤ 500 exhaustively. Deciding this system
 is the precise gap between "empty in searched ranges" and a full m = 4
 impossibility theorem.
 
