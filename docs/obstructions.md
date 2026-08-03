@@ -109,7 +109,51 @@ Results (all **empty**):
 | m = 6, general offsets | aᵢ ≤ 60 | 54 h |
 | bᵢ = −1, m = 5/7/9/11 | aᵢ ≤ 20000/5000/3000/1500 | seconds (verifies Thm 2) |
 
-## 6. Discussion
+## 6. Density heuristic and onset estimates
+
+An Erdős–Pomerance-style count (code: `heuristic.py`) models the expected
+number of k-factor objects ≤ x built from primes with p−1 (and p+1) y-smooth,
+including a per-odd-prime **side-consistency factor** F_q = 2(1−1/q)^k −
+(1−2/q)^k and a 2-adic branch factor 2^(1−k) — ingredients absent from naive
+squaring of the Carmichael heuristic, and calibrated against ground truth:
+
+- one-sided per-prime γ fitted to Pinch's counts C(10¹⁵) = 105212,
+  C(10¹⁸) = 1401644 (model matches within ~1.4 in ln at both anchors);
+- two-sided per-prime γ fitted to this repo's measured twin-smooth prime
+  counts at (y, X) = (60,10⁹), (100,10⁹), (140,2·10⁹), (200,10¹⁰);
+- an upper calibration from the known emptiness E(CLC ≤ 10¹⁸) ≤ 1
+  (all Carmichael numbers to 10¹⁸ are enumerated; none is Lucas–Carmichael).
+
+Onsets (sanity anchor: the same machinery puts the first Carmichael number
+near 10³; truth 561):
+
+| object | first expected near | optimal shape |
+|---|---|---|
+| CLC number | **10²⁰⁸ – 10⁴⁹⁰** | k* ≈ 80–110 factors, y* ≈ 40–90 |
+| LP/Agrawal counterexample (+ p ≡ 3 mod 80) | **10²'⁴⁰⁰ – 10²'⁹⁰⁰** | k* ≈ 270, y* ≈ 300–400 |
+
+Interpretation: CLC numbers should exist but start hundreds of digits out —
+consistent with every construction obstruction in §§3–5 — and the first
+Agrawal counterexample is expected at *thousands* of digits, sharpening the
+Lenstra–Pomerance "large but positive density" picture into a concrete (if
+heuristic) scale. Both estimates are highly sensitive to the per-prime
+calibration (the ranges shown span the defensible band); the qualitative
+conclusion — far beyond exhaustive search, within reach of *targeted
+construction only if the §§3–5 obstructions can be broken* — is robust.
+
+## 7. The remaining m = 4 question, made explicit
+
+By Theorem 3, an m = 4 family needs a repeated C-root (s₁ = s₂ = σ, WLOG up
+to the b → −b mirror). Writing G − 1 = c′(τ−σ)(τ−s₃)(τ−s₄)(τ−ρ) with a free
+fourth root ρ and imposing G(tᵢ) = −1 gives four polynomial conditions
+E₁–E₄; E₁, E₂ are linear in ρ, and eliminating ρ yields an explicit
+compatibility polynomial divisible by (a₁ − a₂) ≠ 0 (derivation reproducible
+via `python3 -m agrawal.strata_m4`). No rational solution with positive aᵢ is
+known; the integer search covers aᵢ ≤ 400 exhaustively. Deciding this system
+is the precise gap between "empty in searched ranges" and a full m = 4
+impossibility theorem.
+
+## 8. Discussion
 
 - The two classical construction paradigms are, respectively, quantitatively
   walled (≈ 2⁻³⁰ per attempt at the optimum, flat in every parameter) and
@@ -123,7 +167,7 @@ Results (all **empty**):
   counterexamples, though of positive density asymptotically, begin at
   computationally inaccessible sizes.
 
-## 7. Open
+## 9. Open
 
 1. Close m = 4 fully (casework on proportional-form strata after Theorem 3;
    the C·L product identity ∏(Dᵢⱼ² − aⱼ²) = aᵢ^(2m−2) may help).

@@ -57,3 +57,16 @@ def test_signed_divisors_pow_matches_naive():
 
     for x, e in [(12, 2), (30, 3), (7, 4), (1, 5)]:
         assert signed_divisors_pow(x, e) == signed_divisors(x**e)
+
+
+def test_heuristic_rho_and_carmichael_onset():
+    from math import exp, log
+    from agrawal.heuristic import ln_rho, onset, calibrate_two_sided
+
+    assert abs(exp(ln_rho(3)) - 0.048608) < 1e-4
+    assert abs(exp(ln_rho(10)) - 2.77e-11) < 2e-13
+    # Carmichael onset: uncalibrated model is conservative but must stay far
+    # below the CLC scale (hundreds of digits)
+    o = onset("carmichael", 0.0)
+    assert o is not None and o / log(10) < 100
+    assert 0.5 < calibrate_two_sided() < 3.0
