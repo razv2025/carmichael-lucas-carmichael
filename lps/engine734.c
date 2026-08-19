@@ -162,15 +162,15 @@ static void *sort_worker(void *arg) {
 
 /* ------------------------------------------------------------ right scan */
 
-#define BITMAP_BITS 33
-static u64 *bitmap; /* 2^33 bits = 1 GiB */
+static u64 *bitmap;      /* sized per slab: ~32 slots per left entry */
+static u64 bitmap_mask;  /* (1 << bits) - 1 */
 
 static inline int bitmap_test(u64 key) {
-    u64 idx = key & ((1ULL << BITMAP_BITS) - 1);
+    u64 idx = key & bitmap_mask;
     return (bitmap[idx >> 6] >> (idx & 63)) & 1;
 }
 static inline void bitmap_set(u64 key) {
-    u64 idx = key & ((1ULL << BITMAP_BITS) - 1);
+    u64 idx = key & bitmap_mask;
     bitmap[idx >> 6] |= 1ULL << (idx & 63);
 }
 
@@ -223,26 +223,37 @@ static void *scan_worker(void *arg) {
                         else lo = mid + 1;
                     }
                 }
-                for (int g = g_lo; g <= g_hi; g++) {
-                    u128 t = s3 + pow7[g];
-                    u64 tlo = (u64)t, thi = (u64)(t >> 64);
-                    rc++;
-                    if (!bitmap_test(tlo)) continue;
-                    /* binary search in bucket, order (lo, hi) */
-                    Vec *B = &J->lb->bucket[tlo >> 56];
-                    size_t lo = 0, hi = B->len;
-                    while (lo < hi) {
-                        size_t mid = (lo + hi) / 2;
-                        const Entry *m = &B->buf[mid];
-                        if (m->lo < tlo || (m->lo == tlo && m->hi < thi))
-                            lo = mid + 1;
-                        else hi = mid;
+                enum { BATCH = 48 };
+                u64 klo[BATCH];
+                for (int gb = g_lo; gb <= g_hi; gb += BATCH) {
+                    int nb = g_hi - gb + 1;
+                    if (nb > BATCH) nb = BATCH;
+                    for (int j = 0; j < nb; j++) {
+                        u128 t = s3 + pow7[gb + j];
+                        klo[j] = (u64)t;
+                        __builtin_prefetch(&bitmap[(klo[j] & bitmap_mask) >> 6],
+                                           0, 0);
                     }
-                    for (size_t i = lo;
-                         i < B->len && B->buf[i].lo == tlo &&
-                         B->buf[i].hi == thi;
-                         i++)
-                        report_match(J, &B->buf[i], d, e, f, g);
+                    rc += nb;
+                    for (int j = 0; j < nb; j++) {
+                        if (!bitmap_test(klo[j])) continue;
+                        u128 t = s3 + pow7[gb + j];
+                        u64 tlo = (u64)t, thi = (u64)(t >> 64);
+                        Vec *B = &J->lb->bucket[tlo >> 56];
+                        size_t lo = 0, hi = B->len;
+                        while (lo < hi) {
+                            size_t mid = (lo + hi) / 2;
+                            const Entry *m = &B->buf[mid];
+                            if (m->lo < tlo || (m->lo == tlo && m->hi < thi))
+                                lo = mid + 1;
+                            else hi = mid;
+                        }
+                        for (size_t i = lo;
+                             i < B->len && B->buf[i].lo == tlo &&
+                             B->buf[i].hi == thi;
+                             i++)
+                            report_match(J, &B->buf[i], d, e, f, gb + j);
+                    }
                 }
             }
         }
@@ -272,8 +283,7 @@ int main(int argc, char **argv) {
         pow7[i] = ipow7(i);
         pow7lo[i] = (u64)pow7[i];
     }
-    bitmap = calloc(1ULL << (BITMAP_BITS - 6), sizeof(u64));
-    if (!bitmap) { fprintf(stderr, "bitmap OOM\n"); return 1; }
+
 
     u128 zmax = 3 * pow7[H] + 1;
     FILE *prog = fopen(prog_path, "a");
@@ -306,13 +316,22 @@ int main(int argc, char **argv) {
             pthread_create(&th[i], NULL, sort_worker, &sj);
         for (int i = 0; i < nthreads; i++) pthread_join(th[i], NULL);
 
-        memset(bitmap, 0, 1ULL << (BITMAP_BITS - 3));
         long long left_count = 0;
-        for (int i = 0; i < NBUCKET; i++) {
+        for (int i = 0; i < NBUCKET; i++)
             left_count += (long long)lb.bucket[i].len;
+        {
+            /* per-slab bitmap: ~32 slots per left entry, cache-resident
+             * when slabs are small */
+            int bits = 20;
+            while ((1LL << bits) < 32 * left_count && bits < 33) bits++;
+            free(bitmap);
+            bitmap = calloc(1ULL << (bits - 6), sizeof(u64));
+            if (!bitmap) { fprintf(stderr, "bitmap OOM\n"); return 1; }
+            bitmap_mask = (1ULL << bits) - 1;
+        }
+        for (int i = 0; i < NBUCKET; i++)
             for (size_t j = 0; j < lb.bucket[i].len; j++)
                 bitmap_set(lb.bucket[i].buf[j].lo);
-        }
 
         _Atomic int next_d = 1;
         _Atomic long long right_count = 0, cand_count = 0;
