@@ -1,0 +1,6 @@
+baseline: 6.398e+08 tuples/s  (331s, cands 0)
+lo64: 6.379e+08 tuples/s  (332s, cands 0)
+residue: 6.398e+08 tuples/s  (331s, cands 0)
+both: 6.265e+08 tuples/s  (338s, cands 0)
+both_nice10: 6.068e+08 tuples/s  (349s, cands 0)
+BENCH3-DONE

@@ -71,6 +71,20 @@ is the first extension of the (7,3,4) range since 2001.
 - **Shrinking the random-access footprint bought the real win**: sizing the
   bitmap per slab (instead of a fixed 1 GiB) and using 10× more slabs gave
   **1.89× end-to-end** (3462 s → 1829 s at H = 2,000; 3.66×10⁸ tuples/s).
+- **Optimization round 2 (all measured at H=1500/7600 slabs; ~2-3% run-to-run
+  variance, so only the first clears noise):** two-pointer g-bounds
+  (`OPT_PTR`, monotone in f) **+8.6% — kept**; low-64-only hot path
+  (`OPT_LO64`) 0% alone and -1.6% with PTR — rejected; residue-class skipping
+  mod 29/43 (`OPT_RESIDUE`) **0.0% despite eliminating 26% of bitmap probes**
+  — rejected; short-range fast path (`OPT_SHORT`) -12.5% — rejected; running
+  at nice 0 instead of 10 gains only 5%. The OPT_RESIDUE result is the
+  instructive one: it is the classical sieving technique from the literature,
+  it is correct mathematics, and it is worthless here because after the grid
+  migration the bitmap probe is no longer the bottleneck. Measure before
+  optimizing.
+- **Cumulative speedup over the original engine: 2.8x** (1.62e8 -> 4.46e8
+  tuples/s, production-to-production at H=12000), cutting the full sweep from
+  ~99 to ~36 days of compute.
 - **Throughput is dominated by free RAM, and degrades as a cliff, not a
   slope.** Under memory pressure (3.3 GB of 4 GB swap in use, 1.8M pageouts)
   slabs ran at 2.7×10⁶ tuples/s — ~90× slower — while still showing ~1000%

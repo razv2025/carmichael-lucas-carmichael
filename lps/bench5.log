@@ -1,0 +1,3 @@
+ptr: 6.876e+08 tuples/s (308s)
+ptr_short: 6.016e+08 tuples/s (352s)
+BENCH5-DONE

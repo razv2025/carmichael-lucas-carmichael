@@ -1,0 +1,4 @@
+baseline: 6.476e+08 tuples/s (327s)
+ptr: 7.036e+08 tuples/s (301s)
+ptr_lo64: 6.921e+08 tuples/s (306s)
+BENCH4-DONE

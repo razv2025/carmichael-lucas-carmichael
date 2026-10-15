@@ -1,3 +1,21 @@
+/* OPTIMIZATION LOG (H=1500, 7600 slabs, M4 Pro, measured not assumed).
+ * Run-to-run variance ~2-3%, so only OPT_PTR clears the noise floor.
+ *
+ *   baseline                          6.48e8 tuples/s
+ *   OPT_PTR          (KEPT)           7.04e8   +8.6%
+ *   OPT_LO64         (rejected)       6.38e8    0.0% alone, -1.6% with PTR
+ *   OPT_RESIDUE      (rejected)       6.40e8    0.0%
+ *   OPT_SHORT        (rejected)       6.02e8   -12.5%
+ *   nice 0 vs 10     (kept nice 10)            +5% only; costs interactivity
+ *
+ * Why the rejects fail: after the grid migration (720k slabs) the bitmap
+ * probe is no longer the bottleneck, so removing 26% of probes (OPT_RESIDUE,
+ * mod 29/43 class skipping) changes nothing. The classical sieving win from
+ * the literature does not apply at this slab granularity. OPT_SHORT loses
+ * because the branch it adds costs more than the batch setup it avoids.
+ * Do not re-try these without first re-measuring where time actually goes.
+ */
+
 /* Slab meet-in-the-middle search for (7,3,4):
  *     a^7 + b^7 + c^7  =  d^7 + e^7 + f^7 + g^7,   1 <= all <= H.
  *
@@ -174,6 +192,38 @@ static inline void bitmap_set(u64 key) {
     bitmap[idx >> 6] |= 1ULL << (idx & 63);
 }
 
+#ifdef OPT_RESIDUE
+/* g-residue-class skipping. x^POWER mod p takes few values when p = 1 mod
+ * POWER, so for fixed s3 = d^k+e^k+f^k some whole classes of g mod p can
+ * never make s3+g^k a sum of three k-th powers. Testing by class costs one
+ * byte load per g instead of a bitmap probe. */
+#define RP1 29
+#define RP2 43
+static unsigned char ok1[RP1][RP1], ok2[RP2][RP2];
+static unsigned char *p7m1, *p7m2;   /* i^POWER mod RP1 / RP2 */
+
+static void build_residue_tables_for(int p, unsigned char *ok) {
+    int S[256], n = 0, inS[256], reach[256];
+    memset(inS, 0, sizeof(inS));
+    memset(reach, 0, sizeof(reach));
+    for (int x = 0; x < p; x++) {
+        int v = 1;
+        for (int k = 0; k < POWER; k++) v = v * x % p;
+        if (!inS[v]) { inS[v] = 1; S[n++] = v; }
+    }
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            for (int k = 0; k < n; k++)
+                reach[(S[i] + S[j] + S[k]) % p] = 1;
+    for (int sm = 0; sm < p; sm++)
+        for (int r = 0; r < p; r++) {
+            int v = 1;
+            for (int k = 0; k < POWER; k++) v = v * r % p;
+            ok[sm * p + r] = (unsigned char)reach[(sm + v) % p];
+        }
+}
+#endif
+
 typedef struct {
     LeftBuild *lb;
     u128 z1, z2;
@@ -203,14 +253,52 @@ static void *scan_worker(void *arg) {
         u128 s1 = pow7[d];
         if (s1 >= J->z2) continue;
         if (s1 + 3 * pow7[d] < J->z1) continue;
+#ifdef OPT_RESIDUE
+        int s1m1 = p7m1[d], s1m2 = p7m2[d];
+#endif
         for (int e = 1; e <= d; e++) {
             u128 s2 = s1 + pow7[e];
             if (s2 + 2 >= J->z2) break;
             if (s2 + 2 * pow7[e] < J->z1) continue;
+#ifdef OPT_RESIDUE
+            int s2m1 = s1m1 + p7m1[e]; if (s2m1 >= RP1) s2m1 -= RP1;
+            int s2m2 = s1m2 + p7m2[e]; if (s2m2 >= RP2) s2m2 -= RP2;
+#endif
+#ifdef OPT_PTR
+            /* g-range bounds are monotone in f: as f grows s3 grows, so both
+             * the upper bound (largest g with g^k <= z2-1-s3) and the lower
+             * bound (smallest g with g^k >= z1-s3) only decrease. Walk them
+             * instead of binary-searching per triple. */
+            int ghi_p = -1, glo_p = -1;
+#endif
             for (int f = 1; f <= e; f++) {
                 u128 s3 = s2 + pow7[f];
                 if (s3 + 1 >= J->z2) break;
                 if (s3 + pow7[f] < J->z1) continue;
+#ifdef OPT_PTR
+                u128 lim = J->z2 - 1 - s3;
+                if (ghi_p < 0) ghi_p = p7_floor(lim, H);
+                else while (ghi_p > 0 && pow7[ghi_p] > lim) ghi_p--;
+                int g_hi = ghi_p < f ? ghi_p : f;
+                if (g_hi == 0) continue;
+                int g_lo = 1;
+                if (s3 + pow7[1] < J->z1) {
+                    u128 need = J->z1 - s3;
+                    if (glo_p < 0) {
+                        int lo = 1, hi = H; glo_p = H + 1;
+                        while (lo <= hi) {
+                            int mid = (lo + hi) / 2;
+                            if (pow7[mid] >= need) { glo_p = mid; hi = mid - 1; }
+                            else lo = mid + 1;
+                        }
+                    } else {
+                        while (glo_p > 1 && pow7[glo_p - 1] >= need) glo_p--;
+                    }
+                    g_lo = glo_p;
+                } else {
+                    glo_p = 1;
+                }
+#else
                 int g_hi = p7_floor(J->z2 - 1 - s3, f);
                 if (g_hi == 0) continue;
                 int g_lo = 1;
@@ -223,21 +311,75 @@ static void *scan_worker(void *arg) {
                         else lo = mid + 1;
                     }
                 }
+#endif
+                if (g_lo > g_hi) continue;
+#ifdef OPT_RESIDUE
+                int s3m1 = s2m1 + p7m1[f]; if (s3m1 >= RP1) s3m1 -= RP1;
+                int s3m2 = s2m2 + p7m2[f]; if (s3m2 >= RP2) s3m2 -= RP2;
+                const unsigned char *row1 = &ok1[s3m1][0];
+                const unsigned char *row2 = &ok2[s3m2][0];
+                int r1 = g_lo % RP1, r2 = g_lo % RP2;
+#endif
+#ifdef OPT_LO64
+                u64 s3lo = (u64)s3;
+#endif
+#ifdef OPT_SHORT
+                /* In a fine grid most triples yield only a few g values; the
+                 * batch/prefetch machinery then costs more than it saves. */
+                if (g_hi - g_lo < 8) {
+                    rc += g_hi - g_lo + 1;
+                    for (int g = g_lo; g <= g_hi; g++) {
+                        u128 t = s3 + pow7[g];
+                        u64 tlo = (u64)t;
+                        if (!bitmap_test(tlo)) continue;
+                        u64 thi = (u64)(t >> 64);
+                        Vec *B = &J->lb->bucket[tlo >> 56];
+                        size_t lo = 0, hi = B->len;
+                        while (lo < hi) {
+                            size_t mid = (lo + hi) / 2;
+                            const Entry *m = &B->buf[mid];
+                            if (m->lo < tlo || (m->lo == tlo && m->hi < thi))
+                                lo = mid + 1;
+                            else hi = mid;
+                        }
+                        for (size_t i = lo;
+                             i < B->len && B->buf[i].lo == tlo &&
+                             B->buf[i].hi == thi; i++)
+                            report_match(J, &B->buf[i], d, e, f, g);
+                    }
+                    continue;
+                }
+#endif
                 enum { BATCH = 48 };
                 u64 klo[BATCH];
+                int gsel[BATCH];
                 for (int gb = g_lo; gb <= g_hi; gb += BATCH) {
                     int nb = g_hi - gb + 1;
                     if (nb > BATCH) nb = BATCH;
+                    int cnt = 0;
                     for (int j = 0; j < nb; j++) {
-                        u128 t = s3 + pow7[gb + j];
-                        klo[j] = (u64)t;
-                        __builtin_prefetch(&bitmap[(klo[j] & bitmap_mask) >> 6],
+#ifdef OPT_RESIDUE
+                        int keep = row1[r1] & row2[r2];
+                        if (++r1 == RP1) r1 = 0;
+                        if (++r2 == RP2) r2 = 0;
+                        if (!keep) continue;
+#endif
+#ifdef OPT_LO64
+                        u64 k = s3lo + pow7lo[gb + j];
+#else
+                        u64 k = (u64)(s3 + pow7[gb + j]);
+#endif
+                        klo[cnt] = k;
+                        gsel[cnt] = gb + j;
+                        __builtin_prefetch(&bitmap[(k & bitmap_mask) >> 6],
                                            0, 0);
+                        cnt++;
                     }
-                    rc += nb;
-                    for (int j = 0; j < nb; j++) {
+                    rc += nb;   /* coverage counts every tuple in range */
+                    for (int j = 0; j < cnt; j++) {
                         if (!bitmap_test(klo[j])) continue;
-                        u128 t = s3 + pow7[gb + j];
+                        int g = gsel[j];
+                        u128 t = s3 + pow7[g];
                         u64 tlo = (u64)t, thi = (u64)(t >> 64);
                         Vec *B = &J->lb->bucket[tlo >> 56];
                         size_t lo = 0, hi = B->len;
@@ -252,7 +394,7 @@ static void *scan_worker(void *arg) {
                              i < B->len && B->buf[i].lo == tlo &&
                              B->buf[i].hi == thi;
                              i++)
-                            report_match(J, &B->buf[i], d, e, f, gb + j);
+                            report_match(J, &B->buf[i], d, e, f, g);
                     }
                 }
             }
@@ -285,6 +427,19 @@ int main(int argc, char **argv) {
     }
 
 
+#ifdef OPT_RESIDUE
+    build_residue_tables_for(RP1, &ok1[0][0]);
+    build_residue_tables_for(RP2, &ok2[0][0]);
+    p7m1 = malloc((size_t)(H + 1));
+    p7m2 = malloc((size_t)(H + 1));
+    for (int i = 0; i <= H; i++) {
+        int v1 = 1, v2 = 1;
+        for (int k = 0; k < POWER; k++) { v1 = v1 * (i % RP1) % RP1;
+                                          v2 = v2 * (i % RP2) % RP2; }
+        p7m1[i] = (unsigned char)v1;
+        p7m2[i] = (unsigned char)v2;
+    }
+#endif
     u128 zmax = 3 * pow7[H] + 1;
     FILE *prog = fopen(prog_path, "a");
     FILE *cand = fopen(cand_path, "a");
