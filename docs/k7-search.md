@@ -92,7 +92,39 @@ is the first extension of the (7,3,4) range since 2001.
   to full speed on its own when other applications released memory. If this
   becomes chronic, doubling the slab count halves the per-slab working set.
 
-## 5. Next
+## 5. GPU (Metal) evaluation — prototyped and measured
+
+`lps/gpu_prototype.m` is a working Metal compute kernel for the right-side
+scan (runtime-compiled MSL, so no Xcode Metal toolchain needed; 128-bit
+values emulated with paired ulongs; 2D thread grid over (d,e)). Its tuple
+counts match the CPU engine exactly on every slab tested, including sparse
+edge slabs, so the enumeration is correct.
+
+Head-to-head on identical slabs (H=1500, 7600-slab grid, slabs 2000–2149,
+5.81×10⁹ tuples):
+
+| configuration | rate | vs CPU |
+|---|---|---|
+| CPU engine, 14 threads, full pipeline | 6.82×10⁸/s | 1.00× |
+| GPU scan kernel only | 1.22×10⁹/s | 1.79× |
+| hybrid as prototyped (serial left-build) | 2.35×10⁸/s | 0.34× |
+| hybrid with left-build parallelised | ~9.0×10⁸/s | ~1.33× |
+| ceiling if the GPU scan were instantaneous | 3.49×10⁹/s | 5.12× |
+
+**Conclusion: the GPU is worth only ~1.3–1.5×, not the 3–5× one would
+guess from core counts.** Two reasons. The unified memory architecture means
+the GPU shares bandwidth with the CPU rather than adding its own, and this
+workload is memory-latency-bound rather than compute-bound — so the GPU's
+arithmetic parallelism buys little. And Amdahl bites: the left-table build
+is CPU work the GPU cannot take, and it caps the hybrid at ~5× even with a
+free scan.
+
+A low-risk way to collect most of that gain without touching the validated
+CPU engine would be to run the GPU prototype as a *second process* over a
+disjoint slab range (the slab design makes disjoint ranges trivially safe)
+— but it needs a candidate-output path first; today it only counts.
+
+## 6. Next
 
 1. Finish H = 12,000 (≈33 days of clean running at 3.6×10⁸ tuples/s).
 2. (7,2,5) and (7,1,6) variants. Both are costlier than (7,3,4) — the term
