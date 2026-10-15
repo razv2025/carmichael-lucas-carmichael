@@ -1,0 +1,4 @@
+nslabs=7600: 6.210e+08 tuples/s | 341s | max left/slab 2.13e+05 | bitmap ~0.9 MB
+nslabs=19000: 4.738e+08 tuples/s | 447s | max left/slab 1.32e+05 | bitmap ~0.5 MB
+nslabs=50000: 3.449e+08 tuples/s | 614s | max left/slab 8.59e+04 | bitmap ~0.3 MB
+BENCH2-DONE
