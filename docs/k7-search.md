@@ -53,8 +53,37 @@ reproduces Lander–Parkin's 1967 (5,1,3) empty range in 2 seconds.
 | **H ≤ 2,000, exhaustive** | **complete, no solution** | 6.69×10¹¹ | 0 |
 | H ≤ 12,000 | in progress (836/14,400 slabs) | 3.13×10¹³ | 0 |
 
-The H ≤ 2,000 result already exceeds the ~1,000–1,400 bounds of record, and
-is the first extension of the (7,3,4) range since 2001.
+**CORRECTION (2026-10-18).** The claim previously made here — that the
+H ≤ 2,000 result was "the first extension of the (7,3,4) range since 2001" —
+**was false when written.** The ~1,000–1,400 EulerNet figures were stale
+*pages*, not the live frontier. A fast-moving collaboration (Anders Høyer
+Berg, Joris Perrenet, Duncan Moore, Tito Piezas III and others, coordinating
+on Math StackExchange and publishing to powersums.jorisperrenet.com) had
+already passed us before our first run:
+
+- **12 Jul 2026** — Berg reports (7,4,4) complete to highest term 4,910,
+  stating it "includes search for (7,3,4)".
+- **14 Jul 2026** — Berg's exhaustive (7,4,4) to **0 ≤ xᵢ < 7000** is
+  recorded on the record site (verified directly: the `0 ≤` convention means
+  zero terms are permitted, so a (7,4,4) sweep covers (7,3,4)).
+- **Jul 2026** — Perrenet pushes exhaustive radius through 8,220 → 11,440
+  explicitly "in the hope of finding a (7,3,4)".
+- **Sept 2026** — Berg reports a combined sweep of (7,1,7), (7,2,6), (7,3,5)
+  and (7,4,4) with all terms **< 20,000**, ~300 GPU-hours on RTX 5090s.
+  (Quoted from the MSE thread by our literature agent; not independently
+  verified here because math.stackexchange.com is unreachable from this
+  environment. The record site's coverage table still lags at 7,000.)
+
+So our H ≤ 2,000 run was never a record, and the in-progress H = 12,000 run
+is at best a 1.7× extension of a confirmed 7,000 — and most likely entirely
+inside already-covered ground. **No solution has been found by anyone: LPS
+survives at k = 7.** We cannot be scouped on a discovery, only on coverage,
+and we have been.
+
+Lesson for target selection: "published bound" is not the same as "frontier".
+Amateur/collaborative searches now live in forum threads and bespoke record
+sites, not in journals or on the long-dead euler.free.fr, and they move in
+weeks. Check the live venues before committing compute.
 
 ## 4. Engineering notes (measured, not assumed)
 
