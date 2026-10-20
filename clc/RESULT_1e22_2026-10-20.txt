@@ -1,0 +1,7 @@
+TOTAL scanned: 49,679,870   (expected 49,679,870 -> MATCH)
+verification failures: 0  []
+FULL CLC hits: 0  []
+BEST partial: 3 of 7 primes, n = 9857524690572481
+count by omega: {3: 420658, 4: 232742, 5: 1370257, 6: 6034046, 7: 14056367, 8: 16005646, 9: 8939435, 10: 2347828, 11: 262818, 12: 10018, 13: 55}
+numbers with exactly 3 matching primes: 179  (Eldar/A329948: 179)
+elapsed 1761s

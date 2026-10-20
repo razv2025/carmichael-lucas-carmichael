@@ -44,12 +44,16 @@ verification and was unaware of the prior literature. The record:
 - **Verified here.** No CLC number ≤ 10¹⁵ (Korselt test over Suteu's complete
   Lucas–Carmichael table, 129,125 entries) and ≤ 10¹⁸ (Lucas–Carmichael test
   over Pinch's complete Carmichael tables, 1,401,644 entries).
-- **Implicit frontier 10²²**, never stated in print: Goutier's 2022/24
-  tabulation of all 49,679,870 Carmichael numbers ≤ 10²² carries a per-number
-  Lucas–Carmichael flag (`D`) that never occurs; Eldar (OEIS A329948, Apr
-  2024) lists all 179 Carmichael numbers ≤ 10²² having ≥ 3 primes with
-  p+1 | n+1 — none has them all (max is 3 of 11). Shallue–Webster's
-  independent count 49,679,870 confirms the table's completeness.
+- **Verified here to 10²² (2026-10-20).** Our own complete factor-and-test
+  scan of Goutier's list of all 49,679,870 Carmichael numbers ≤ 10²² (code and
+  output in `clc/`): zero Lucas–Carmichael, zero verification failures;
+  per-ω counts match Goutier's published tally in every class; exactly 179
+  numbers have three primes with p+1 | n+1, matching Eldar's OEIS A329948 —
+  and none has more than three. Previously this frontier was only implicit:
+  Goutier's per-number `D` flag never occurs, and Eldar's 2024 near-miss list
+  tops out at 3 of 11; neither had been stated in print. Shallue–Webster's
+  independent count 49,679,870 confirms the list's completeness. **This is
+  now the largest verified bound, superseding Pinch's printed 10¹⁶.**
 - **Beyond:** the 10²⁴ Carmichael list exists (Shallue–Webster 2025/26,
   308,279,939 numbers; public numbers-only binary by Stamm-Wilbrandt, 2026);
   Baillie scanned it for Baillie–PSW pseudoprimes (none); **nobody has run
@@ -168,8 +172,8 @@ squaring of the Carmichael heuristic, and calibrated against ground truth:
 - two-sided per-prime γ fitted to this repo's measured twin-smooth prime
   counts at (y, X) = (60,10⁹), (100,10⁹), (140,2·10⁹), (200,10¹⁰);
 - an upper calibration from the verified emptiness E(CLC ≤ 10¹⁸) ≤ 1
-  (see §1a: none is Lucas–Carmichael up to 10¹⁸ by direct check; the true
-  verified frontier is 10²²).
+  (see §1a: now verified to 10²² by direct check; using 10¹⁸ here keeps the
+  calibration slightly conservative).
 
 Onsets (sanity anchor: the same machinery puts the first Carmichael number
 near 10³; truth 561):
