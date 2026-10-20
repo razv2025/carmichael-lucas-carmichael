@@ -20,6 +20,52 @@ This note records one quantified empirical obstruction (§3) and three
 impossibility theorems (§4) covering the two classical construction
 paradigms for Carmichael-type numbers.
 
+## 1a. Prior state of the question (corrected 2026-10-20)
+
+An earlier draft of this note asserted "no CLC number below 10¹⁸" without
+verification and was unaware of the prior literature. The record:
+
+- **Origin.** H. C. Williams, "On numbers analogous to the Carmichael
+  numbers", Canad. Math. Bull. 20 (1977) 133–143, poses the question
+  explicitly and proves the only nonexistence theorems that exist: a CLC
+  number has an **odd number k ≥ 5 of prime factors** (in his Lucas-sequence
+  formulation; under the bare divisibility definition: all pᵢ in one class
+  mod 4, k odd if that class is 3), **k ≠ 3**, and **3 ∤ n**. His k ≠ 3
+  argument uses only (p−1) | (n−1) and (p+1) | (n+1) — it is an absolute
+  theorem, strictly stronger than our polynomial-family Theorem 1 for m = 3,
+  which should be read as its parametric analogue.
+- **No further theorem since 1977**: nothing for k = 4 or 5, no congruence
+  constraints beyond the elementary ones (for each odd prime q, q cannot
+  divide both some pᵢ−1 and some pⱼ+1 — the "side-split" that drives §3).
+- **Published bound.** Pinch, "Absolute quadratic pseudoprimes" (Turku 2007,
+  p. 10): "Williams asked whether there are any Carmichael numbers N with an
+  odd number of prime divisors and … p | N ⇒ p+1 | N+1. There are no such
+  Carmichael numbers up to 10¹⁶." The only bound ever printed.
+- **Verified here.** No CLC number ≤ 10¹⁵ (Korselt test over Suteu's complete
+  Lucas–Carmichael table, 129,125 entries) and ≤ 10¹⁸ (Lucas–Carmichael test
+  over Pinch's complete Carmichael tables, 1,401,644 entries).
+- **Implicit frontier 10²²**, never stated in print: Goutier's 2022/24
+  tabulation of all 49,679,870 Carmichael numbers ≤ 10²² carries a per-number
+  Lucas–Carmichael flag (`D`) that never occurs; Eldar (OEIS A329948, Apr
+  2024) lists all 179 Carmichael numbers ≤ 10²² having ≥ 3 primes with
+  p+1 | n+1 — none has them all (max is 3 of 11). Shallue–Webster's
+  independent count 49,679,870 confirms the table's completeness.
+- **Beyond:** the 10²⁴ Carmichael list exists (Shallue–Webster 2025/26,
+  308,279,939 numbers; public numbers-only binary by Stamm-Wilbrandt, 2026);
+  Baillie scanned it for Baillie–PSW pseudoprimes (none); **nobody has run
+  the Lucas–Carmichael test on it.**
+- **Where it really sits.** CLC numbers (plus side congruences) are the
+  backbone of the standard Baillie–PSW counterexample construction —
+  Pomerance 1984, the Grantham–Alford 2,030-prime set, Chen–Greene 2003,
+  Baillie–Fiori–Wagstaff 2021 ($2000 prize) — and that community judges the
+  subset-product route "intractable" (search space ~2¹⁵⁰⁰). §3's margin wall
+  is a measurement of exactly that impasse. The BPSW literature never uses the
+  name Lucas–Carmichael and never cites Williams; the two literatures do not
+  cross-reference. Howe's non-rigid order-2 Carmichael numbers are the one
+  bridge: a CLC number is order-2 iff n ≡ p (mod p²−1) for every p | n, and
+  Puddefoot's Oct 2026 census shows every order-2 Carmichael number < 10²⁸ is
+  rigid, so no CLC of that 2-adic type exists below 10²⁸.
+
 ## 2. Setup
 
 Korselt-style criteria: n = p₁⋯p_k (distinct odd primes, k ≥ 3) is CLC iff
@@ -121,8 +167,9 @@ squaring of the Carmichael heuristic, and calibrated against ground truth:
   C(10¹⁸) = 1401644 (model matches within ~1.4 in ln at both anchors);
 - two-sided per-prime γ fitted to this repo's measured twin-smooth prime
   counts at (y, X) = (60,10⁹), (100,10⁹), (140,2·10⁹), (200,10¹⁰);
-- an upper calibration from the known emptiness E(CLC ≤ 10¹⁸) ≤ 1
-  (all Carmichael numbers to 10¹⁸ are enumerated; none is Lucas–Carmichael).
+- an upper calibration from the verified emptiness E(CLC ≤ 10¹⁸) ≤ 1
+  (see §1a: none is Lucas–Carmichael up to 10¹⁸ by direct check; the true
+  verified frontier is 10²²).
 
 Onsets (sanity anchor: the same machinery puts the first Carmichael number
 near 10³; truth 561):
