@@ -57,3 +57,10 @@ Result (`RESULT_1e24_2026-10-21.txt`): **zero Lucas–Carmichael among all
 New near-miss record: 15500309690554865758009 (≈1.55×10²², nine prime
 factors) has **four** primes with p+1 | n+1 — no number below 10²² has more
 than three. 826 numbers have exactly three (179 below 10²²).
+
+Independent per-ω cross-checks of the 10²⁴ scan against published OEIS data
+(both computed by other people with other code):
+- three-prime Carmichael numbers below 10²⁴: ours 1,494,738 = OEIS A132195
+  a(24) (J. M. Chick's tabulation, arXiv:0711.2915); below 10²²: 420,658 ✓.
+- eleven-prime Carmichael numbers below 10²⁴: ours 6,529,921 = OEIS A299711
+  a(24); below 10²²: 262,818 ✓.

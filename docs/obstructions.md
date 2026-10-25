@@ -54,7 +54,7 @@ verification and was unaware of the prior literature. The record:
   list of all 308,279,939 Carmichael numbers < 10²⁴ (Stamm-Wilbrandt's public
   PARI binary; completeness verified against the published counts at 10²²,
   10²³ and 10²⁴; code, logs and output in `clc/`): **zero Lucas–Carmichael**,
-  zero verification failures. The best near-miss anywhere below 10²⁴ is
+  zero verification failures; per-prime-factor-count tallies match independent OEIS data (A132195: 1,494,738 three-prime Carmichael numbers below 10²⁴; A299711: 6,529,921 eleven-prime). The best near-miss anywhere below 10²⁴ is
   15500309690554865758009 ≈ 1.55×10²² (nine prime factors) with four primes
   satisfying p+1 | n+1; 826 numbers have exactly three. **This is the
   largest verified bound; nothing beyond 10²⁴ has been tabulated.**
