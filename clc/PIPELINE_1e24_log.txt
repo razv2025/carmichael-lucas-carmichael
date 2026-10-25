@@ -1,0 +1,11 @@
+13:17:33 decode start
+13:25:45 decode done: 308279939 lines, 7499778495 bytes
+total lines: 308,279,939   malformed: 0   non-increasing steps: 0
+first five: [561, 1105, 1729, 2465, 2821]   (expected [561, 1105, 1729, 2465, 2821])
+largest: 999999999855878641139521
+  count < 10^22: 49,679,870  expected 49,679,870  -> MATCH
+  count < 10^23: 123,381,982  expected 123,381,982  -> MATCH
+  count < 10^24: 308,279,939  expected 308,279,939  -> MATCH
+VERDICT: COMPLETE AND CONSISTENT
+13:28:16 scan start
+10:31:59 scan done

@@ -39,3 +39,21 @@ does not word-split unquoted variables (so `kill $PIDS` saw one bogus pid).
   identical to an uninterrupted run, every chunk processed exactly once.
 
 Use `scan_resumable.py` for all future runs.
+
+## Extension to 10²⁴ — verified 2026-10-21
+
+Source: all 308,279,939 Carmichael numbers < 10²⁴ (Shallue–Webster's
+tabulation) as Hermann Stamm-Wilbrandt's public PARI `writebin` vector
+(https://stamm-wilbrandt.de/carm10e24.bin, 12,296,962,769 bytes, dated
+7 Mar 2026). Pipeline (`pipeline_1e24.sh`): download (size verified) →
+decode with PARI/GP `read()` (`decode_pari_writebin.gp`) → completeness
+check (`verify_carmichael_list.py`, output `VERIFY_1e24_list_completeness.txt`:
+counts below 10²²/10²³/10²⁴ = 49,679,870 / 123,381,982 / 308,279,939 exactly
+as published, strictly increasing, first five 561, 1105, 1729, 2465, 2821)
+→ scan (`scan_carmichael_list_for_clc.py`, 12 workers, 21 h of compute).
+
+Result (`RESULT_1e24_2026-10-21.txt`): **zero Lucas–Carmichael among all
+308,279,939 Carmichael numbers below 10²⁴**, zero verification failures.
+New near-miss record: 15500309690554865758009 (≈1.55×10²², nine prime
+factors) has **four** primes with p+1 | n+1 — no number below 10²² has more
+than three. 826 numbers have exactly three (179 below 10²²).

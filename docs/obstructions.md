@@ -49,15 +49,21 @@ verification and was unaware of the prior literature. The record:
   output in `clc/`): zero Lucas–Carmichael, zero verification failures;
   per-ω counts match Goutier's published tally in every class; exactly 179
   numbers have three primes with p+1 | n+1, matching Eldar's OEIS A329948 —
-  and none has more than three. Previously this frontier was only implicit:
+  and none has more than three.
+- **Verified here to 10²⁴ (2026-10-21).** The same scan over Shallue–Webster's
+  list of all 308,279,939 Carmichael numbers < 10²⁴ (Stamm-Wilbrandt's public
+  PARI binary; completeness verified against the published counts at 10²²,
+  10²³ and 10²⁴; code, logs and output in `clc/`): **zero Lucas–Carmichael**,
+  zero verification failures. The best near-miss anywhere below 10²⁴ is
+  15500309690554865758009 ≈ 1.55×10²² (nine prime factors) with four primes
+  satisfying p+1 | n+1; 826 numbers have exactly three. **This is the
+  largest verified bound; nothing beyond 10²⁴ has been tabulated.**
+  Previously the 10²² frontier was only implicit:
   Goutier's per-number `D` flag never occurs, and Eldar's 2024 near-miss list
   tops out at 3 of 11; neither had been stated in print. Shallue–Webster's
-  independent count 49,679,870 confirms the list's completeness. **This is
-  now the largest verified bound, superseding Pinch's printed 10¹⁶.**
-- **Beyond:** the 10²⁴ Carmichael list exists (Shallue–Webster 2025/26,
-  308,279,939 numbers; public numbers-only binary by Stamm-Wilbrandt, 2026);
-  Baillie scanned it for Baillie–PSW pseudoprimes (none); **nobody has run
-  the Lucas–Carmichael test on it.**
+  independent count 49,679,870 confirms the list's completeness. (Superseded the same week by the 10²⁴ verification below.)
+- **Beyond 10²⁴:** no Carmichael tabulation exists; extending the bound
+  further would require tabulating Carmichael numbers past 10²⁴ first.
 - **Where it really sits.** CLC numbers (plus side congruences) are the
   backbone of the standard Baillie–PSW counterexample construction —
   Pomerance 1984, the Grantham–Alford 2,030-prime set, Chen–Greene 2003,
