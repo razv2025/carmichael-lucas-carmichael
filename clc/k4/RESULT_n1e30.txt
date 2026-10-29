@@ -1,0 +1,7 @@
+# 4-prime Carmichael–Lucas–Carmichael enumeration — campaign n1e30 — Thu Oct 29 13:29:39 IST 2026
+# command: enum_k4 --B 1e30 --kappa 2 --filter
+# host: Razs-MacBook-Pro.local Apple M4 Pro
+COMPLETE blocks=3811/3811 pairs=230612582193 skip_gcd=52861117931 skip_inv=282680 cand=1882282352 window_survivors=1904 fermat_survivors=1 solutions=0 wall=5208.3s
+# Python re-verification of every SOLUTION / FSURV / WSURV line:
+FSURV p1=13 p2=97 m=21349 = {37: 1, 577: 1}  -> not CLC
+verified: 0 SOLUTION lines, 907 WSURV lines (window survivors checked in Python), 1 base-2 Fermat pseudoprimes examined, 0 problems

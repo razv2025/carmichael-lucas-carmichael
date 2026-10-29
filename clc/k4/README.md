@@ -1,6 +1,15 @@
 # clc/k4 — Carmichael ∩ Lucas–Carmichael numbers with exactly four prime factors
 
-**Status (2026-10-25): code written, validated, NOT yet run in production. Halted to save tokens. Resume below.**
+**Status (2026-10-29): BOTH CAMPAIGNS COMPLETE — no 4-prime CLC number exists with n ≤ 10³⁰, and none exists (for any n) with smallest prime ≤ 500,000.**
+
+| campaign | scope | pairs (p1,p2) | window survivors | Fermat survivors | solutions | wall |
+|---|---|---|---|---|---|---|
+| `RESULT_n1e30.txt` | all n ≤ 10³⁰ | 230,612,582,193 | 1,904 | 1 | **0** | 87 min |
+| `RESULT_p1_500000.txt` | all n, smallest prime p1 ≤ 500,000 | 86,517,004,140 | 1,185 | 1 | **0** | 146 min |
+
+The single Fermat survivor in both is the Carmichael number 26921089 = 13·37·97·577 (not Lucas–Carmichael). Every survivor with
+P > 2⁴⁰ (907 + 222 lines) was re-verified independently in Python (`verify_k4.py`): 0 problems. Host: Apple M4 Pro, 14 threads.
+Corollary (with Theorem A, n < 477 p1^{15/2}): **any 4-prime CLC number has p1 > 500,000 and n > 10³⁰**; in fact n > p1⁴ > 6×10²².
 
 ## What this is
 Williams (1977) proved a CLC number cannot have k = 3 prime factors. k = 4 is the first open case
@@ -48,8 +57,6 @@ Notation: n = p1 p2 q r (p1<p2<q<r), P = p1 p2, L_p = (p²−1)/2.  CLC ⟺ n/p 
 - Timings: `--p1max 30000` 42 s; cost ∝ X^{2.5}; `--B 1e24` 6 s, cost ∝ B^{1/2}.  Limits: p2 < 4.29×10⁹ (64-bit L2),
   so B ≤ ~10³⁰ and X ≤ ~8×10⁵ without a 128-bit extension.
 
-## TODO to finish #2
-1. `cd ~/Claude/Math/clc/k4 && nohup ./run_k4.sh > run_k4.log 2>&1 &`  (then `./k4ctl.sh status`).
-2. When both RESULT files exist: add the numbers to this README, `docs/obstructions.md` §1a and the consultation doc;
-   write `docs/k4-notes.md` (proofs of F1–F6, algorithm, validation, heuristic, results).
-3. Optional: 128-bit L2 to reach B = 10³² / X = 10⁶ (~10× more time each).
+## Possible extensions
+- 128-bit L2 arithmetic would allow B = 10³² (~15 h) or p1 ≤ 10⁶ (~10 h); heuristic value is small (remaining mass ~ X⁻⁴).
+- Proofs and discussion: `docs/k4-notes.md`.

@@ -64,6 +64,14 @@ verification and was unaware of the prior literature. The record:
   independent count 49,679,870 confirms the list's completeness. (Superseded the same week by the 10²⁴ verification below.)
 - **Beyond 10²⁴:** no Carmichael tabulation exists; extending the bound
   further would require tabulating Carmichael numbers past 10²⁴ first.
+- **Four prime factors (2026-10-29, `clc/k4/`, `docs/k4-notes.md`).** The first
+  open case after Williams's k ≠ 3. New elementary theorem: if n = p₁p₂p₃p₄ is
+  CLC then all pᵢ ≡ 1 (mod 12), p₃ < 2p₁p₂, p₄ < √(2p₁p₂p₃), and
+  **p₂² ≤ 24p₁³ + 3**, so n < 477 p₁^{15/2} and each smallest prime admits only
+  finitely many candidates. Complete enumeration: **no 4-prime CLC number with
+  n ≤ 10³⁰, and none at all with smallest prime ≤ 500,000** (230.6 and 86.5
+  billion (p₁,p₂) pairs; every survivor re-verified independently). Heuristic
+  expected count of 4-prime CLC numbers ≈ 10⁻⁵, concentrated at p₁ = 13.
 - **Where it really sits.** CLC numbers (plus side congruences) are the
   backbone of the standard Baillie–PSW counterexample construction —
   Pomerance 1984, the Grantham–Alford 2,030-prime set, Chen–Greene 2003,
