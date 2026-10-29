@@ -26,13 +26,14 @@ Notation: n = p1 p2 q r (p1<p2<q<r), P = p1 p2, L_p = (p²−1)/2.  CLC ⟺ n/p 
 - (F4) With j = d·e:  |jm − 4P²| ≤ max(2j√(2p1), 8p1).  (Filter. The admissible j for fixed m form an interval,
   so "floor or ceil of 4P²/m passes" is an exact test — but the TRUE j need not be floor/ceil; the self-tests caught this.)
 - **(F6) THEOREM A (new):** multiply the three equations in (F2): d·e·s·Π = 8p1³ with
-  Π = (1−(d−2)/(dr²))(1−(e−2)/(eq²))(1−(s−2)/(sp2²)) ∈ [1−3/p2², 1+3.0001/p2²].  Each equation read mod p1
-  gives t(x²−1) ≡ −2 (mod p1), so p1 ∤ d, e, s, hence d e s ≠ 8p1³, which forces  **p2² ≤ 24 p1³ + 3**
+  Π = (1−(d−2)/(dr²))(1−(e−2)/(eq²))(1−(s−2)/(sp2²)) ∈ [(1−1/p2²)³, (1+1/p2²)³].  Each equation read mod p1
+  gives t(x²−1) ≡ −2 (mod p1), so p1 ∤ d, e, s, hence d e s ≠ 8p1³. If Π<1 this forces p2² ≤ 24p1³+3; if Π>1 only the
+  d-factor can exceed 1 (e>d≥1, s>2p1), so Π ≤ 1+1/r² and r² ≤ 8p1³−1. Either way **p2² ≤ 24 p1³ + 1**
   (and p2² ≡ 1 mod 24 gives p2² ≤ 24p1³+1).  Corollaries: q, r < 2P < 9.9 p1^{5/2};  n < 477 p1^{15/2};
   for each p1 only finitely many n;  a 4-prime CLC number n has p1 > (n/477)^{2/15}.
   Sanity check on the relaxed κ=24 solution 13685 = 5·7·17·23: d=27, e=67, s=977, des=1,767,393, Π=0.97765, des·Π = 13824·125 ✓.
-- Heuristic: expected number of 4-prime CLC numbers ≈ Σ_{p1} 54/(p1⁵ ln³p1) ≈ 10⁻⁵, almost all of it at p1 = 13
-  (n < 1.1×10¹¹, long excluded).  Mass beyond p1 > X is ~ 3/(X⁴ ln⁴X).
+- Heuristic: expected number of 4-prime CLC numbers ≈ 6×10⁻⁷ (`agrawal/k4_heuristic.py`), ~96% of it at p1 = 13
+  (n < 1.1×10¹¹, long excluded).  Mass beyond p1 > X decays like X⁻⁴.
 
 ## Code
 - `enum_k4.c` — the enumerator (C, pthreads, __int128). Two modes: `--B 1e30` (all n ≤ B) and `--p1max X`

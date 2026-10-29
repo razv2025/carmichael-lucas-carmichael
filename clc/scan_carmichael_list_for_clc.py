@@ -87,5 +87,9 @@ if __name__ == "__main__":
     by_k = {}
     for (g, k), v in hist.items(): by_k[k] = by_k.get(k, 0) + v
     print(f"count by omega: {dict(sorted(by_k.items()))}")
-    print(f"numbers with exactly 3 matching primes: {sum(v for (g,k),v in hist.items() if g == 3)}  (Eldar/A329948: 179)")
+    print(f"numbers with exactly 3 matching primes: {sum(v for (g,k),v in hist.items() if g == 3)}  (A329948 below 1e22: 179)")
+    for g in sorted(set(g for (g, k) in hist)):
+        print(f"numbers with exactly {g} matching primes: {sum(v for (gg,k),v in hist.items() if gg == g):,}  by omega: {dict(sorted((k, v) for (gg,k),v in hist.items() if gg == g))}")
+    # (added 2026-10-29: the 1e22/1e24 runs printed only the omega-marginal and the g == 3 total, so the number of
+    #  4-match numbers below 1e24 is not on record; a rerun with this version records the full histogram)
     print(f"elapsed {time.time()-t0:.0f}s")

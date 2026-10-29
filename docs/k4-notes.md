@@ -37,9 +37,12 @@ So d·e·s·Π = 8p₁³. Each factor of Π lies in [1 − 1/x², 1 + 1/x²] wit
   (1 − 1/p₂²)³ ≤ Π ≤ (1 + 1/p₂²)³.
 Now read (iii), (iv), (ii) modulo p₁: the left sides vanish, so d(r²−1) ≡ e(q²−1) ≡ s(p₂²−1) ≡ −2 (mod p₁); as p₁ ≥ 13 is odd, p₁ ∤ d, e, s. Hence d·e·s ≠ 8p₁³, i.e. Π ≠ 1.
 If Π < 1 then des ≥ 8p₁³ + 1 and Π = 8p₁³/des ≤ 1 − 1/(8p₁³+1); with Π ≥ 1 − 3/p₂² this gives p₂² ≤ 24p₁³ + 3.
-If Π > 1 then des ≤ 8p₁³ − 1 and Π ≥ 1 + 1/(8p₁³−1); with Π ≤ 1 + 3.0001/p₂² (p₂ ≥ 37) this gives p₂² ≤ 24.001p₁³.
-In either case p₂² ≤ 24p₁³ + 3, and since p₂ ≡ 1 (mod 12) forces p₂² ≡ 1 (mod 24), p₂² ≤ 24p₁³ + 1. ∎
-(In fact Π < 1 always: d = 1 is the only way a factor exceeds 1, and then 1/r² < 1/q² + 1/p₂² is forced.)
+If Π > 1: a factor of Π exceeds 1 only when its quotient is 1; e > d ≥ 1 (as r > q) and s > 2p₁ (as qr ≥ p₂²+1), so only
+the d-factor can, and Π ≤ 1 + 1/r². With des ≤ 8p₁³ − 1 we get Π ≥ 1 + 1/(8p₁³−1), hence r² ≤ 8p₁³ − 1 and p₂² < r² < 8p₁³.
+In either case p₂² ≤ 24p₁³ + 1 (the first case via p₂² ≡ 1 mod 24). ∎
+**Correction (2026-10-29):** the first write-up handled Π > 1 with "(1+1/p₂²)³ ≤ 1 + 3.0001/p₂²", which is false (coefficient 3.0022 at
+p₂ = 37) and does not close; caught by the independent fact-check (docs/review-facts-2026-10-29.md). The enumeration used p₂² ≤ 24p₁³+3,
+satisfied in both cases, so Theorem B stands.
 
 *Consequences.* p₂ < 4.9p₁^{3/2}; p₃ < 2P < 9.8p₁^{5/2}; p₄ < 2P; n < 4P³ < 4·(4.9)³·p₁^{15/2} < 477p₁^{15/2}.
 
@@ -75,9 +78,9 @@ The one Fermat survivor is the Carmichael number 26921089 = 13·37·97·577 (37+
 
 ## 5. Heuristics and what remains
 
-Conditioning on (a), each condition n/p ≡ 1 (mod L_p/12) has "probability" 24/p². Summing over p₁<p₂<q<r ≡ 1 (mod 12) with
-q, r ∈ (p₂, 2P) and p₂ < 4.9p₁^{3/2} gives an expected count ≈ Σ_{p₁} 54/(p₁⁵ ln³p₁) ≈ 10⁻⁵, dominated by p₁ = 13 (where n <
-1.1×10¹¹, excluded since Pinch). The mass left after Theorem B is ~3/(X⁴ln⁴X) with X = 5×10⁵, i.e. ~10⁻²⁵.
+Conditioning on (a), each condition n/p ≡ 1 (mod L_p/12) has "probability" 24/p². Summing ∏ 24/pᵢ² over p₁<p₂<q<r ≡ 1 (mod 12) with
+p₂² ≤ 24p₁³+1 and q, r ∈ (p₂, 2P) gives an expected count ≈ 6.3×10⁻⁷ (`python3 -m agrawal.k4_heuristic`), about 96% of it from
+p₁ = 13 (where n < 1.1×10¹¹, long excluded). The mass left after Theorem B (p₁ > 5×10⁵) decays like X⁻⁴ and is of order 10⁻²⁵.
 
 A proof that k = 4 is impossible would need a bound on p₁ itself. Theorem A reduces the problem to one free parameter
 (given p₁ everything is bounded polynomially), and the identity d·e·s·Π = 8p₁³ with p₁ ∤ des shows the integer

@@ -14,7 +14,7 @@ Verified 2026-10-20 on the M4 Pro, independently of Goutier's flags.
 - `RESULT_1e22_2026-10-20.txt` — output. Cross-checks that all passed:
   total 49,679,870 = Goutier = Shallue–Webster; per-ω counts equal Goutier's
   published tally in all 11 classes; exactly 179 numbers have 3 primes with
-  p+1 | n+1, equal to Eldar's OEIS A329948; zero verification failures;
+  p+1 | n+1, equal to OEIS A329948 (Suteu; b-file by Eldar); zero verification failures;
   **zero full hits**. Best partial: 3 matching primes (never more).
 
 ## Operating a scan: `scanctl.sh` and `scan_resumable.py` (added 2026-10-20)

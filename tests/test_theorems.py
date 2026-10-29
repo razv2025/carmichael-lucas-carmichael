@@ -193,3 +193,23 @@ def test_root_conditions_match_divisibility():
         D = [a[i] * b[j] - a[j] * b[i] for j in range(3)]
         assert val == 1
         assert sp.prod([a[j] + D[j] for j in range(3) if j != i]) == a[i] ** 2
+
+
+def test_pi_greater_than_one_case():
+    """Corrected Π>1 argument of Theorem A(c): e > d, s > 2 p1, so only the d-factor can exceed 1 and Π ≤ 1 + 1/r².
+    Also records that the earlier estimate (1+x)^3 ≤ 1 + 3.0001 x (x = 1/p2², p2 ≥ 37) is FALSE."""
+    import random
+    rng = random.Random(5)
+    x = Fraction(1, 37 * 37)
+    assert (1 + x) ** 3 > 1 + Fraction(30001, 10000) * x          # the old constant was wrong
+    for _ in range(3000):
+        p1 = rng.choice([13, 37, 61, 73, 97, 109])
+        p2 = rng.choice([p for p in range(37, 5000) if p % 12 == 1 and p > p1])
+        q = rng.randrange(p2 + 1, 10**5); r = rng.randrange(q + 1, 10**6)
+        P = p1 * p2
+        d = Fraction(2 * (P * q - 1), r * r - 1); e = Fraction(2 * (P * r - 1), q * q - 1); s = Fraction(2 * (p1 * q * r - 1), p2 * p2 - 1)
+        assert e > d and s > 2 * p1                                  # hence e, s ≥ 2 when they are integers
+        if d >= 1:
+            f1 = 1 - (d - 2) / (d * r * r); f2 = 1 - (e - 2) / (e * q * q); f3 = 1 - (s - 2) / (s * p2 * p2)
+            assert f2 <= 1 and f3 <= 1 and f1 <= 1 + Fraction(1, r * r)
+            assert f1 * f2 * f3 <= 1 + Fraction(1, r * r)

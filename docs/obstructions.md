@@ -48,15 +48,16 @@ verification and was unaware of the prior literature. The record:
   scan of Goutier's list of all 49,679,870 Carmichael numbers ≤ 10²² (code and
   output in `clc/`): zero Lucas–Carmichael, zero verification failures;
   per-ω counts match Goutier's published tally in every class; exactly 179
-  numbers have three primes with p+1 | n+1, matching Eldar's OEIS A329948 —
+  numbers have three primes with p+1 | n+1, matching OEIS A329948 (Suteu; b-file by Eldar) —
   and none has more than three.
 - **Verified here to 10²⁴ (2026-10-21).** The same scan over Shallue–Webster's
   list of all 308,279,939 Carmichael numbers < 10²⁴ (Stamm-Wilbrandt's public
   PARI binary; completeness verified against the published counts at 10²²,
   10²³ and 10²⁴; code, logs and output in `clc/`): **zero Lucas–Carmichael**,
   zero verification failures; per-prime-factor-count tallies match independent OEIS data (A132195: 1,494,738 three-prime Carmichael numbers below 10²⁴; A299711: 6,529,921 eleven-prime). The best near-miss anywhere below 10²⁴ is
-  15500309690554865758009 ≈ 1.55×10²² (nine prime factors) with four primes
-  satisfying p+1 | n+1; 826 numbers have exactly three. **This is the
+  15500309690554865758009 ≈ 1.55×10²² (nine prime factors) is the first number
+  with four primes satisfying p+1 | n+1 (the count of such numbers was not
+  recorded); 826 numbers have exactly three. **This is the
   largest verified bound; nothing beyond 10²⁴ has been tabulated.**
   Previously the 10²² frontier was only implicit:
   Goutier's per-number `D` flag never occurs, and Eldar's 2024 near-miss list
@@ -71,7 +72,7 @@ verification and was unaware of the prior literature. The record:
   finitely many candidates. Complete enumeration: **no 4-prime CLC number with
   n ≤ 10³⁰, and none at all with smallest prime ≤ 500,000** (230.6 and 86.5
   billion (p₁,p₂) pairs; every survivor re-verified independently). Heuristic
-  expected count of 4-prime CLC numbers ≈ 10⁻⁵, concentrated at p₁ = 13.
+  expected count of 4-prime CLC numbers ≈ 6×10⁻⁷, concentrated at p₁ = 13.
 - **Where it really sits.** CLC numbers (plus side congruences) are the
   backbone of the standard Baillie–PSW counterexample construction —
   Pomerance 1984, the Grantham–Alford 2,030-prime set, Chen–Greene 2003,

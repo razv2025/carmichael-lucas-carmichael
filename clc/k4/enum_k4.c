@@ -26,9 +26,11 @@
  *  (F5) kappa n = d r^3 - (d - kappa) r,  so r is an integer root of a cubic once d is known.
  *  (F6) [Theorem A, kappa = 2]  Let s be defined by 2(p1 q r - 1) = s (p2^2 - 1) (condition at p2).  Multiplying
  *       2Pq = d r^2 - (d-2),  2Pr = e q^2 - (e-2),  2 p1 q r = s p2^2 - (s-2)  gives  d e s · Π = 8 p1^3 with
- *       Π = (1 - (d-2)/(d r^2))(1 - (e-2)/(e q^2))(1 - (s-2)/(s p2^2)) ∈ [1 - 3/p2^2, 1 + 3.0001/p2^2];
- *       reading the three equations mod p1 shows p1 ∤ d, e, s, so d e s ≠ 8 p1^3, which forces
- *       p2^2 ≤ 24 p1^3 + 3.  Hence for each p1 the whole problem is finite (--p1max mode).
+ *       Π = (1 - (d-2)/(d r^2))(1 - (e-2)/(e q^2))(1 - (s-2)/(s p2^2)) ∈ [(1-1/p2^2)^3, (1+1/p2^2)^3];
+ *       reading the three equations mod p1 shows p1 ∤ d, e, s, so d e s ≠ 8 p1^3.  If Π < 1 this forces
+ *       p2^2 ≤ 24 p1^3 + 3; if Π > 1 only the d-factor can exceed 1 (e > d ≥ 1, s > 2 p1), so Π ≤ 1 + 1/r^2 and
+ *       r^2 ≤ 8 p1^3 - 1 < 24 p1^3.  The code uses p2^2 ≤ 24 p1^3 + 3 (valid in both cases); the sharp bound is
+ *       p2^2 ≤ 24 p1^3 + 1.  Hence for each p1 the whole problem is finite (--p1max mode).
  *
  * Algorithm: for every admissible pair p1 < p2 with p1 p2^3 ≤ B: CRT (F3) -> m0, Lambda;
  * walk m = m0 + t Lambda over (p2^2, min(kappa^2 P^2, B/P)]; window test (F4); survivors:
