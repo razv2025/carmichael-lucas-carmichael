@@ -1,0 +1,322 @@
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,url,enumitem}\usepackage[dvipsnames]{xcolor}\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\N}{\mathbb N}
+\providecommand{\lcm}{\operatorname{lcm}}
+\DeclareMathOperator{\omg}{\omega}
+\newcommand{\TODO}[1]{\textbf{[TODO: #1]}}
+
+\title[Carmichael numbers that are also Lucas--Carmichael]{Numbers that are both Carmichael and Lucas--Carmichael:\\ a verified bound of $10^{24}$, the four-prime case,\\ and obstructions to constructions}
+\author{Raz Vakil}
+\address{\TODO{affiliation / city}}
+\email{\TODO{email}}
+\date{\today\ (draft for consultation)}
+
+\begin{document}
+
+\begin{abstract}
+A squarefree composite $n$ is \emph{Carmichael} if $(p-1)\mid(n-1)$ for every prime $p\mid n$, and \emph{Lucas--Carmichael} if $(p+1)\mid(n+1)$ for every $p\mid n$. Williams (1977) asked whether a number can be both; no example is known, and the only published bound is Pinch's $10^{16}$ (2007). Such numbers are also the backbone of the standard construction of a Baillie--PSW counterexample and of the Lenstra--Pomerance route to a counterexample to Agrawal's conjecture, although those literatures do not use the name. We verify, independently of the tabulators' own flags, that no Carmichael number below $10^{24}$ is Lucas--Carmichael (308{,}279{,}939 numbers; the best near miss has four of nine primes satisfying $(p+1)\mid(n+1)$). For the first open case after Williams's theorem that three prime factors are impossible, we prove that a four-prime example $p_1<p_2<p_3<p_4$ must have all $p_i\equiv1\pmod{12}$, $p_3<2p_1p_2$, $p_4<\sqrt{2p_1p_2p_3}$ and $p_2^2\le 24p_1^3+1$, so that only finitely many candidates exist for each smallest prime, and we show by a complete enumeration that none exists with $n\le10^{30}$ and none at all with $p_1\le 500{,}000$. We also prove that the two classical construction paradigms for Carmichael numbers fail in their simplest two-sided forms: no Chernick-type polynomial family of three factors, of any number of factors with uniform offsets $\pm1$, or in generic position can produce such numbers, and we quantify the failure of the two-sided Erd\H{o}s subset-product method. Heuristics suggest the first example, if any, has hundreds of digits and around a hundred prime factors.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+Throughout, $n$ denotes an odd squarefree composite integer with prime factorisation $n=p_1p_2\cdots p_k$, $p_1<\dots<p_k$, $k=\omg(n)\ge2$.
+
+\begin{definition}
+$n$ is a \emph{Carmichael number} if $(p-1)\mid(n-1)$ for every $p\mid n$ (Korselt's criterion), and a \emph{Lucas--Carmichael number} if $(p+1)\mid(n+1)$ for every $p\mid n$. We call $n$ a \emph{CLC number} if it is both.
+\end{definition}
+
+Carmichael numbers are the absolute Fermat pseudoprimes; Lucas--Carmichael numbers play the same role for Lucas sequences with discriminant a quadratic non-residue of every $p\mid n$. H.~C.~Williams \cite{Williams77} asked in 1977 whether a number can be both, proved that it cannot have exactly three prime factors and cannot be divisible by $3$, and showed that under his Lucas-sequence formulation the number of prime factors must be odd (in the bare divisibility formulation above, all $p_i$ lie in one class modulo $4$, and $k$ is odd when that class is $3$; see Lemma~\ref{lem:classes}). No example is known. Pinch \cite{Pinch07} reported that there is none up to $10^{16}$; to our knowledge no other bound and no further theorem has appeared since 1977.
+
+The question is not isolated. Pomerance's 1984 heuristic argument that counterexamples to the Baillie--PSW primality test exist \cite{Pomerance84}, and the subsequent attempts to construct one \cite{ChenGreene03,BFW21,Grantham}, seek $n=\prod p$ with $(p-1)\mid(n-1)$ and $(p+1)\mid(n+1)$ for all $p\mid n$ together with side conditions ($p\equiv3\pmod 8$, $(5/p)=-1$); such an $n$ is a CLC number. The Lenstra--Pomerance analysis of Agrawal's conjecture from the AKS primality test \cite{AKS,LP} shows that the natural counterexamples are CLC numbers whose primes are all $\equiv3\pmod{80}$. Howe's higher-order Carmichael numbers \cite{Howe00} are a third neighbour: $n$ is Carmichael of order $2$ iff $n\equiv p\pmod{p^2-1}$ for all $p\mid n$, while $n$ is CLC iff $n\equiv p\pmod{(p^2-1)/2}$ (Lemma~\ref{lem:quotient}). These three literatures do not cite one another and do not use a common name; one purpose of this note is to put them side by side.
+
+Our results are the following.
+
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Verified bound} (Theorem~\ref{thm:bound}). No CLC number is smaller than $10^{24}$. This is a complete, independent factor-and-test pass over the tabulations of all Carmichael numbers below $10^{24}$, with completeness and per-class cross-checks against independently published counts. The largest number of primes $p\mid n$ with $(p+1)\mid(n+1)$ attained below $10^{24}$ is four (once, with $\omg(n)=9$); $826$ Carmichael numbers attain three.
+\item \textbf{Four prime factors} (Theorems~\ref{thm:A} and~\ref{thm:B}). If $n=p_1p_2p_3p_4$ is CLC then all $p_i\equiv1\pmod{12}$, $p_3<2p_1p_2$, $p_4<\sqrt{2p_1p_2p_3}$, and $p_2^2\le24p_1^3+1$; in particular $n<477\,p_1^{15/2}$ and for each $p_1$ there are finitely many candidates. A complete enumeration shows that no four-prime CLC number has $n\le10^{30}$, and that none exists with $p_1\le500{,}000$.
+\item \textbf{Construction obstructions} (Theorems~\ref{thm:fam3}--\ref{thm:famgen}, \S\ref{sec:subset}). Chernick-type polynomial families cannot produce CLC numbers with three factors, with uniform offsets $\pm1$, or in generic position, and the degenerate strata are empty in the ranges searched. The two-sided Erd\H{o}s--Alford--Granville--Pomerance subset-product method is quantified to lose about $1.5$ bits per prime relative to the one-sided case, with the expected number of solutions in the best configurations found near $2^{-30}$.
+\item \textbf{Heuristics} (\S\ref{sec:heur}). The expected number of four-prime CLC numbers is about $10^{-6}$, concentrated at $p_1=13$; an Erd\H{o}s--Pomerance-style count suggests the first CLC number of any kind has between roughly $200$ and $500$ digits and about $80$--$110$ prime factors.
+\end{itemize}
+
+All code, logs and result files are public (\S\ref{sec:repro}). Every computational claim was re-verified by a second, independent route described there.
+
+\section{Preliminaries}\label{sec:prelim}
+
+For an odd prime $p$ write $L_p=(p^2-1)/2=\lcm(p-1,p+1)$.
+
+\begin{lemma}\label{lem:quotient}
+Let $p\mid n$. Then $(p-1)\mid(n-1)$ and $(p+1)\mid(n+1)$ hold together if and only if $n/p\equiv1\pmod{L_p}$, equivalently $n\equiv p\pmod{L_p}$.
+\end{lemma}
+\begin{proof}
+The two divisibilities say $n\equiv1\pmod{p-1}$ and $n\equiv-1\pmod{p+1}$. Since $p\equiv1\pmod{p-1}$ and $p\equiv-1\pmod{p+1}$, this is $n\equiv p$ modulo $\lcm(p-1,p+1)=L_p$ (the gcd of $p\mp1$ is $2$). Finally $L_p\mid n-p=p\,(n/p-1)$ with $\gcd(p,L_p)=1$ gives $L_p\mid n/p-1$, and conversely.
+\end{proof}
+
+\begin{lemma}[congruence classes]\label{lem:classes}
+Let $n$ be CLC with $k$ prime factors.
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item All $p\mid n$ lie in one class $c$ modulo $4$, and $n\equiv c\pmod 4$; hence $k$ is odd if $c=3$.
+\item $3\nmid n$; all $p\mid n$ lie in one class $c'$ modulo $3$, and $n\equiv c'\pmod3$; hence $k$ is odd if $c'=2$.
+\item If $k$ is even, every $p\mid n$ is $\equiv1\pmod{12}$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(a) $8\mid p^2-1$ for odd $p$, so $4\mid L_p$ and $n\equiv p\pmod 4$ for every $p\mid n$ by Lemma~\ref{lem:quotient}. Thus all $p\equiv c$, and $n\equiv c^k\pmod4$; if $c=3$ this forces $k$ odd. (b) For $p\ne3$, $3\mid p^2-1$, so $3\mid L_p$ and $n\equiv p\pmod3$. If $3\mid n$ then every other prime factor would be $\equiv n\equiv0\pmod3$, impossible for $k\ge2$; so $3\nmid n$, all $p\equiv c'\pmod3$ and $n\equiv c'^k\equiv c'$, which for $c'=2$ forces $k$ odd. (c) is (a) and (b) with $k$ even.
+\end{proof}
+
+Williams proved that $k=3$ is impossible. For completeness we give a four-line proof in the present notation.
+
+\begin{proposition}[Williams]\label{prop:k3}
+No CLC number has exactly three prime factors.
+\end{proposition}
+\begin{proof}
+Let $n=p_1p_2p_3$. By Lemma~\ref{lem:quotient} at $p_3$, $p_1p_2-1=tL_3$ with $t\ge1$ (as $p_1p_2>1$); since $p_1p_2<p_3^2$ we have $t<2$, so $2p_1p_2=p_3^2+1$. At $p_2$, $p_1p_3-1=sL_2$ with $s\ge1$; now $p_3<\sqrt{2p_1p_2}<\sqrt2\,p_2$, so $p_1p_3<\sqrt2\,p_2^2$ and $s<2\sqrt2\,p_2^2/(p_2^2-1)<3$. If $s=2$ then $p_1p_3=p_2^2$, impossible; so $2p_1p_3=p_2^2+1$. Subtracting, $2p_1(p_2-p_3)=p_3^2-p_2^2$, i.e. $2p_1=-(p_2+p_3)<0$, a contradiction.
+\end{proof}
+
+\section{Four prime factors}\label{sec:k4}
+
+\subsection{Structure}
+
+\begin{theorem}\label{thm:A}
+Let $n=p_1p_2p_3p_4$, $p_1<p_2<p_3<p_4$, be a CLC number, and write $P=p_1p_2$, $q=p_3$, $r=p_4$.
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item Every $p_i\equiv1\pmod{12}$; in particular $p_1\ge13$ and $p_2\ge37$.
+\item There are integers $d,e,s\ge1$ with
+\begin{equation}\label{eq:three}
+2Pq=d(r^2-1)+2,\qquad 2Pr=e(q^2-1)+2,\qquad 2p_1qr=s(p_2^2-1)+2,
+\end{equation}
+and consequently $q<2P$, $r<\sqrt{2Pq}<2P$, $m:=qr<4P^2$, $n<4P^3$ and $d<2p_1$.
+\item $p_2^2\le24p_1^3+1$.
+\end{enumerate}
+Consequently $p_2<4.9\,p_1^{3/2}$, $p_3,p_4<2P<9.8\,p_1^{5/2}$ and $n<477\,p_1^{15/2}$.
+\end{theorem}
+
+\begin{proof}
+(a) is Lemma~\ref{lem:classes}(c).
+
+(b) Lemma~\ref{lem:quotient} at $r$ gives $n/r-1=Pq-1=dL_r$ with an integer $d\ge1$, which is the first equation; the second and third are Lemma~\ref{lem:quotient} at $q$ and at $p_2$. From $2Pq=d(r^2-1)+2\ge r^2+1>q^2$ we get $q<2P$ and $r^2<2Pq$, hence $r<\sqrt{2Pq}<2P$, $m=qr<4P^2$ and $n=Pm<4P^3$. Also $d=2(Pq-1)/(r^2-1)<2Pq/(r^2-1)<2P/q<2p_1$ because $r\ge q+1$ and $q>p_2$.
+
+(c) Multiply the three equations in~\eqref{eq:three}. The left side is $8P^2p_1\,q^2r^2=8p_1^3p_2^2q^2r^2$. Writing $d(r^2-1)+2=dr^2\bigl(1-\tfrac{d-2}{dr^2}\bigr)$ and similarly for the other two factors, the right side is $d\,e\,s\;r^2q^2p_2^2\,\Pi$ with
+\[
+\Pi=\Bigl(1-\frac{d-2}{dr^2}\Bigr)\Bigl(1-\frac{e-2}{eq^2}\Bigr)\Bigl(1-\frac{s-2}{sp_2^2}\Bigr).
+\]
+Hence
+\begin{equation}\label{eq:des}
+d\,e\,s\cdot\Pi=8p_1^3 .
+\end{equation}
+For an integer $t\ge1$ and $x\ge2$ one has $-1/x^2\le (t-2)/(tx^2)<1/x^2$, so each factor of $\Pi$ lies in $[1-1/x^2,\,1+1/x^2]$ with $x\in\{r,q,p_2\}$, $x\ge p_2$; therefore
+\begin{equation}\label{eq:Pi}
+(1-p_2^{-2})^3\le\Pi\le(1+p_2^{-2})^3 .
+\end{equation}
+Now reduce the three equations~\eqref{eq:three} modulo $p_1$. Each left side is divisible by $p_1$, so $d(r^2-1)\equiv e(q^2-1)\equiv s(p_2^2-1)\equiv-2\pmod{p_1}$. As $p_1$ is odd, $p_1\nmid d$, $p_1\nmid e$ and $p_1\nmid s$. Hence $des\ne8p_1^3$, i.e. $\Pi\ne1$.
+
+If $\Pi<1$ then $des\ge8p_1^3+1$ and $\Pi=8p_1^3/des\le1-\frac1{8p_1^3+1}$; with $\Pi\ge(1-p_2^{-2})^3\ge1-3p_2^{-2}$ this gives $p_2^2\le3(8p_1^3+1)=24p_1^3+3$. If $\Pi>1$ then $des\le8p_1^3-1$ and $\Pi\ge1+\frac1{8p_1^3-1}$; since $p_2\ge37$, $(1+p_2^{-2})^3\le1+3.0001\,p_2^{-2}$, which gives $p_2^2\le3.0001(8p_1^3-1)<24p_1^3+3$. In both cases $p_2^2\le24p_1^3+3$. Finally $p_2\equiv1\pmod{12}$ implies $p_2^2\equiv1\pmod{24}$, while $24p_1^3+2$ and $24p_1^3+3$ are $\equiv2,3\pmod{24}$; so $p_2^2\le24p_1^3+1$.
+
+The consequences follow from (b) and (c): $p_2<\sqrt{24}\,p_1^{3/2}<4.9\,p_1^{3/2}$, $q,r<2P<9.8\,p_1^{5/2}$, and $n<4P^3<4\cdot4.9^3\,p_1^{15/2}<477\,p_1^{15/2}$.
+\end{proof}
+
+\begin{remark}
+In fact $\Pi<1$ always: a factor of $\Pi$ exceeds $1$ only when the corresponding quotient equals $1$, and $e,s\ge2$ (as $e>d\ge1$ by $r>q$, and $s=2(p_1qr-1)/(p_2^2-1)>2p_1$), so $\Pi>1$ would need $1/r^2>(1-2/e)/q^2+(1-2/s)/p_2^2$ up to second-order terms, which fails for $r>q>p_2$. We kept both cases in the proof to avoid relying on this.
+\end{remark}
+
+\begin{corollary}\label{cor:A}
+For each prime $p_1$ there are only finitely many four-prime CLC numbers with smallest prime $p_1$, all below $477\,p_1^{15/2}$. Conversely a four-prime CLC number $n$ has $p_1>(n/477)^{2/15}$.
+\end{corollary}
+
+\subsection{Enumeration}
+
+Theorem~\ref{thm:A} makes two kinds of complete enumeration possible: all $n\le B$ (where $n>p_1p_2^3$ forces $p_1<B^{1/4}$ and $p_2<(B/p_1)^{1/3}$), and all $n$ whatsoever with $p_1\le X$ (where $p_2\le\sqrt{24p_1^3+1}$). Both reduce to a search over pairs $(p_1,p_2)$.
+
+\begin{lemma}[one class for the cofactor]\label{lem:crt}
+With notation as in Theorem~\ref{thm:A}, $m=qr$ satisfies $p_2m\equiv1\pmod{L_{p_1}}$ and $p_1m\equiv1\pmod{L_{p_2}}$. These are solvable iff $p_1\equiv p_2\pmod{\gcd(L_{p_1},L_{p_2})}$, in which case $m$ lies in a single residue class modulo $\Lambda=\lcm(L_{p_1},L_{p_2})$.
+\end{lemma}
+\begin{proof}
+The congruences are Lemma~\ref{lem:quotient} at $p_1$ and $p_2$ ($n/p_1=p_2m$, $n/p_2=p_1m$). Let $g=\gcd(L_{p_1},L_{p_2})$. The system is solvable iff $p_2^{-1}\equiv p_1^{-1}\pmod g$, i.e. $p_1\equiv p_2\pmod g$ (both $p_i$ are coprime to $g$: $p_2\mid L_{p_1}$ would need $p_2\mid p_1\pm1$ with $p_2>p_1$, impossible for odd primes, and $p_1\mid L_{p_2}$ would make $p_1m\equiv1\pmod{p_1}$ impossible). The rest is the Chinese remainder theorem.
+\end{proof}
+
+Since $\Lambda\approx P^2/(4g)$ while $m<4P^2$, Lemma~\ref{lem:crt} leaves $O(g)$ candidates $m$ per pair. The next lemma rejects almost all of them with one multiplication.
+
+\begin{lemma}[window]\label{lem:window}
+With $d,e$ as in~\eqref{eq:three} and $j:=de$, $T:=4P^2$,
+\begin{equation}\label{eq:window}
+|jm-T|<\max\bigl(2j\sqrt{2p_1},\;8p_1\bigr).
+\end{equation}
+Moreover, for fixed $m>2\lceil\sqrt{2p_1}\rceil$ the set of real $j>0$ satisfying $|jm-T|\le\max(2j\lceil\sqrt{2p_1}\rceil,8p_1)$ is an interval containing $T/m$; hence it contains an integer iff it contains $\lfloor T/m\rfloor$ or $\lceil T/m\rceil$.
+\end{lemma}
+\begin{proof}
+From~\eqref{eq:three}, $d=2(Pq-1)/(r^2-1)$ and $e=2(Pr-1)/(q^2-1)$, so $j\,(q^2-1)(r^2-1)=4(Pq-1)(Pr-1)$. Expanding with $m=qr$,
+\[
+jm^2-Tm=j(q^2+r^2-1)-4P(q+r)+4 .
+\]
+The right side is a difference of two positive numbers, so its absolute value is at most $\max\bigl(j(q^2+r^2-1),\,4P(q+r)-4\bigr)\le\max(2jr^2,\,8Pr)$. Dividing by $m=qr$ gives $|jm-T|\le\max(2jr/q,\,8P/q)$. By Theorem~\ref{thm:A}(b), $r^2<2Pq$, so $r/q<\sqrt{2P/q}<\sqrt{2p_1}$ (as $q>p_2$), and $P/q<p_1$; this is~\eqref{eq:window}. For the interval property, put $S=\lceil\sqrt{2p_1}\rceil$ and $\phi(j)=|jm-T|-\max(2jS,8p_1)$. On $j\ge T/m$ the first term increases with slope $m$ and the second with slope at most $2S<m$, so $\phi$ is strictly increasing; on $j\le T/m$ the first term decreases and the second is non-decreasing, so $\phi$ is strictly decreasing. Thus $\{\phi\le0\}$ is an interval, and it contains $T/m$ since $\phi(T/m)<0$.
+\end{proof}
+
+\paragraph{Algorithm.} For every pair of primes $p_1<p_2$, both $\equiv1\pmod{12}$, within the range dictated by the campaign, (i) test the compatibility condition of Lemma~\ref{lem:crt} and compute $m_0$ and $\Lambda$; (ii) walk the candidates $m\equiv m_0\pmod\Lambda$ in $(p_2^2,\min(4P^2,B/P)]$, rejecting $m$ unless $\lfloor T/m\rfloor$ or $\lceil T/m\rceil$ satisfies~\eqref{eq:window} (for large $m$ the walk is organised over the integers $j$ instead, which is equivalent by Lemma~\ref{lem:window} and much faster); (iii) for each survivor, require $2^{n-1}\equiv1\pmod n$ (necessary for a Carmichael number); (iv) for each remaining $m$, recover $r$ as an integer root of $dx^3-(d-2)x-2n$ for $d=1,\dots,2p_1$ (multiply the first equation of~\eqref{eq:three} by $r$: $2n=dr^3-(d-2)r$), set $q=m/r$, and check all four conditions of Lemma~\ref{lem:quotient} together with the primality of $q$ and $r$. Every survivor of step~(ii), and every reported solution, is additionally re-verified by an independent Python program using exact integer arithmetic and \textsc{SymPy} factorisation.
+
+\paragraph{Validation.} The implementation was tested against brute force on a \emph{relaxed} problem that does have solutions: replace $L_p$ by $(p^2-1)/\kappa$ for $\kappa\in\{24,120\}$. The whole derivation above goes through with $2$ replaced by $\kappa$. On the relaxed problem the enumerator finds exactly the solution set that a direct four-fold loop finds (for $\kappa=24$ the unique solution below $10^{12}$ is $13685=5\cdot7\cdot17\cdot23$, for which $d=27$, $e=67$, $s=977$ and $des\cdot\Pi=24^3\cdot5^3$ exactly). Separate self-tests brute-force the two-prime sub-problem $(q,r)$ for small $(p_1,p_2)$ in four relaxed variants (43 solutions) and check every inequality used above, and brute-force the residue class of Lemma~\ref{lem:crt} for $13{,}037$ pairs. On the real problem the enumerator reproduces the empty result below $10^{24}$ of Theorem~\ref{thm:bound} in six seconds. One design error was caught by these tests before any production run: the true $j=de$ is \emph{not} in general $\lfloor T/m\rfloor$ or $\lceil T/m\rceil$ (only the filter may use those two values), so the reconstruction step~(iv) must not depend on $j$.
+
+\begin{theorem}\label{thm:B}
+There is no CLC number with exactly four prime factors and $n\le10^{30}$, and there is none at all whose smallest prime factor is at most $500{,}000$. Consequently a four-prime CLC number, if one exists, has $p_1>500{,}000$ and $n>10^{30}$.
+\end{theorem}
+
+\begin{proof}[Computation]
+Table~\ref{tab:k4} summarises the two campaigns (Apple M4 Pro, 14 threads). In each, the single survivor of the Fermat filter is the Carmichael number $26921089=13\cdot37\cdot97\cdot577$, for which $38\nmid26921090$; all window survivors with $P>2^{40}$ were re-verified in Python. The second statement combines the second campaign with Corollary~\ref{cor:A}.
+\end{proof}
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{lrrrrr}
+\toprule
+campaign & pairs $(p_1,p_2)$ & window survivors & Fermat survivors & solutions & wall time\\
+\midrule
+all $n\le10^{30}$ & 230{,}612{,}582{,}193 & 1{,}904 & 1 & 0 & 87 min\\
+all $n$, $p_1\le500{,}000$ & 86{,}517{,}004{,}140 & 1{,}185 & 1 & 0 & 146 min\\
+\bottomrule
+\end{tabular}
+\caption{The four-prime enumeration (Theorem~\ref{thm:B}).}\label{tab:k4}
+\end{table}
+
+\section{No CLC number below \texorpdfstring{$10^{24}$}{10\^{}24}}\label{sec:bound}
+
+\begin{theorem}\label{thm:bound}
+No CLC number is smaller than $10^{24}$. Among the $308{,}279{,}939$ Carmichael numbers below $10^{24}$, exactly one has four prime factors $p$ with $(p+1)\mid(n+1)$, namely
+\[
+15500309690554865758009=37\cdot103\cdot109\cdot127\cdot307\cdot523\cdot613\cdot1429\cdot2089
+\]
+(the primes $37,109,1429,2089$), $826$ have exactly three, and none has more than four. Below $10^{22}$ the maximum is three, attained by $179$ numbers.
+\end{theorem}
+
+\paragraph{Method.} Carmichael numbers have been tabulated completely to $10^{21}$ by Pinch \cite{Pinch07,PinchTables}, to $10^{22}$ by Goutier \cite{Goutier} and to $10^{24}$ by Shallue and Webster \cite{SW24,SW25}, whose list is distributed by Stamm-Wilbrandt as a PARI/GP binary vector \cite{SW_bin}. A CLC number is in particular Carmichael, so it suffices to test every tabulated Carmichael number for the Lucas--Carmichael property. We did this ourselves rather than rely on flags computed by the tabulators: each $n$ was factored (the Miller--Rabin square-root-of-unity splitting, which always succeeds on Carmichael numbers, with a general factoring fallback), the factorisation was checked to be squarefree with product $n$ and to satisfy Korselt's criterion, and the number of primes $p$ with $(p+1)\mid(n+1)$ was recorded. Processing is line-based so that no entry can be skipped at a buffer boundary. Three completeness checks were applied to the $10^{24}$ list: the counts below $10^{22}$, $10^{23}$ and $10^{24}$ ($49{,}679{,}870$; $123{,}381{,}982$; $308{,}279{,}939$) equal the published ones \cite{SW25}, the list is strictly increasing, and it begins $561,1105,1729,2465,2821$. Our per-$\omg$ tallies agree with independently published counts: $1{,}494{,}738$ three-prime Carmichael numbers below $10^{24}$ (OEIS A132195, \cite{Chick}) and $6{,}529{,}921$ eleven-prime ones (OEIS A299711); below $10^{22}$ all eleven per-$\omg$ counts agree with Goutier's tally, and the $179$ three-match numbers agree with Eldar's A329948. The converse direction was also checked: none of the $129{,}125$ Lucas--Carmichael numbers below $10^{15}$ tabulated by Suteu (OEIS A006972) is Carmichael. Table~\ref{tab:omega} gives the distribution below $10^{24}$.
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{rr@{\qquad}rr@{\qquad}rr}
+\toprule
+$\omg(n)$ & count & $\omg(n)$ & count & $\omg(n)$ & count\\
+\midrule
+3 & 1{,}494{,}738 & 7 & 62{,}338{,}997 & 11 & 6{,}529{,}921\\
+4 & 548{,}265 & 8 & 99{,}469{,}866 & 12 & 547{,}590\\
+5 & 3{,}429{,}390 & 9 & 81{,}041{,}495 & 13 & 15{,}328\\
+6 & 19{,}665{,}194 & 10 & 33{,}199{,}094 & 14 & 61\\
+\bottomrule
+\end{tabular}
+\caption{Carmichael numbers below $10^{24}$ by number of prime factors, as recounted by our scan (total $308{,}279{,}939$).}\label{tab:omega}
+\end{table}
+
+\begin{corollary}\label{cor:apps}
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item A counterexample to Agrawal's conjecture of the Lenstra--Pomerance type (a CLC number all of whose primes are $\equiv3\pmod{80}$) exceeds $10^{24}$.
+\item A Baillie--PSW counterexample of the Pomerance type (a Carmichael number with $(p+1)\mid(n+1)$ for all $p\mid n$) exceeds $10^{24}$.
+\end{enumerate}
+\end{corollary}
+Statement (b) adds little to the known absence of Baillie--PSW counterexamples below $2^{64}\approx1.8\times10^{19}$ \cite{Gilchrist}, but it is a different kind of statement: it bounds every construction that proceeds through the Pomerance conditions, not only the tested range.
+
+\begin{remark}[Howe's order-$2$ Carmichael numbers]
+Howe \cite{Howe00} calls $n$ a Carmichael number of order $2$ if $n\equiv p\pmod{p^2-1}$ for all $p\mid n$; by Lemma~\ref{lem:quotient} a CLC number is the same with modulus $(p^2-1)/2$. Thus a CLC number is of order $2$ iff additionally $(n-p)/L_p$ is even for every $p\mid n$. Tabulations of order-$2$ Carmichael numbers therefore bound one $2$-adic type of CLC number; we have not pursued this.
+\end{remark}
+
+\section{Obstructions to constructions}\label{sec:obstr}
+
+Carmichael numbers are constructed in two ways: by polynomial families in the manner of Chernick \cite{Chernick39}, $n(k)=(6k+1)(12k+1)(18k+1)$, where the divisibilities are polynomial identities; and by subset products in the manner of Erd\H{o}s and Alford--Granville--Pomerance \cite{Erdos56,AGP94,LN96}, where many primes $p$ with $p-1$ dividing a fixed smooth $\Lambda$ are harvested and a subset with product $\equiv1\pmod\Lambda$ is sought. We show that the two-sided versions of both break down in their simplest forms.
+
+\subsection{Polynomial families}
+
+Consider $n(k)=\prod_{i=1}^m(a_ik+b_i)$ with integers $a_i>0$, the linear factors pairwise non-proportional, and require the CLC divisibilities as polynomial identities: $(a_ik+b_i-1)\mid(n(k)-1)$ and $(a_ik+b_i+1)\mid(n(k)+1)$ in $\mathbb Q[k]$. Since a linear polynomial divides $f$ iff $f$ vanishes at its root, this is $n\bigl((1-b_i)/a_i\bigr)=1$ and $n\bigl((-1-b_i)/a_i\bigr)=-1$. With $D_{ij}=a_ib_j-a_jb_i$ one computes $a_j\frac{1-b_i}{a_i}+b_j=(a_j+D_{ij})/a_i$, so the conditions read, for every $i$,
+\begin{equation}\label{eq:fam}
+\prod_{j\ne i}(a_j+D_{ij})=a_i^{m-1}=\prod_{j\ne i}(D_{ij}-a_j).
+\end{equation}
+
+\begin{theorem}[three factors]\label{thm:fam3}
+No such family exists for $m=3$.
+\end{theorem}
+\begin{proof}
+Subtracting the two products in~\eqref{eq:fam} for $i=1,2,3$ gives $a_2D_{13}+a_3D_{12}=0$, $a_1D_{23}+a_3D_{21}=0$, $a_1D_{32}+a_2D_{31}=0$, i.e. $a_2D_{13}=-a_3D_{12}$, $a_1D_{23}=a_3D_{12}$, $a_1D_{23}=-a_2D_{13}$. The identity $a_1D_{23}-a_2D_{13}+a_3D_{12}=0$ (it is $a\wedge b\wedge a=0$) becomes $3a_3D_{12}=0$, so $D_{12}=0$ and then $D_{13}=D_{23}=0$: $b$ is proportional to $a$ and the factors are proportional, contrary to hypothesis.
+\end{proof}
+
+\begin{theorem}[uniform offsets]\label{thm:fampm1}
+No such family exists with $b_i=-1$ for all $i$, nor with $b_i=+1$ for all $i$, for any $m\ge2$.
+\end{theorem}
+\begin{proof}
+If all $b_i=-1$ then $D_{ij}=a_j-a_i$, the second product in~\eqref{eq:fam} is $(-a_i)^{m-1}$, and the first becomes $\prod_{j\ne i}(2a_j-a_i)=a_i^{m-1}$. The $a_i$ are distinct (non-proportionality). Take $i$ with $a_i$ maximal: for $j\ne i$, $0<a_j<a_i$ gives $|2a_j-a_i|<a_i$, so the product has absolute value $<a_i^{m-1}$. The case $b_i=+1$ is the mirror image with $\prod_{j\ne i}(a_i-2a_j)$.
+\end{proof}
+
+\begin{theorem}[generic position]\label{thm:famgen}
+Put $s_i=(b_i-1)/a_i$ and $t_i=(b_i+1)/a_i$. If the $s_i$ are pairwise distinct and the $t_i$ are pairwise distinct, no such family exists, for any $m\ge2$.
+\end{theorem}
+\begin{proof}
+Let $G(\tau)=n(-\tau)$, of degree $m$ with leading coefficient $c=(-1)^m\prod a_i$. The hypotheses say $G(s_i)=1$ and $G(t_i)=-1$. With $m$ distinct roots each, $G-1=c\prod(\tau-s_i)$ and $G+1=c\prod(\tau-t_i)$. Subtracting, $2=c\bigl[\prod(\tau-t_i)-\prod(\tau-s_i)\bigr]$ identically in $\tau$. The coefficient of $\tau^{m-1}$ on the right is $-c\sum(t_i-s_i)=-c\sum 2/a_i\ne0$, while on the left it is $0$.
+\end{proof}
+
+\begin{corollary}
+Every CLC polynomial family has two indices $i\ne j$ with $p_j-1=\frac{a_j}{a_i}(p_i-1)$ or $p_j+1=\frac{a_j}{a_i}(p_i+1)$ as polynomial identities.
+\end{corollary}
+
+The degenerate strata left open by Theorem~\ref{thm:famgen} were searched exhaustively using the fact that each factor in~\eqref{eq:fam} divides $a_i^{m-1}$: no family exists with $m=4$ and all $a_i\le500$, with $m=5$ and $a_i\le150$, or with $m=6$ and $a_i\le60$ (45 min, 1.8 h and 54 h respectively). Theorem~\ref{thm:fampm1} was also confirmed by search for $m=5,7,9,11$ up to $a_i\le20000,5000,3000,1500$.
+
+\begin{remark}
+These theorems close families in which the divisibilities hold identically in $k$. They say nothing about families that are CLC only for $k$ in some residue classes, nor about sporadic solutions. Theorem~\ref{thm:fam3} is the parametric shadow of Proposition~\ref{prop:k3}.
+\end{remark}
+
+\subsection{Two-sided subset products}\label{sec:subset}
+
+In the subset-product method one fixes a smooth modulus $\Lambda$, harvests primes $p$ with $(p-1)\mid\Lambda$, and looks for a subset with product $\equiv1\pmod\Lambda$; the expected number of solutions is about $2^{\text{(pool size)}-\log_2\varphi(\Lambda)}$, and the method succeeds because the pool grows faster than $\log_2\varphi(\Lambda)$. For CLC numbers one needs simultaneously $(p+1)\mid\Lambda'$ and product $\equiv-1\pmod{\Lambda'}$, and the two moduli interact: by Lemma~\ref{lem:classes} an odd prime $\ell$ cannot divide both some $p_i-1$ and some $p_j+1$ (else $n\equiv1\equiv-1\pmod\ell$), so every small prime must be assigned to one side, and the $2$-adic branch is fixed. Define the \emph{margin} of a configuration as (number of usable primes) $-\log_2\varphi(\lcm\text{ of all required }p\mp1)$, so that the expected number of two-sided solutions is about $2^{\text{margin}}$.
+
+We measured the margin over three families of configurations: random smooth moduli ($3{,}250$ configurations, all with margin $>-14$ searched exhaustively by meet-in-the-middle, no solution); pools of all primes $p\le X$ with both $p-1$ and $p+1$ $y$-smooth, with the side assignment optimised by hill-climbing (hundreds of restarts); and pools restricted to primes with few prime factors in $p\mp1$. The best margins were $-8.2$ (tiny three-prime systems), $-29.0/-30.6/-31.0/-36.9$ for $y=60/100/140/200$, and $-36.9$ for the sparse pools. The wall is flat or worsening in every direction we varied: each usable prime contributes one bit of subset freedom but about $2.5$ bits of modulus, because a prime that is useful on one side is almost never useful on the other. This is a measurement, not a theorem, but it quantifies the ``intractable'' judgement of the Baillie--PSW literature \cite{BFW21} and explains it.
+
+\section{Heuristics}\label{sec:heur}
+
+\paragraph{Four prime factors.} Condition on Theorem~\ref{thm:A}(a). For $p\equiv1\pmod{12}$ the condition $n/p\equiv1\pmod{L_p}$ is automatic modulo $12$, so model the remaining condition as an event of probability $24/p^2$, independently for the four primes. Summing $\prod_i 24/p_i^2$ over quadruples of primes $\equiv1\pmod{12}$ with $p_2^2\le24p_1^3+1$ and $p_2<q<r<2p_1p_2$ (Theorem~\ref{thm:A}) gives an expected count of about $7.5\times10^{-7}$, of which $97\%$ comes from $p_1=13$ (where $n<1.1\times10^{11}$, excluded since \cite{Pinch07}); the contribution of $p_1>X$ decays like $X^{-4}$ and is below $10^{-25}$ for $X=500{,}000$. On this model the four-prime case is empty with overwhelming probability, and Theorem~\ref{thm:B} confirms the part of the prediction that can be tested.
+
+\paragraph{Onset of CLC numbers.} An Erd\H{o}s--Pomerance-style count of $k$-factor products of primes with $p\mp1$ both $y$-smooth, including the side-consistency factor $2(1-1/\ell)^k-(1-2/\ell)^k$ for each odd prime $\ell\le y$ and a factor $2^{1-k}$ for the $2$-adic branch, calibrated on the one-sided side against Pinch's counts $C(10^{15})=105{,}212$, $C(10^{18})=1{,}401{,}644$ and on the two-sided side against our measured counts of twin-smooth primes, places the first CLC number near $10^{208}$--$10^{490}$ with $k\approx80$--$110$ and $y\approx40$--$90$, and the first Lenstra--Pomerance counterexample to Agrawal's conjecture near $10^{2400}$--$10^{2900}$ with $k\approx270$. The ranges reflect the sensitivity to the per-prime calibration; the qualitative conclusion---far beyond exhaustive search, reachable only by a construction that circumvents \S\ref{sec:obstr}---is robust. The same machinery places the first Carmichael number near $10^3$ (truth: $561$).
+
+\section{Reproducibility}\label{sec:repro}
+
+All code is in the public repository \TODO{URL}, tagged for this version. The $10^{24}$ scan (\texttt{clc/}) consists of the download--decode--verify--scan pipeline, the completeness report, the result files with per-$\omg$ and per-match counts, and SHA-256 checksums of the input data. The four-prime enumeration (\texttt{clc/k4/}) consists of the C program, its brute-force reference, the Python re-verifier, the per-block logs of both campaigns (one JSON line per block, so the coverage can be audited), and \texttt{make test}, which runs the self-tests and the relaxed end-to-end comparison in under a minute. The family searches and the heuristic model are in \texttt{agrawal/}, with a \textsc{pytest} suite that includes symbolic checks of the identities used in the proofs of Theorems~\ref{thm:A} and~\ref{thm:fam3}--\ref{thm:famgen}. The consultation history, including the errors caught along the way, is in \texttt{docs/}.
+
+\section{Open problems}
+
+\begin{enumerate}[leftmargin=2em]
+\item Is $k=4$ impossible? Theorem~\ref{thm:A} reduces it to one free parameter; the integer $\delta=des-8p_1^3\ge1$ equals $8p_1^3(1/\Pi-1)$, which pins the sizes of $q,r,p_2$ relative to $p_1$ but does not by itself exclude them.
+\item The $k=5$ case, where both classes modulo $4$ are allowed and the analogue of~\eqref{eq:des} has four factors.
+\item Closing the $m=4$ polynomial-family stratum with one repeated root.
+\item A rigorous two-sided analogue of Pomerance's upper bound for Carmichael numbers.
+\end{enumerate}
+
+\section*{Acknowledgements}
+We thank the authors of the tabulations this work rests on: R.~G.~E.~Pinch, C.~Goutier, A.~Shallue and J.~Webster, H.~Stamm-Wilbrandt (for making the $10^{24}$ list available), D.~Suteu, and the OEIS contributors whose independent counts served as cross-checks. \TODO{AI-assistance statement, to be confirmed by the author: ``The code and the first drafts of the arguments and of this text were produced with the assistance of an AI system (Claude, Anthropic) under the author's direction; the author checked every proof by hand and every computation was re-verified by the independent routes described in \S\ref{sec:repro}.''}
+
+\begin{thebibliography}{99}
+\bibitem{AKS} M.~Agrawal, N.~Kayal, N.~Saxena, PRIMES is in P, \emph{Ann. of Math.} 160 (2004), 781--793.
+\bibitem{AGP94} W.~R.~Alford, A.~Granville, C.~Pomerance, There are infinitely many Carmichael numbers, \emph{Ann. of Math.} 139 (1994), 703--722.
+\bibitem{BFW21} R.~Baillie, A.~Fiori, S.~S.~Wagstaff Jr., Strengthening the Baillie--PSW primality test, \emph{Math. Comp.} 90 (2021), 1931--1955.
+\bibitem{ChenGreene03} Z.~Chen, J.~Greene, Some comments on Baillie--PSW pseudoprimes, \emph{Fibonacci Quart.} 41 (2003), 334--344.
+\bibitem{Chernick39} J.~Chernick, On Fermat's simple theorem, \emph{Bull. Amer. Math. Soc.} 45 (1939), 269--274.
+\bibitem{Chick} J.~M.~Chick, Carmichael numbers with three prime factors, \texttt{arXiv:0711.2915}; counts in OEIS A132195.
+\bibitem{Erdos56} P.~Erd\H{o}s, On pseudoprimes and Carmichael numbers, \emph{Publ. Math. Debrecen} 4 (1956), 201--206.
+\bibitem{Gilchrist} J.~Gilchrist, Pseudoprime enumeration with probabilistic primality tests (2013), \TODO{full reference}; see also J.~Feitsma's table of base-2 pseudoprimes below $2^{64}$.
+\bibitem{Goutier} C.~Goutier, Carmichael numbers up to $10^{22}$ (2024), data and readme linked from OEIS A002997 and A055553.
+\bibitem{Grantham} J.~Grantham, Frobenius pseudoprimes, \emph{Math. Comp.} 70 (2001), 873--891; and the \$620 problem page.
+\bibitem{Howe00} E.~W.~Howe, Higher-order Carmichael numbers, \emph{Math. Comp.} 69 (2000), 1711--1719.
+\bibitem{LN96} G.~L\"oh, W.~Niebuhr, A new algorithm for constructing large Carmichael numbers, \emph{Math. Comp.} 65 (1996), 823--836.
+\bibitem{LP} H.~W.~Lenstra Jr., C.~Pomerance, Remarks on Agrawal's conjecture, in: \emph{Future directions in algorithmic number theory}, AIM workshop notes (2003), pp.~30--32.
+\bibitem{Pinch07} R.~G.~E.~Pinch, Absolute quadratic pseudoprimes, in: \emph{Proc. Conf. on Algorithmic Number Theory}, Turku 2007, TUCS General Publication 46, pp.~113--128.
+\bibitem{PinchTables} R.~G.~E.~Pinch, The Carmichael numbers up to $10^{21}$, \emph{Proc. Conf. on Algorithmic Number Theory}, Turku 2007; tables at \url{http://www.s369624816.websitehome.co.uk/rgep/carpsp.html}.
+\bibitem{Pomerance84} C.~Pomerance, Are there counter-examples to the Baillie--PSW primality test?, in: \emph{Dopo le parole}, Amsterdam 1984.
+\bibitem{SW24} A.~Shallue, J.~Webster, Tabulating Carmichael numbers up to $10^{22}$ \TODO{check title}, \texttt{arXiv:2401.14495}.
+\bibitem{SW25} A.~Shallue, J.~Webster, Carmichael numbers up to $10^{24}$ \TODO{check title}, \texttt{arXiv:2506.09903}.
+\bibitem{SW_bin} H.~Stamm-Wilbrandt, \texttt{carm10e24.bin}, PARI/GP binary vector of all Carmichael numbers below $10^{24}$ (7 March 2026), \url{https://stamm-wilbrandt.de/carm10e24.bin}.
+\bibitem{Williams77} H.~C.~Williams, On numbers analogous to the Carmichael numbers, \emph{Canad. Math. Bull.} 20 (1977), 133--143.
+\end{thebibliography}
+\end{document}

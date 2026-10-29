@@ -1,4 +1,0 @@
-nslabs=19: 2.954e+08 tuples/s | 717s total | max left/slab 4.39e+07 | bitmap ~176 MB
-nslabs=190: 4.065e+08 tuples/s | 521s total | max left/slab 4.45e+06 | bitmap ~18 MB
-nslabs=1900: 6.121e+08 tuples/s | 346s total | max left/slab 5.31e+05 | bitmap ~2 MB
-BENCH-DONE

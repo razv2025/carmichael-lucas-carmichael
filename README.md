@@ -1,82 +1,36 @@
-# Agrawal counterexample hunt
+# Carmichael ∩ Lucas–Carmichael numbers
 
-Search infrastructure targeting **Agrawal's conjecture** (from the AKS
-primality test), which is heuristically expected to be **false**
-(Lenstra–Pomerance, [AIM notes pp. 30–32](http://www.aimath.org/WWN/primesinp/primesinp.pdf)):
+Code, data and notes behind the preprint
 
-> If r is a prime not dividing n and (X−1)^n ≡ X^n − 1 (mod n, X^r − 1),
-> then n is prime or n² ≡ 1 (mod r).
+> R. Vakil, *Numbers that are both Carmichael and Lucas–Carmichael: a verified bound of 10²⁴, the four-prime case, and obstructions to constructions* (2026) — `paper/clc.tex`, `paper/clc.pdf`.
 
-A counterexample would collapse AKS to a single congruence (Õ(log³ n) primality
-testing). The known counterexample mechanism (r = 5) requires n = p₁⋯p_k,
-k odd, all pᵢ ≡ 3 (mod 80), with n simultaneously a **Carmichael** number
-((pᵢ−1) | (n−1)) and a **Lucas–Carmichael** number ((pᵢ+1) | (n+1)).
+A squarefree composite n is **Carmichael** if (p−1) | (n−1) for every prime p | n and **Lucas–Carmichael** if (p+1) | (n+1) for every p | n. Whether a number can be both was asked by H. C. Williams in 1977; no example is known. Results in this repository:
 
-## Current phase: the milestone hunt
-
-**No number that is both Carmichael and Lucas–Carmichael is known to exist.**
-Finding the first is a standalone open problem and a strict prerequisite of the
-Lenstra–Pomerance route. Construction: fix coprime odd smooth moduli O1, O2 and
-a 2-adic budget; harvest primes p with (p−1)/2 | O1 and (p+1) | 2^a·O2; then
-any subset with product ≡ 1 (mod lcm(p−1)) and ≡ −1 (mod lcm(p+1)) is a hit
-(Korselt). This is the Erdős / Löh–Niebuhr / Alford–Granville–Pomerance
-subset-product method with *two-sided* conditions — the two-sided smoothness
-coupling (d | O1 and (d+1) | 2^a·O2 simultaneously) is the entire difficulty.
+| result | where |
+|---|---|
+| No such number below 10²⁴ (independent scan of all 308,279,939 Carmichael numbers < 10²⁴, with completeness and OEIS cross-checks; near-miss statistics) | `clc/` — `RESULT_1e24_2026-10-21.txt`, `RESULT_1e22_2026-10-20.txt`, `VERIFY_1e24_list_completeness.txt`, `DATA_SHA256.txt` |
+| **Theorem A** (four prime factors p₁<p₂<p₃<p₄): all pᵢ ≡ 1 (mod 12), p₃ < 2p₁p₂, p₄ < √(2p₁p₂p₃), **p₂² ≤ 24p₁³ + 1**, n < 477 p₁^{15/2} | `paper/clc.tex` §3, `docs/k4-notes.md` |
+| **Theorem B**: no four-prime example with n ≤ 10³⁰, and none at all with smallest prime ≤ 500,000 | `clc/k4/` — `RESULT_n1e30.txt`, `RESULT_p1_500000.txt`, per-block logs `k4_*.jsonl` |
+| Impossibility theorems for two-sided Chernick-type polynomial families; exhaustive searches of the remaining strata; quantified failure of the two-sided subset-product method; heuristics | `agrawal/`, `docs/obstructions.md`, `data/` |
 
 ## Layout
 
-- `agrawal/verify.py` — the referee: exact Agrawal congruence check (direct and
-  per-prime CRT), Carmichael / Lucas–Carmichael verification. Nothing counts
-  unless it passes here.
-- `agrawal/harvest.py` — prime harvesting by divisor enumeration of smooth moduli.
-- `agrawal/solver.py` — modulus/target construction (CRT over prime powers),
-  greedy subpool selection, meet-in-the-middle subset-product search.
-- `agrawal/explore.py` — background sweep over (O1, O2, a2) configurations;
-  logs `pool_size`, `log2_phi_M` and the key dashboard metric
-  `margin = pool_size − log2 φ(M)` (expected hits ≈ 2^margin).
-- `tests/` — pytest suite (run: `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest tests/`).
+- `paper/` — the preprint (LaTeX; build with `tectonic clc.tex`).
+- `clc/` — the 10²²/10²⁴ verification: `scan_carmichael_list_for_clc.py` (factor-and-test scan), `scan_resumable.py` + `scanctl.sh` (checkpointed variant), `verify_carmichael_list.py` (completeness), `decode_pari_writebin.gp`, `pipeline_1e24.sh`, `check_lc_table_for_carmichael.py` (converse check). Inputs are the public tabulations cited in the paper (not redistributed; checksums in `DATA_SHA256.txt`).
+- `clc/k4/` — the four-prime enumeration: `enum_k4.c` (algorithm and proofs of the facts it uses in the header comment), `brute_k4.c` (brute-force reference for the relaxed test problem), `verify_k4.py` (independent re-verification of survivors), `run_k4.sh` / `k4ctl.sh` (driver and control), `Makefile` (`make test`).
+- `agrawal/` — polynomial-family searches and theorems (`family.py`, `strata_m4.py`), subset-product experiments (`harvest.py`, `twins.py`, `split.py`, `golden.py`, `solver.py`, `explore.py`), the density heuristic (`heuristic.py`), and the exact verifier (`verify.py`). `docs/agrawal-hunt-log.md` is the original working log.
+- `tests/` — pytest suite, including executable checks of the identities used in every proof (`test_theorems.py`) and of the scanner (`test_clc.py`).
+- `docs/` — `k4-notes.md` (proofs), `obstructions.md` (working note on constructions and heuristics), `publication-plan.md` (venues, process, concerns and mitigations), `review-*.md` (independent review reports), `k7-search.md` (an unrelated earlier project on the Lander–Parkin–Selfridge conjecture, kept for the record together with `lps/`).
 
-## Status / findings log
+## Running the checks
 
-- 2026-07-28: pipeline built and validated — the solver reproduces classic
-  Carmichael numbers from the Λ = 5040 pool instantly. First random CLC sweeps
-  show margins around **−70**: pools of ~20 primes against ~74-bit moduli.
-- 2026-07-28 (later): random config sweeps (3,250 configs): best margin −8.2,
-  all configs above −14 searched exhaustively, no hit (~1% cumulative odds
-  consumed). Plateau in the −8..−16 range for tiny matched pools.
-- 2026-07-28 (evening): **twin-smooth reformulation.** New harvester finds all
-  primes with p±1 y-smooth by smooth-set intersection: 2,534 primes at
-  (y=100, X=1e9) in 1.4s; 7,727 at (y=140, X=2e9). Split optimizer (hill-climb
-  over side assignments) reveals the **margin wall: ≈ −30, flat across
-  y = 60/100/140**. Cause, quantified: a global side-assignment keeps only
-  ~s usable primes (s = number of odd side primes) while the modulus costs
-  ~2.5s bits — the two-sided coupling loses ~1.5 bits per prime no matter y.
-  Breaking the wall needs structurally cheaper primes (low ω(p∓1) "golden"
-  twins via Pell/Størmer–CHM enumeration), subset-lcm (not pool-lcm)
-  formulations, or a fundamentally better selection method.
-- 2026-07-29 (overnight run): wall confirmed and worsening with scale.
-  y=200, X=1e10: 25,660 twin-smooth primes harvested (27s), but 351 hill-climb
-  restarts × 1500 iters over 3h: best margin **−36.9**, median −37.9, top-5
-  identical — the optimizer saturates the landscape, it isn't under-trained.
-  Margin by y: 60 → −29.0, 100 → −30.6, 140 → −31.0, 200 → −36.9.
-  **Optimum y is low (~60–100); the fixed-split method bottoms out at ≈ −29.**
-  Conclusion: fixed-split pool-lcm construction is a characterized dead end.
-- 2026-07-29/30: **parametric (Chernick-style) families.** For
-  n(k) = ∏(aᵢk + bᵢ), the CLC conditions reduce to
-  ∏_{j≠i}(aⱼ + D_ij) = ∏_{j≠i}(D_ij − aⱼ) = aᵢ^(m−1) with D_ij = aᵢbⱼ − aⱼbᵢ.
-  **Proved impossible:** m = 3 (any offsets, via rank identity), and *all
-  uniform-sign (bᵢ = ±1) families for every m* (max-element argument).
-  **Empty by exhaustive divisor-pruned search:** m = 4 general offsets,
-  aᵢ ≤ 250. Open: m ≥ 5 general offsets, and m = 4 beyond 250.
-  (Also: fixed a divisor-enumeration performance bug — powers must be
-  factored via the base, never trial-divided.)
+```
+pip install -r requirements.txt     # sympy, pytest (gmpy2 optional)
+./run_tests.sh                      # pytest + C self-tests + relaxed end-to-end + 1e24 reproduction, ~1–2 min
+```
 
-## Roadmap
+Reproducing the computations: the 10²⁴ scan needs the Shallue–Webster list (`clc/pipeline_1e24.sh`, ~21 CPU-hours on 12 cores); the four-prime campaigns need no external data (`clc/k4/run_k4.sh`, 87 + 146 minutes on an Apple M4 Pro).
 
-1. ✅ Verifier + harvester + MITM solver + explorer.
-2. Margin optimization: config search (hill-climbing on margin), asymmetric
-   O1/O2 designs, prime-power caps, larger baskets.
-3. Wagner generalized-birthday solver (k-list) for pools ≫ 44 primes.
-4. Tighten to full Agrawal conditions: pᵢ ≡ 3 (mod 80) filters, per-prime
-   ρ(p)/λ(p) congruence obligations (Váňa's reformulation), r = 5.
-5. Certify any hit (ECPP prime certificates) and independent verification.
+## License
+
+MIT (see `LICENSE`). Please cite the preprint (`CITATION.cff`).

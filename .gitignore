@@ -3,3 +3,19 @@ __pycache__/
 .pytest_cache/
 data/
 .DS_Store
+# build products and run-time logs (results and block logs ARE tracked)
+clc/k4/enum_k4
+clc/k4/brute_k4
+clc/k4/*.err
+clc/k4/*.out
+clc/k4/run_k4.log
+clc/k4/run_k4.pid
+lps/engine734
+lps/*.log
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg
+paper/*.fls
+paper/*.fdb_latexmk

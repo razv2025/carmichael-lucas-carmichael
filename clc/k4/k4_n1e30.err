@@ -1,2 +1,0 @@
-B=1000000000000000000000000000000 kappa=2 filter=1 test=0  p1min=13 p1max=31622776 p2max=4252903702 threads=14 bs=128
-sieve: 50343481 admissible primes ≤ p2max, 487684 usable as p1, 3811 blocks (9.9s)
