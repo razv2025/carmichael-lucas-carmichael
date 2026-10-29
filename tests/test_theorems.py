@@ -209,7 +209,7 @@ def test_pi_greater_than_one_case():
         P = p1 * p2
         d = Fraction(2 * (P * q - 1), r * r - 1); e = Fraction(2 * (P * r - 1), q * q - 1); s = Fraction(2 * (p1 * q * r - 1), p2 * p2 - 1)
         assert e > d and s > 2 * p1                                  # hence e, s ≥ 2 when they are integers
-        if d >= 1:
+        if d >= 1 and e >= 2:   # theorem: d, e, s integers, e > d >= 1 so e >= 2; random rationals need this guard
             f1 = 1 - (d - 2) / (d * r * r); f2 = 1 - (e - 2) / (e * q * q); f3 = 1 - (s - 2) / (s * p2 * p2)
             assert f2 <= 1 and f3 <= 1 and f1 <= 1 + Fraction(1, r * r)
             assert f1 * f2 * f3 <= 1 + Fraction(1, r * r)
