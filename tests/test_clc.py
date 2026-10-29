@@ -52,3 +52,22 @@ def test_batches_skips_trailer(tmp_path):
     p = tmp_path / "l.txt"
     p.write_bytes(b"561\n1105\n\x1a")
     assert list(scan.batches(str(p), size=10)) == [[561, 1105]]
+
+
+def test_c_fermat_routine_matches_python():
+    """The enumerator's 128-bit modular exponentiation (used to reject window survivors with P <= 2^40)
+    must agree with Python's pow on random odd moduli up to 2^122, including Carmichael numbers."""
+    import random, shutil
+    k4 = ROOT / "clc" / "k4"
+    if shutil.which("cc") is None:
+        import pytest; pytest.skip("no C compiler")
+    subprocess.run(["make", "-s", "enum_k4"], cwd=k4, check=True)
+    rng = random.Random(7)
+    ns = [rng.getrandbits(b) | 1 for b in (20, 40, 64, 65, 90, 100, 122) for _ in range(40)]
+    ns += [561, 1105, 1729, 26921089, 15500309690554865758009, 13 * 97 * 21349]
+    out = subprocess.run([str(k4 / "enum_k4"), "--fermat-check"], input="\n".join(map(str, ns)) + "\n",
+                         capture_output=True, text=True, check=True).stdout.split("\n")
+    got = dict(tuple(map(int, l.split())) for l in out if l.strip())
+    assert len(got) == len(set(ns))
+    for n in ns:
+        assert got[n] == pow(2, n - 1, n), n

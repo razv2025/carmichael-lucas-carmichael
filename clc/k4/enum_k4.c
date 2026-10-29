@@ -450,6 +450,11 @@ int main(int argc, char **argv){
         else if (!strcmp(argv[i], "--filter")) FILTER = 1;
         else if (!strcmp(argv[i], "--dumpw")) DUMPW = 1;
         else if (!strcmp(argv[i], "--oldwalk")) OLDWALK = 1;
+        else if (!strcmp(argv[i], "--fermat-check")) {   /* test aid: read decimal n (< 2^126) per line, print 2^(n-1) mod n */
+            char line[256];
+            while (fgets(line, sizeof line, stdin)) { size_t L = strlen(line); while (L && (line[L-1]=='\n'||line[L-1]=='\r')) line[--L]=0; if (!L) continue;
+                u128 n = parse_u128(line); char a[64], b[64]; fmt_u128(a, n); fmt_u128(b, powmod2_128(n - 1, n)); printf("%s %s\n", a, b); }
+            return 0; }
         else if (!strcmp(argv[i], "--test")) { TESTMODE = 1; FILTER = 0; }
         else if (!strcmp(argv[i], "--integers")) { INTEGERS = 1; TESTMODE = 1; FILTER = 0; }
         else if (!strcmp(argv[i], "--selftest") && i+1 < argc) { SELFTEST = strtoull(argv[++i], 0, 10); TESTMODE = 1; FILTER = 0; }

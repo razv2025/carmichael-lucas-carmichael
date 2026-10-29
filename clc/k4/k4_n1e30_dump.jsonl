@@ -1,0 +1,14 @@
+{"header":1,"B":"1000000000000000000000000000000","p1max":0,"kappa":2,"filter":1,"test":0,"bs":128,"nblk":3811,"n_p1":487684,"np":50343481}
+{"blk":0,"p1lo":13,"p1hi":3793,"pairs":1148438,"skip_g":261339,"skip_inv":830,"cand":53409945,"wsurv":182,"fsurv":1,"sol":0,"sec":1.21,"t":1}
+{"blk":1,"p1lo":3853,"p1hi":8353,"pairs":5679950,"skip_g":1310702,"skip_inv":1418,"cand":241785093,"wsurv":78,"fsurv":0,"sol":0,"sec":5.91,"t":6}
+{"blk":2,"p1lo":8377,"p1hi":13297,"pairs":12249919,"skip_g":2642768,"skip_inv":1800,"cand":258973928,"wsurv":50,"fsurv":0,"sol":0,"sec":8.24,"t":8}
+{"blk":3,"p1lo":13309,"p1hi":18289,"pairs":20860844,"skip_g":4848796,"skip_inv":1995,"cand":202819187,"wsurv":45,"fsurv":0,"sol":0,"sec":9.46,"t":9}
+{"blk":4,"p1lo":18301,"p1hi":23593,"pairs":30607340,"skip_g":7023075,"skip_inv":2247,"cand":155830743,"wsurv":48,"fsurv":0,"sol":0,"sec":11.19,"t":11}
+{"blk":5,"p1lo":23629,"p1hi":28837,"pairs":41989853,"skip_g":9527377,"skip_inv":2481,"cand":128546198,"wsurv":32,"fsurv":0,"sol":0,"sec":13.63,"t":14}
+{"blk":6,"p1lo":28909,"p1hi":34261,"pairs":54707962,"skip_g":11874243,"skip_inv":2694,"cand":99468515,"wsurv":22,"fsurv":0,"sol":0,"sec":16.82,"t":17}
+{"blk":7,"p1lo":34273,"p1hi":39409,"pairs":68185604,"skip_g":15236229,"skip_inv":2871,"cand":88199753,"wsurv":24,"fsurv":0,"sol":0,"sec":20.02,"t":20}
+{"blk":8,"p1lo":39541,"p1hi":45337,"pairs":83008498,"skip_g":18739496,"skip_inv":2995,"cand":76318735,"wsurv":24,"fsurv":0,"sol":0,"sec":23.97,"t":24}
+{"blk":9,"p1lo":45361,"p1hi":50893,"pairs":98944997,"skip_g":22165444,"skip_inv":3173,"cand":64668222,"wsurv":18,"fsurv":0,"sol":0,"sec":28.21,"t":28}
+{"blk":10,"p1lo":50929,"p1hi":56101,"pairs":114627996,"skip_g":27147079,"skip_inv":3313,"cand":58874405,"wsurv":23,"fsurv":0,"sol":0,"sec":31.88,"t":32}
+{"blk":11,"p1lo":56113,"p1hi":61441,"pairs":131122316,"skip_g":28462456,"skip_inv":3489,"cand":51854303,"wsurv":16,"fsurv":0,"sol":0,"sec":36.98,"t":37}
+{"blk":12,"p1lo":61561,"p1hi":67261,"pairs":149658595,"skip_g":33359883,"skip_inv":3512,"cand":45918841,"wsurv":19,"fsurv":0,"sol":0,"sec":41.79,"t":42}

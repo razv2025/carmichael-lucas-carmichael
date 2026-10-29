@@ -19,3 +19,5 @@ paper/*.bbl
 paper/*.blg
 paper/*.fls
 paper/*.fdb_latexmk
+clc/k4/*_dump.out
+clc/k4/rerun_dump.log

@@ -29,6 +29,16 @@ for path in sys.argv[1:]:
             n, ok = check(kappa, ps)
             print(('OK  ' if ok else 'BAD ') + f"n={n} = {'*'.join(map(str,ps))} kappa={kappa}" + ('' if n == int(kv['n']) else '  (n mismatch!)'))
             bad += (not ok) or n != int(kv['n'])
+        elif line.startswith('W '):
+            nws += 1
+            p1, p2, m = (int(x) for x in line.split()[1:4])
+            n = p1 * p2 * m
+            if pow(2, n - 1, n) != 1: continue
+            nfs += 1
+            f = factorint(m); ps = sorted(set([p1, p2] + list(f)))
+            clc = len(f) == 2 and all(e == 1 for e in f.values()) and check(2, ps)[1]
+            print(f"W passed Fermat: p1={p1} p2={p2} m={m} = {f}  -> {'CLC!!' if clc else 'not CLC'}")
+            bad += clc
         elif line.startswith('WSURV'):
             # window survivor handed over from C (n too large for 128-bit arithmetic): Fermat first, then exact
             nws += 1

@@ -63,7 +63,9 @@ Ordered by recommendation:
 
 - [ ] *Optional but recommended:* rerun the 10²⁴ scan with the current `scan_carmichael_list_for_clc.py` (now prints the full (matches, ω) histogram, ~21 h on 12 cores) to record how many numbers have four matching primes; the paper currently says only "first attained at …".
 
-- [ ] Consultant A (number theorist) has read §§2–3 and signed off on the proofs.
+- [ ] Consultant A (number theorist) has read §§2–3 and signed off on the proofs (both independent reviews are in `docs/review-math-2026-10-29.md` and `docs/review-facts-2026-10-29.md`).
+- [ ] Howe's order-2 criterion quoted in §1 and §4 checked against Howe, Math. Comp. 69 (2000), Theorem 1.
+- [ ] Dump rerun finished (`clc/k4/RESULT_dump_reverify.txt` ends with DONE, all W lines 'not CLC'); then replace the TODO in §3 of the paper by "all 1,904 + 1,185 window survivors were re-verified in Python" and commit the dump logs.
 - [ ] Consultant B has run `./run_tests.sh` from a clean clone on another machine.
 - [ ] Literature re-check done (MathSciNet/zbMATH/arXiv) and the Puddefoot claim verified or dropped.
 - [ ] All TODOs in `paper/clc.tex` resolved; bibliography entries for Shallue–Webster, Pinch 2007 and Gilchrist verified.
