@@ -1,6 +1,6 @@
 # Carmichael ∩ Lucas–Carmichael numbers
 
-Code, data and notes behind the preprint
+Code, data and notes behind the preprint (repository: https://github.com/razv2025/carmichael-lucas-carmichael)
 
 > R. Vakil, *Numbers that are both Carmichael and Lucas–Carmichael: a verified bound of 10²⁴, the four-prime case, and obstructions to constructions* (2026) — `paper/clc.tex`, `paper/clc.pdf`.
 

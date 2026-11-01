@@ -6,5 +6,5 @@ authors:
     given-names: Raz
 version: 1.0.0
 date-released: 2026-10-29
-repository-code: "TODO: repository URL"
+repository-code: "https://github.com/razv2025/carmichael-lucas-carmichael"
 license: MIT

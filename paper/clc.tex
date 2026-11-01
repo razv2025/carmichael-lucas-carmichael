@@ -18,8 +18,8 @@
 
 \title[Carmichael numbers that are also Lucas--Carmichael]{Numbers that are both Carmichael and Lucas--Carmichael:\\ a verified bound of $10^{24}$, the four-prime case,\\ and obstructions to constructions}
 \author{Raz Vakil}
-\address{\TODO{affiliation / city}}
-\email{\TODO{email}}
+\address{Tel Aviv, Israel}
+\email{Raz.Vakil@gmail.com}
 \date{\today\ (draft for consultation)}
 
 \begin{document}
@@ -287,7 +287,7 @@ We measured the margin over three families of configurations: random smooth modu
 
 \section{Reproducibility}\label{sec:repro}
 
-All code is in the public repository \TODO{URL}, tagged for this version. The $10^{24}$ scan (\texttt{clc/}) consists of the download--decode--verify--scan pipeline, the completeness report, the result files with per-$\omg$ and per-match counts, and SHA-256 checksums of the input data. The four-prime enumeration (\texttt{clc/k4/}) consists of the C program, its brute-force reference, the Python re-verifier, the per-block logs of both campaigns (one JSON line per block, so the coverage can be audited), and \texttt{make test}, which runs the self-tests and the relaxed end-to-end comparison in under a minute. The family searches and the heuristic model are in \texttt{agrawal/}, with a \textsc{pytest} suite that includes symbolic checks of the identities used in the proofs of Theorems~\ref{thm:A} and~\ref{thm:fam3}--\ref{thm:famgen}. The consultation history, including the errors caught along the way, is in \texttt{docs/}.
+All code is in the repository \url{https://github.com/razv2025/carmichael-lucas-carmichael}, tagged for this version. The $10^{24}$ scan (\texttt{clc/}) consists of the download--decode--verify--scan pipeline, the completeness report, the result files with per-$\omg$ and per-match counts, and SHA-256 checksums of the input data. The four-prime enumeration (\texttt{clc/k4/}) consists of the C program, its brute-force reference, the Python re-verifier, the per-block logs of both campaigns (one JSON line per block, so the coverage can be audited), and \texttt{make test}, which runs the self-tests and the relaxed end-to-end comparison in under a minute. The family searches and the heuristic model are in \texttt{agrawal/}, with a \textsc{pytest} suite that includes symbolic checks of the identities used in the proofs of Theorems~\ref{thm:A} and~\ref{thm:fam3}--\ref{thm:famgen}. The consultation history, including the errors caught along the way, is in \texttt{docs/}.
 
 \section{Open problems}
 
@@ -299,7 +299,7 @@ All code is in the public repository \TODO{URL}, tagged for this version. The $1
 \end{enumerate}
 
 \section*{Acknowledgements}
-We thank the authors of the tabulations this work rests on: R.~G.~E.~Pinch, C.~Goutier, A.~Shallue and J.~Webster, H.~Stamm-Wilbrandt (for making the $10^{24}$ list available), D.~Suteu, and the OEIS contributors whose independent counts served as cross-checks. \TODO{AI-assistance statement, to be confirmed by the author: ``The code and the first drafts of the arguments and of this text were produced with the assistance of an AI system (Claude, Anthropic) under the author's direction; the author checked every proof by hand and every computation was re-verified by the independent routes described in \S\ref{sec:repro}.''}
+We thank the authors of the tabulations this work rests on: R.~G.~E.~Pinch, C.~Goutier, A.~Shallue and J.~Webster, H.~Stamm-Wilbrandt (for making the $10^{24}$ list available), D.~Suteu, and the OEIS contributors whose independent counts served as cross-checks. The code and the first drafts of the arguments and of this text were produced with the assistance of an AI system (Claude, Anthropic) under the author's direction; the author checked every proof by hand, and every computation was re-verified by the independent routes described in \S\ref{sec:repro}.
 
 \begin{thebibliography}{99}
 \bibitem{AKS} M.~Agrawal, N.~Kayal, N.~Saxena, PRIMES is in P, \emph{Ann. of Math.} 160 (2004), 781--793.
