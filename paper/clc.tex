@@ -1,6 +1,9 @@
 \documentclass[11pt]{amsart}
 \usepackage[margin=1.1in]{geometry}
-\usepackage{amsmath,amssymb,amsthm,booktabs,array,url,enumitem}\usepackage[dvipsnames]{xcolor}\usepackage{hyperref}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,url,enumitem}
+\usepackage{algorithm,algpseudocode}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[pdftitle={Exhaustive searches for Williams numbers: the four-prime case and a general 10^24 bound},pdfauthor={Raz Vakil},pdfkeywords={Carmichael numbers, Lucas-Carmichael numbers, Williams numbers, Baillie-PSW, exhaustive search}]{hyperref}
 \hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
@@ -10,22 +13,21 @@
 \newtheorem{definition}[theorem]{Definition}
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
-\newcommand{\Z}{\mathbb Z}
-\newcommand{\N}{\mathbb N}
 \providecommand{\lcm}{\operatorname{lcm}}
 \DeclareMathOperator{\omg}{\omega}
-\newcommand{\TODO}[1]{\textbf{[TODO: #1]}}
 
-\title[Searching for four-prime Williams numbers]{An exhaustive search for four-prime Williams numbers\\ (Carmichael numbers that are also Lucas--Carmichael)\\ to $10^{30}$, and a verified bound of $10^{24}$ for all of them}
+\title[Exhaustive searches for Williams numbers]{Exhaustive searches for Williams numbers:\\ the four-prime case and a general $10^{24}$ bound}
 \author{Raz Vakil}
 \address{Tel Aviv, Israel}
 \email{Raz.Vakil@gmail.com}
-\date{\today\ (draft for consultation)}
+\subjclass[2020]{Primary 11Y11; Secondary 11A51, 11Y16}
+\keywords{Carmichael numbers, Lucas--Carmichael numbers, Williams numbers, Baillie--PSW test, exhaustive search}
+\date{1 November 2026}
 
 \begin{document}
 
 \begin{abstract}
-A squarefree composite $n$ is \emph{Carmichael} if $(p-1)\mid(n-1)$ for every prime $p\mid n$, and \emph{Lucas--Carmichael} if $(p+1)\mid(n+1)$ for every $p\mid n$. Numbers that are both---\emph{Williams numbers}, after Williams's 1977 question---are not known to exist; they are the natural candidates for a Baillie--PSW counterexample (Pomerance) and for the Lenstra--Pomerance route to a counterexample to Agrawal's conjecture. Williams proved that such a number cannot have three prime factors, and McIntosh and Dipra (2015) proved that, with all but three prime factors fixed, only finitely many Williams numbers exist, with explicit bounds: for four prime factors $p_1<p_2<p_3<p_4$, all $p_i\equiv1\pmod{12}$, $p_2<5p_1^{3/2}$, $p_3<p_1p_2$ and $p_4<\sqrt{2p_1p_2p_3}$; they showed that a four-prime example must have $p_1>2\times10^4$ and $n>10^{24}$. We give a self-contained proof of these bounds (with $p_2^2\le24p_1^3+1$) and a different search algorithm, which fixes $(p_1,p_2)$, places the cofactor $p_3p_4$ in a single residue class modulo $\lcm\bigl((p_1^2-1)/2,(p_2^2-1)/2\bigr)$ and rejects almost every candidate with one multiplication; with it we extend the exclusion to $n\le10^{30}$ and to all $n$ with $p_1\le500{,}000$, with a certified completeness record. We also verify, by an independent factor-and-test pass over the complete tabulations, that no Carmichael number below $10^{24}$ is Lucas--Carmichael (308{,}279{,}939 numbers; at most four of the primes of any of them satisfy $(p+1)\mid(n+1)$). In appendices we show that the two classical construction paradigms for Carmichael numbers fail in their simplest two-sided forms (no Chernick-type polynomial family of three factors, of any number of factors with uniform offsets $\pm1$, or in generic position can produce such numbers; the two-sided subset-product method is measured to lose about $1.5$ bits per prime), and we record heuristic estimates.
+An odd squarefree composite integer is a Williams number if it is both Carmichael and Lucas--Carmichael; none is known. For a four-prime Williams number $n=p_1p_2p_3p_4$ we give a self-contained restatement, with a slight sharpening, of the bounds due to McIntosh and Dipra, and derive from them an enumeration that fixes $(p_1,p_2)$, places $p_3p_4$ in a single residue class modulo $\lcm\bigl((p_1^2-1)/2,(p_2^2-1)/2\bigr)$, and rejects almost every candidate with one multiplication. Certified computations prove that no such number satisfies $n\le10^{30}$ or $p_1\le500{,}000$, extending McIntosh and Dipra's $n>10^{24}$, $p_1>2\times10^4$. Separately, a factor-and-test scan of all $308{,}279{,}939$ Carmichael numbers below $10^{24}$ finds no Williams number. Code, logs and certification records are archived.
 \end{abstract}
 
 \maketitle
@@ -38,20 +40,31 @@ Throughout, $n$ denotes an odd squarefree composite integer with prime factorisa
 $n$ is a \emph{Carmichael number} if $(p-1)\mid(n-1)$ for every $p\mid n$ (Korselt's criterion), and a \emph{Lucas--Carmichael number} if $(p+1)\mid(n+1)$ for every $p\mid n$. A number that is both is a \emph{Williams number} (a $1$-Williams number in Echi's terminology \cite{Echi07}).
 \end{definition}
 
-Carmichael numbers are the absolute Fermat pseudoprimes; Lucas--Carmichael numbers play the same role for Lucas sequences with discriminant a quadratic non-residue of every $p\mid n$. H.~C.~Williams \cite{Williams77} asked in 1977 whether a number can be both, proved that it cannot have exactly three prime factors and cannot be divisible by $3$, and showed that under his Lucas-sequence formulation the number of prime factors must be odd (in the bare divisibility formulation above, all $p_i$ lie in one class modulo $4$, and $k$ is odd when that class is $3$; see Lemma~\ref{lem:classes}). Echi \cite{Echi07} named such numbers \emph{Williams numbers} (more precisely $1$-Williams numbers, within a family of $a$-Williams numbers) and dropped the parity restriction; Bouall\`egue, Echi and Pinch \cite{BEP10} and Al-Rasasi and Ghanmi \cite{AG13} studied the general $a$; Pinch \cite{Pinch07} reported that there is no Williams number up to $10^{16}$ with an odd number of prime factors. McIntosh \cite{McIntosh14} treated the parallel problem $(p\pm1)\mid(n-1)$ and, with Dipra \cite{MD15}, the Williams numbers themselves: they proved that for a fixed set of $d-3$ prime factors only finitely many Williams numbers with $d$ prime factors exist, with explicit bounds on the three remaining primes, observed that all prime factors are congruent modulo $12$ (and $\equiv1$ when their number is even), organised searches, and showed that a Williams number with exactly four prime factors has smallest prime $p_1>2\times10^4$ and $n>10^{24}$; they also report that a Pinch-style complete search for $4\le d\le13$ prime factors, at various bounds between $10^{20}$ and $10^{35}$, found none. Zhang \cite{Zhang15} developed counting heuristics for Williams numbers built from a fixed set of primes, exhibited a set of $1{,}029$ primes expected to contain many of them, and offered a prize for the first example. No Williams number is known.
+Carmichael numbers are the absolute Fermat pseudoprimes; Lucas--Carmichael numbers play the same role for Lucas sequences with discriminant a quadratic non-residue of every $p\mid n$. H.~C.~Williams \cite{Williams77} asked in 1977 whether a number can be both, proved that it cannot have exactly three prime factors and cannot be divisible by $3$, and showed that under his Lucas-sequence formulation the number of prime factors must be odd (in the divisibility formulation above, all $p_i$ lie in one class modulo $4$, and $k$ is odd when that class is $3$; Lemma~\ref{lem:classes}). Echi \cite{Echi07} named such numbers Williams numbers, within a family of $a$-Williams numbers, and dropped the parity restriction; Bouall\`egue, Echi and Pinch \cite{BEP10} and Al-Rasasi and Ghanmi \cite{AG13} studied general $a$; Pinch \cite{Pinch07} reported that there is no Williams number up to $10^{16}$ with an odd number of prime factors. McIntosh \cite{McIntosh14} treated the parallel problem $(p\pm1)\mid(n-1)$, and McIntosh and Dipra \cite{MD15} the Williams numbers themselves. Zhang \cite{Zhang15} developed counting heuristics for Williams numbers built from a fixed set of primes and offered a prize for the first example. No Williams number is known.
 
-The question is tied to primality testing. Pomerance's 1984 heuristic argument that counterexamples to the Baillie--PSW primality test exist \cite{Pomerance84}, restated in \cite{BFW21}, builds $n=\prod p$ from primes with $p\equiv3\pmod 8$, $(5/p)=-1$ and smooth squarefree $(p-1)/2$, $(p+1)/4$, chosen so that $(p-1)\mid(n-1)$ and $(p+1)\mid(n+1)$ for all $p\mid n$; such an $n$ is a Williams number, a connection made explicit in \cite{McIntosh14,MD15,Zhang15}. The construction attempted by Chen and Greene \cite{ChenGreene03} for Grantham's \$620 problem \cite{Grantham} uses the weaker order conditions $\operatorname{ord}_p(2)\mid M$; the related set of $2{,}030$ primes they discuss does satisfy $(p-1)\mid M$, $(p+1)\mid N$, and an unrefereed report by Phatak \cite{Phatak20} states that no subset of that set is a Williams number. The Lenstra--Pomerance analysis of Agrawal's conjecture from the AKS primality test \cite{AKS,LP} shows that the natural counterexamples are Williams numbers whose primes are all $\equiv3\pmod{80}$. Howe's higher-order Carmichael numbers \cite{Howe00} are a further neighbour: by Howe's criterion, a squarefree $n$ is Carmichael of order $2$ iff for every $p\mid n$ one has $n\equiv1$ or $n\equiv p\pmod{p^2-1}$, while $n$ is a Williams number iff $n\equiv p\pmod{(p^2-1)/2}$ for every $p\mid n$ (Lemma~\ref{lem:quotient}). We use the name ``Williams number'' throughout; the abbreviation CLC (Carmichael and Lucas--Carmichael) in the code and the earlier notes means the same thing.
+The question is tied to primality testing. Pomerance's 1984 heuristic argument that counterexamples to the Baillie--PSW primality test exist \cite{Pomerance84}, restated in \cite{BFW21}, builds $n=\prod p$ from primes with $p\equiv3\pmod 8$, $(5/p)=-1$ and smooth squarefree $(p-1)/2$, $(p+1)/4$, chosen so that $(p-1)\mid(n-1)$ and $(p+1)\mid(n+1)$ for all $p\mid n$; such an $n$ is in particular a Williams number \cite{McIntosh14,MD15,Zhang15}. The construction attempted by Chen and Greene \cite{ChenGreene03} for Grantham's \$620 problem \cite{Grantham} uses weaker order conditions; the related set of $2{,}030$ primes does satisfy $(p-1)\mid M$, $(p+1)\mid N$, and an unrefereed report by Phatak \cite{Phatak20} states that no subset of that set is a Williams number. The Lenstra--Pomerance analysis of Agrawal's conjecture from the AKS primality test \cite{AKS,LP} shows that the natural counterexamples are Williams numbers whose primes are all $\equiv3\pmod{80}$. Howe's higher-order Carmichael numbers \cite{Howe00} are a further neighbour: by Howe's criterion a squarefree $n$ is Carmichael of order $2$ iff for every $p\mid n$ one has $n\equiv1$ or $n\equiv p\pmod{p^2-1}$, while $n$ is a Williams number iff $n\equiv p\pmod{(p^2-1)/2}$ for every $p\mid n$ (Lemma~\ref{lem:quotient}).
 
-Our results are the following.
+\paragraph{Prior results for four prime factors, and what is new here.} McIntosh and Dipra \cite{MD15} proved that for a fixed set of $d-3$ prime factors only finitely many Williams numbers with $d$ prime factors exist, with explicit bounds on the remaining three primes, observed that all prime factors are congruent modulo $12$ (and $\equiv1$ when their number is even), organised two searches, and showed that a Williams number with exactly four prime factors has $p_1>2\times10^4$ and $n>10^{24}$. Table~\ref{tab:compare} sets their results for $d=4$ beside ours. Theorem~\ref{thm:A} is their theorem restated with a self-contained proof; the new contributions are the enumeration algorithm of \S\ref{sec:alg}, its certified completeness (\S\ref{sec:complete}), the resulting exclusions (Theorem~\ref{thm:B}), and the general $10^{24}$ census (Theorem~\ref{thm:bound}).
 
-\begin{itemize}[leftmargin=2em]
-\item \textbf{Four prime factors} (Theorems~\ref{thm:A} and~\ref{thm:B}). Theorem~\ref{thm:A} restates, with a self-contained proof, the bounds of McIntosh and Dipra \cite[Thms.~2--3]{MD15} for $d=4$: all $p_i\equiv1\pmod{12}$, $p_3<2p_1p_2$ (they have $p_3<p_1p_2$), $p_4<\sqrt{2p_1p_2p_3}$, and $p_2^2\le24p_1^3+1$ (they have $p_2<5p_1^{3/2}$); so $n<477\,p_1^{15/2}$ and for each $p_1$ a finite search remains. Theorem~\ref{thm:B} is new: by a different algorithm (\S\ref{sec:enum}) we show that no four-prime Williams number has $n\le10^{30}$, and that none exists with $p_1\le500{,}000$, extending their $n>10^{24}$, $p_1>2\times10^4$.
-\item \textbf{Verified bound} (Theorem~\ref{thm:bound}). No Williams number of any number of prime factors is smaller than $10^{24}$. This is a complete factor-and-test pass over the tabulations of all Carmichael numbers below $10^{24}$, with completeness and per-class cross-checks against independently published counts. The largest number of primes $p\mid n$ with $(p+1)\mid(n+1)$ attained below $10^{24}$ is four (first at a number with $\omg(n)=9$); $826$ Carmichael numbers attain exactly three.
-\item \textbf{Heuristics} (\S\ref{sec:heur}, speculative). A simple probabilistic model puts the expected number of four-prime Williams numbers near $10^{-6}$, concentrated at $p_1=13$.
-\item \textbf{Appendices.} Appendix~\ref{sec:obstr} shows that the two classical constructions of Carmichael numbers fail in their simplest two-sided forms: Chernick-type polynomial families cannot produce Williams numbers with three factors, with uniform offsets $\pm1$, or in generic position (Theorems~\ref{thm:fam3}--\ref{thm:famgen}), the degenerate strata are empty in the ranges searched, and the two-sided subset-product method is measured to lose about $1.5$ bits per prime. Appendix~\ref{app:onset} gives a heuristic onset estimate.
-\end{itemize}
+\begin{table}[h]
+\centering\small
+\begin{tabular}{p{2.6cm}p{5.6cm}p{5.6cm}}
+\toprule
+ & McIntosh--Dipra \cite{MD15} & this paper\\
+\midrule
+all $p_i\equiv1\ (12)$ & \S2 & Lemma~\ref{lem:classes}(c)\\
+$p_2$ & $p_2<5p_1^{3/2}$ (Thm.~3) & $p_2^2\le24p_1^3+1$ (Thm.~\ref{thm:A})\\
+$p_3$ & $p_3<p_1p_2$ (Thm.~3) & $p_3<2p_1p_2$ (weaker; sufficient)\\
+$p_4$ & $p_4<\sqrt{2p_1p_2p_3}$ (Thm.~3) & same\\
+search method & loops over the three quotients; Pinch-style loops over compatible primes & CRT class for $p_3p_4$ and window filter (\S\ref{sec:alg}); certified completeness\\
+four primes excluded & $p_1\le2\times10^4$; $n\le10^{24}$ & $p_1\le500{,}000$; $n\le10^{30}$ (Thm.~\ref{thm:B})\\
+all $d$ & searches for $4\le d\le13$ at unstated bounds in $[10^{20},10^{35}]$ & none below $10^{24}$, any $d$ (Thm.~\ref{thm:bound})\\
+\bottomrule
+\end{tabular}
+\caption{Four-prime Williams numbers: prior and present results.}\label{tab:compare}
+\end{table}
 
-All code, logs and result files are available (\S\ref{sec:repro}), together with a certification record for the enumerations.
+All code, logs and certification records are available (\S\ref{sec:repro}). Appendix~\ref{sec:obstr} proves that Chernick-type polynomial families whose divisibilities hold identically in the parameter cannot produce Williams numbers with three factors, with uniform offsets $\pm1$, or in generic position; a supplementary note \cite{Supp} records two heuristic experiments.
 
 \section{Preliminaries}\label{sec:prelim}
 
@@ -76,7 +89,7 @@ Let $n$ be a Williams number with $k$ prime factors.
 (a) $8\mid p^2-1$ for odd $p$, so $4\mid L_p$ and $n\equiv p\pmod 4$ for every $p\mid n$ by Lemma~\ref{lem:quotient}. Thus all $p\equiv c$, and $n\equiv c^k\pmod4$; if $c=3$ this forces $k$ odd. (b) For $p\ne3$, $3\mid p^2-1$, so $3\mid L_p$ and $n\equiv p\pmod3$. If $3\mid n$ then every other prime factor would be $\equiv n\equiv0\pmod3$, impossible for $k\ge2$; so $3\nmid n$, all $p\equiv c'\pmod3$ and $n\equiv c'^k\equiv c'$, which for $c'=2$ forces $k$ odd. (c) is (a) and (b) with $k$ even.
 \end{proof}
 
-Lemma~\ref{lem:classes}(c) is observed in \cite[\S2]{MD15}. Williams proved that $k=3$ is impossible; the following short proof is essentially that of \cite[Thm.~1]{MD15}.
+Part (c) is observed in \cite[\S2]{MD15}. Williams proved that $k=3$ is impossible; the following proof is essentially that of \cite[Thm.~1]{MD15}.
 
 \begin{proposition}[Williams]\label{prop:k3}
 No Williams number has exactly three prime factors.
@@ -85,9 +98,7 @@ No Williams number has exactly three prime factors.
 Let $n=p_1p_2p_3$. By Lemma~\ref{lem:quotient} at $p_3$, $p_1p_2-1=tL_3$ with $t\ge1$ (as $p_1p_2>1$); since $p_1p_2<p_3^2$ we have $t<2$, so $2p_1p_2=p_3^2+1$. At $p_2$, $p_1p_3-1=sL_2$ with $s\ge1$; now $p_3<\sqrt{2p_1p_2}<\sqrt2\,p_2$, so $p_1p_3<\sqrt2\,p_2^2$ and $s<2\sqrt2\,p_2^2/(p_2^2-1)<3$ (as $p_2\ge5$). If $s=2$ then $p_1p_3=p_2^2$, impossible; so $2p_1p_3=p_2^2+1$. Subtracting, $2p_1(p_2-p_3)=p_3^2-p_2^2$, i.e. $2p_1=-(p_2+p_3)<0$, a contradiction.
 \end{proof}
 
-\section{Four prime factors}\label{sec:k4}
-
-\subsection{Structure}
+\section{Four prime factors: structural bounds}\label{sec:k4}
 
 \begin{theorem}[McIntosh--Dipra \cite{MD15}, $d=4$; restated]\label{thm:A}
 Let $n=p_1p_2p_3p_4$, $p_1<p_2<p_3<p_4$, be a Williams number, and write $P=p_1p_2$, $q=p_3$, $r=p_4$.
@@ -126,32 +137,26 @@ Now reduce the three equations~\eqref{eq:three} modulo $p_1$. Each left side is 
 
 \emph{Case $\Pi>1$.} A factor $1-\frac{t-2}{tx^2}$ of $\Pi$ exceeds $1$ only when $t=1$. Now $e>d\ge1$, because $e/d=\frac{(Pr-1)(r^2-1)}{(Pq-1)(q^2-1)}>1$ for $r>q$; and $s>2p_1$, because $qr\ge p_2^2+1$ gives $s=\frac{2(p_1qr-1)}{p_2^2-1}\ge\frac{2(p_1p_2^2+p_1-1)}{p_2^2-1}>2p_1$. So only the first factor can exceed $1$, and $\Pi\le1+r^{-2}$. On the other hand $des\le8p_1^3-1$ gives $\Pi=8p_1^3/des\ge1+\frac1{8p_1^3-1}$. Hence $r^2\le8p_1^3-1$, and $p_2^2<r^2<8p_1^3\le24p_1^3+1$.
 
-In both cases $p_2^2\le24p_1^3+1$.
-
-The consequences follow from (b) and (c): $p_2^2\le24p_1^3+1<24.01\,p_1^3=(4.9\,p_1^{3/2})^2$ for $p_1\ge5$, so $p_2<4.9\,p_1^{3/2}$; then $q,r<2P<9.8\,p_1^{5/2}$ and $n<4P^3<4\cdot4.9^3\,p_1^{15/2}<477\,p_1^{15/2}$.
+In both cases $p_2^2\le24p_1^3+1$. The consequences follow from (b) and (c): $p_2^2\le24p_1^3+1<24.01\,p_1^3=(4.9\,p_1^{3/2})^2$ for $p_1\ge5$, so $p_2<4.9\,p_1^{3/2}$; then $q,r<2P<9.8\,p_1^{5/2}$ and $n<4P^3<4\cdot4.9^3\,p_1^{15/2}<477\,p_1^{15/2}$.
 \end{proof}
 
 \begin{remark}
-An earlier draft handled the case $\Pi>1$ with the estimate $(1+p_2^{-2})^3\le1+3.0001\,p_2^{-2}$, which is false (the correct coefficient at $p_2=37$ is $3.0022$, and with it that route does not close); the error was found in the independent check described in \S\ref{sec:repro}. The enumeration of \S\ref{sec:enum} used the bound $p_2^2\le24p_1^3+3$, which both cases satisfy, so Theorem~\ref{thm:B} is unaffected.
+In the notation of \cite{MD15} ($P,q,r,s$ and $f_s,f_r,f_q$ for our $p_1,p_2,p_3,p_4$ and $d,e,s$), Theorems~2 and~3 there give $q<5P^{3/2}$, $r<Pq$ and $s<\sqrt{2Pqr}$, and show by Newton's inequality that the quotient product always exceeds $8P^3$, so that the case $\Pi>1$ above never occurs. The statement above differs only in the slightly sharper bound on $p_2$ (from the congruence modulo $24$) and the weaker bound on $p_3$, which is all the enumeration needs.
 \end{remark}
 
 \begin{corollary}\label{cor:A}
 For each prime $p_1$ there are only finitely many four-prime Williams numbers with smallest prime $p_1$, all below $477\,p_1^{15/2}$. Conversely a four-prime Williams number $n$ has $p_1>(n/477)^{2/15}$.
 \end{corollary}
 
-\begin{remark}[relation to McIntosh and Dipra]
-Theorem~\ref{thm:A} is Theorems~2 and~3 of \cite{MD15} specialised to $d=4$ (their $P,q,r,s$ are our $p_1,p_2,p_3,p_4$, their $f_s,f_r,f_q$ our $d,e,s$): they prove $q<5P^{3/2}$, $r<Pq$ and $s<\sqrt{2Pqr}$, and show directly, using Newton's inequality $S_2^2\ge S_1S_3$, that the quotient product always exceeds $8P^3$ (so $\Pi<1$ and the second case in our proof never occurs). Our statement differs only in the trivially sharper $p_2^2\le24p_1^3+1$ (from the congruence modulo $24$) and the weaker $p_3<2p_1p_2$, which is all the enumeration needs; the proof above is independent but uses the same product identity. We had derived it before learning of \cite{MD15}.
-\end{remark}
+\section{The enumeration algorithm}\label{sec:alg}
 
-\subsection{Enumeration}\label{sec:enum}
-
-Theorem~\ref{thm:A} makes two kinds of complete enumeration possible: all $n\le B$ (where $n>p_1p_2^3$ forces $p_1<B^{1/4}$ and $p_2<(B/p_1)^{1/3}$), and all $n$ whatsoever with $p_1\le X$ (where $p_2\le\sqrt{24p_1^3+1}$). Both reduce to a search over pairs $(p_1,p_2)$.
+Theorem~\ref{thm:A} makes two kinds of complete enumeration possible: all $n\le B$ (where $n>p_1p_2^3$ forces $p_1<B^{1/4}$ and $p_2<(B/p_1)^{1/3}$), and all $n$ whatsoever with $p_1\le X$ (where $p_2\le\sqrt{24p_1^3+1}$). Both reduce to a search over pairs $(p_1,p_2)$ of primes $\equiv1\pmod{12}$.
 
 \begin{lemma}[one class for the cofactor]\label{lem:crt}
 With notation as in Theorem~\ref{thm:A}, $m=qr$ satisfies $p_2m\equiv1\pmod{L_{p_1}}$ and $p_1m\equiv1\pmod{L_{p_2}}$. These are solvable iff $p_1\nmid p_2^2-1$ and $p_1\equiv p_2\pmod{\gcd(L_{p_1},L_{p_2})}$, in which case $m$ lies in a single residue class modulo $\Lambda=\lcm(L_{p_1},L_{p_2})$.
 \end{lemma}
 \begin{proof}
-The congruences are Lemma~\ref{lem:quotient} at $p_1$ and $p_2$ ($n/p_1=p_2m$, $n/p_2=p_1m$). The first congruence is always solvable: $p_2\mid L_{p_1}$ would need $p_2\mid p_1\pm1$ with $p_2>p_1$, impossible for odd primes. The second is solvable iff $\gcd(p_1,L_{p_2})=1$, i.e. $p_1\nmid p_2^2-1$. Given both, let $g=\gcd(L_{p_1},L_{p_2})$; the pair is compatible iff $p_2^{-1}\equiv p_1^{-1}\pmod g$, i.e. $p_1\equiv p_2\pmod g$ (note $\gcd(p_1p_2,g)=1$). The rest is the Chinese remainder theorem.
+The congruences are Lemma~\ref{lem:quotient} at $p_1$ and $p_2$ ($n/p_1=p_2m$, $n/p_2=p_1m$). The first is always solvable: $p_2\mid L_{p_1}$ would need $p_2\mid p_1\pm1$ with $p_2>p_1$, impossible for odd primes. The second is solvable iff $\gcd(p_1,L_{p_2})=1$, i.e. $p_1\nmid p_2^2-1$. Given both, let $g=\gcd(L_{p_1},L_{p_2})$; the pair is compatible iff $p_2^{-1}\equiv p_1^{-1}\pmod g$, i.e. $p_1\equiv p_2\pmod g$ (note $\gcd(p_1p_2,g)=1$). The rest is the Chinese remainder theorem.
 \end{proof}
 
 Since $\Lambda\approx P^2/(4g)$ while $m<4P^2$, Lemma~\ref{lem:crt} leaves $O(g)$ candidates $m$ per pair. The next lemma rejects almost all of them with one multiplication.
@@ -171,23 +176,59 @@ jm^2-Tm=j(q^2+r^2-1)-4P(q+r)+4 .
 The right side is a difference of two positive numbers, so its absolute value is at most $\max\bigl(j(q^2+r^2-1),\,4P(q+r)-4\bigr)\le\max(2jr^2,\,8Pr)$. Dividing by $m=qr$ gives $|jm-T|\le\max(2jr/q,\,8P/q)$. By Theorem~\ref{thm:A}(b), $r^2<2Pq$, so $r/q<\sqrt{2P/q}<\sqrt{2p_1}$ (as $q>p_2$), and $P/q<p_1$; this is~\eqref{eq:window}. For the interval property, put $S=\lceil\sqrt{2p_1}\rceil$ and $\phi(j)=|jm-T|-\max(2jS,8p_1)$. On $j\ge T/m$ the first term increases with slope $m$ and the second with slope at most $2S<m$, so $\phi$ is strictly increasing; on $j\le T/m$ the first term decreases and the second is non-decreasing, so $\phi$ is strictly decreasing. Thus $\{\phi\le0\}$ is an interval, and it contains $T/m$ since $\phi(T/m)<0$.
 \end{proof}
 
-\paragraph{Algorithm.} Put $S=\lceil\sqrt{2p_1}\rceil$, $R_j=\max(2jS,8p_1)$, and call $(m,j)$ \emph{admissible} if $|jm-T|\le R_j$; by Lemma~\ref{lem:window} the true $(m,de)$ is admissible, and for fixed $m>p_2^2>2S$ the admissible $j$ form an interval containing $T/m$. For every pair of primes $p_1<p_2$, both $\equiv1\pmod{12}$, within the range dictated by the campaign: (i) skip the pair unless both conditions of Lemma~\ref{lem:crt} hold (a pair failing them has no CLC completion), and compute $m_0$, $\Lambda$; (ii) the candidates are $m\equiv m_0\pmod\Lambda$ with $p_2^2<m\le m_{\max}:=\min(4P^2-1,\lfloor B/P\rfloor)$; choose a threshold $M^*\approx\sqrt{T\Lambda}$; for $m\le M^*$ walk the candidates and keep $m$ iff $\lfloor T/m\rfloor$ or $\lceil T/m\rceil$ is admissible for it; for $m>M^*$ walk instead the integers $j$ from $\max\bigl(1,\lfloor(T-8p_1)/(m_{\max}+2S)\rfloor-1\bigr)$ to $\lfloor(T+8p_1)/(M^*-2S)\rfloor+1$ and keep every candidate $m\in(M^*,m_{\max}]$ in the exact window $\lceil(T-R_j)/j\rceil\le m\le\lfloor(T+R_j)/j\rfloor$ (any admissible $(m,j)$ with $m>M^*$ has $j$ in that range, since $jm\le T+2jS+8p_1$ and $jm\ge T-2jS-8p_1$); the two walks were checked to produce identical survivor lists on six instances, including two relaxed instances with $346{,}409$ and $11{,}007{,}875$ survivors; (iii) for each surviving $m$ require $2^{n-1}\equiv1\pmod n$, $n=Pm$ (necessary for a Carmichael number; computed in C with $128$-bit modular arithmetic when $P\le2^{40}$, and otherwise deferred to the Python verifier below); (iv) for each remaining $m$, recover $r$ as an integer root of $dx^3-(d-2)x-2n$ for $d=1,\dots,2p_1$ (multiply the first equation of~\eqref{eq:three} by $r$: $2n=dr^3-(d-2)r$; Theorem~\ref{thm:A}(b) gives $d<2p_1$), set $q=m/r$, and check all four conditions of Lemma~\ref{lem:quotient} together with the primality of $q$ and $r$. Independently of the C program, a Python program using exact integer arithmetic and \textsc{SymPy} factorisation re-tests every survivor of step~(ii) that it is given.
-
-\begin{proposition}[completeness of the search]\label{prop:complete}
-Let $n=p_1p_2qr$ be a Williams number with four prime factors, and suppose $n\le B$ (campaign 1) or $p_1\le X$ (campaign 2). Then the algorithm above visits the pair $(p_1,p_2)$, the candidate $m=qr$ survives step~(ii) and step~(iii), and step~(iv) recovers $(q,r)$ and reports $n$.
-\end{proposition}
+\begin{lemma}[reconstruction]\label{lem:cbrt}
+Let $n=p_1p_2qr$ be a four-prime Williams number with $d$ as in~\eqref{eq:three}. Then $r$ is a root of $dx^3-(d-2)x-2n$, and $\lfloor(2n/d)^{1/3}\rfloor\in\{r-1,r\}$.
+\end{lemma}
 \begin{proof}
-By Theorem~\ref{thm:A}(a) both $p_1,p_2$ are primes $\equiv1\pmod{12}$. If $n\le B$ then $p_1^4<p_1p_2qr=n\le B$ and $p_1p_2^3<n\le B$, so $p_1<B^{1/4}$ and $p_2<(B/p_1)^{1/3}$; in either campaign $p_2\le\sqrt{24p_1^3+1}$ by Theorem~\ref{thm:A}(c). Hence the pair is in the range scanned. The congruences of Lemma~\ref{lem:crt} hold for $m$, so the pair passes step~(i) and $m\equiv m_0\pmod\Lambda$; by Theorem~\ref{thm:A}(b), $p_2^2<m<4P^2$, and $m\le B/P$ when $n\le B$, so $m$ is one of the candidates walked in step~(ii). By Lemma~\ref{lem:window} the pair $(m,de)$ is admissible, so if $m\le M^*$ then $\lfloor T/m\rfloor$ or $\lceil T/m\rceil$ is admissible and $m$ is kept, while if $m>M^*$ then $j=de$ lies in the scanned $j$-range and $m$ lies in the exact window for that $j$, so again $m$ is kept. Since $n$ is a Carmichael number, $2^{n-1}\equiv1\pmod n$ and $m$ survives step~(iii) (or is deferred to the Python verifier, which applies the same test). Finally $2n=dr^3-(d-2)r$ with $1\le d<2p_1$ (Theorem~\ref{thm:A}(b)), so the loop over $d$ in step~(iv) reaches $d$, the integer cube root recovers $r$, $q=m/r$, and all checks pass. The actual runs are certified by the record described in \S\ref{sec:repro}: every block of pairs logged exactly once with contiguous $p_1$ ranges, and every window survivor re-tested in Python.
+Multiplying the first equation of~\eqref{eq:three} by $r$ gives $2n=2Pqr=dr^3-(d-2)r$. Put $x=2n/d$; then $x-r^3=-(d-2)r/d\in(-r,r]$. If $x\ge r^3$ then $r\le x^{1/3}<(r^3+r)^{1/3}<r+1$; if $x<r^3$ then $x>r^3-r>(r-1)^3$ (as $3r^2-3r+1>r$ for $r\ge1$), so $r-1<x^{1/3}<r$. Thus $\lfloor x^{1/3}\rfloor$ is $r$ or $r-1$, and the same holds for $\lfloor\lfloor x\rfloor^{1/3}\rfloor$ since $\lfloor x\rfloor\le x<\lfloor x\rfloor+1$ changes the cube root by less than $1$ in the same direction.
 \end{proof}
 
-\paragraph{Validation.} The implementation was tested against brute force on a \emph{relaxed} problem that does have solutions: replace $L_p$ by $(p^2-1)/\kappa$ for $\kappa\in\{24,120\}$. Theorem~\ref{thm:A}(b) and Lemmas~\ref{lem:crt}--\ref{lem:window}, which are all the algorithm uses, go through with $2$ replaced by $\kappa$ (Theorem~\ref{thm:A}(c) and the Fermat filter are specific to $\kappa=2$ and are switched off in the relaxed runs, so step~(iii) is validated only by the Python re-verification). On the relaxed problem the enumerator finds exactly the solution set that a direct four-fold loop finds (for $\kappa=24$ the unique solution below $10^{12}$ is $13685=5\cdot7\cdot17\cdot23$, for which $d=27$, $e=67$, $s=977$ and $des\cdot\Pi=24^3\cdot5^3$ exactly; the outputs of both programs to $10^{12}$ are archived in \texttt{clc/k4/validation/}). This is a regression test of the implementation on an instance with known answer, not an independent validation of the production search, which rests on the completeness argument above and the certification record of \S\ref{sec:repro}. Separate self-tests brute-force the two-prime sub-problem $(q,r)$ for small $(p_1,p_2)$ in four relaxed variants (43 solutions) and check every inequality used above, and brute-force the residue class of Lemma~\ref{lem:crt} for $13{,}037$ pairs. On the real problem the enumerator reproduces the empty result below $10^{24}$ of Theorem~\ref{thm:bound} in under ten seconds. One design error was caught by these tests before any production run: the true $j=de$ is \emph{not} in general $\lfloor T/m\rfloor$ or $\lceil T/m\rceil$ (only the filter may use those two values), so the reconstruction step~(iv) must not depend on $j$.
+\begin{algorithm}[h]
+\caption{Enumeration of four-prime Williams numbers (campaign 1: all $n\le B$; campaign 2: all $n$ with $p_1\le X$)}\label{alg}
+\begin{algorithmic}[1]
+\State \textbf{Input:} $B$ (campaign 1) or $X$ (campaign 2). Put $S=\lceil\sqrt{2p_1}\rceil$, $R_j=\max(2jS,8p_1)$; call $(m,j)$ \emph{admissible} if $|jm-T|\le R_j$ where $T=4P^2$.
+\ForAll{primes $p_1\equiv1\ (12)$ with $p_1<B^{1/4}$ (campaign 1) or $p_1\le X$ (campaign 2)}
+\ForAll{primes $p_2\equiv1\ (12)$, $p_1<p_2\le\sqrt{24p_1^3+3}$, and $p_2<(B/p_1)^{1/3}$ in campaign 1}
+\State $P\gets p_1p_2$; \textbf{if} $p_1\mid p_2^2-1$ or $p_1\not\equiv p_2\pmod{\gcd(L_{p_1},L_{p_2})}$ \textbf{then skip} (Lemma~\ref{lem:crt})
+\State compute $m_0,\Lambda$ by CRT; $m_{\max}\gets\min(4P^2-1,\lfloor B/P\rfloor)$ (no second term in campaign 2)
+\State $M^*\gets\lfloor\sqrt{T}\sqrt{\Lambda}\rfloor$ (floating point; any value works, this balances the two walks)
+\ForAll{$m\equiv m_0\ (\Lambda)$ with $p_2^2<m\le\min(M^*,m_{\max})$} \Comment{walk A}
+\State keep $m$ iff $(m,\lfloor T/m\rfloor)$ or $(m,\lceil T/m\rceil)$ is admissible
+\EndFor
+\ForAll{integers $j$ from $\max\bigl(1,\lfloor(T-8p_1)/(m_{\max}+2S)\rfloor-1\bigr)$ to $\lfloor(T+8p_1)/(M^*-2S)\rfloor+1$} \Comment{walk B}
+\State keep every $m\equiv m_0\ (\Lambda)$ with $\max(M^*+1,\lceil(T-R_j)/j\rceil)\le m\le\min(m_{\max},\lfloor(T+R_j)/j\rfloor)$, unless $(m,j-1)$ is admissible (reported once, under the least admissible $j$)
+\EndFor
+\ForAll{kept $m$} \Comment{survivors}
+\State $n\gets Pm$; \textbf{if} $2^{n-1}\not\equiv1\pmod n$ \textbf{then discard} (in C with $128$-bit arithmetic when $P\le2^{40}$; otherwise deferred to the Python verifier)
+\ForAll{$d=1,\dots,2p_1$} \State $x\gets\lfloor\lfloor2n/d\rfloor^{1/3}\rfloor$; \textbf{for} $r\in\{x-1,x,x+1\}$ with $dr^3-(d-2)r=2n$ and $r\mid m$: $q\gets m/r$; report $(p_1,p_2,q,r)$ if $p_2<q<r$, $q,r$ prime and all four conditions of Lemma~\ref{lem:quotient} hold
+\EndFor
+\EndFor
+\EndFor
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\section{Completeness, validation and certification}\label{sec:complete}
+
+\begin{proposition}[completeness]\label{prop:complete}
+Let $n=p_1p_2qr$ be a four-prime Williams number with $n\le B$ (campaign 1) or $p_1\le X$ (campaign 2). Then Algorithm~\ref{alg} visits the pair $(p_1,p_2)$, keeps $m=qr$, and reports $n$.
+\end{proposition}
+\begin{proof}
+By Theorem~\ref{thm:A}(a) both $p_1,p_2$ are primes $\equiv1\pmod{12}$. If $n\le B$ then $p_1^4<n\le B$ and $p_1p_2^3<n\le B$, so $p_1<B^{1/4}$ and $p_2<(B/p_1)^{1/3}$; in either campaign $p_2\le\sqrt{24p_1^3+1}$ by Theorem~\ref{thm:A}(c). Hence the pair is in the range scanned. The congruences of Lemma~\ref{lem:crt} hold for $m$, so the pair is not skipped and $m\equiv m_0\pmod\Lambda$; by Theorem~\ref{thm:A}(b), $p_2^2<m<4P^2$, and $m\le B/P$ when $n\le B$, so $m$ lies in the walked range. By Lemma~\ref{lem:window} the pair $(m,de)$ is admissible. If $m\le M^*$ then $\lfloor T/m\rfloor$ or $\lceil T/m\rceil$ is admissible and walk A keeps $m$. If $m>M^*$ then $j=de$ lies in the scanned range, because admissibility gives $jm\le T+2jS+8p_1$ and $jm\ge T-2jS-8p_1$, hence $j(m-2S)\le T+8p_1$ with $m-2S>M^*-2S$ and $j(m+2S)\ge T-8p_1$ with $m+2S\le m_{\max}+2S$; and $m$ lies in the exact window for the least admissible $j$, so walk B keeps it. Since $n$ is a Carmichael number, $2^{n-1}\equiv1\pmod n$. Finally $1\le d<2p_1$ by Theorem~\ref{thm:A}(b), and by Lemma~\ref{lem:cbrt} the integer cube root lands within one of $r$, so the loop over $d$ recovers $r$, $q=m/r$, and all checks pass.
+\end{proof}
+
+\paragraph{Validation.} The implementation was tested against brute force on a \emph{relaxed} problem that has solutions: replace $L_p$ by $(p^2-1)/\kappa$ with $\kappa\in\{24,120\}$ (Theorem~\ref{thm:A}(b) and Lemmas~\ref{lem:crt}--\ref{lem:cbrt}, which are all the algorithm uses, go through with $2$ replaced by $\kappa$; Theorem~\ref{thm:A}(c) and the Fermat filter are specific to $\kappa=2$ and are switched off in these runs). On the relaxed problem the enumerator finds exactly the solution set that a direct four-fold loop finds; for $\kappa=24$ the unique solution below $10^{12}$ is $13685=5\cdot7\cdot17\cdot23$, and the outputs of both programs are archived. Separate self-tests brute-force the two-prime sub-problem $(q,r)$ for small $(p_1,p_2)$ in four relaxed variants and check every inequality of Lemmas~\ref{lem:window}--\ref{lem:cbrt} on the solutions found, brute-force the residue class of Lemma~\ref{lem:crt} for $13{,}037$ pairs, and compare the $128$-bit Fermat routine with Python on random moduli. The two walks were checked to produce identical survivor lists on six instances, two of them relaxed instances with $346{,}409$ and $11{,}007{,}875$ survivors. These are regression tests of the implementation on instances with known answers, not an independent validation of the production campaigns, which rests on Proposition~\ref{prop:complete} and the certification below.
+
+\paragraph{Certification.} Each campaign is processed in blocks of consecutive $p_1$ and logs one record per block (its $p_1$ range, number of pairs, survivors, Fermat survivors, solutions). Both campaigns were run twice, the second time with every window survivor written out, and a certification script asserts: every block identifier appears exactly once; block ranges are increasing, disjoint and contiguous over the admissible primes; per-block counts equal those of the first run; the distinct survivors, within each campaign, number exactly the logged total, block by block; every survivor re-tested in Python (base-2 Fermat test on $n=Pm$, then factorisation of $m$ and the four conditions of Lemma~\ref{lem:quotient} on the original tuple) yields the logged number of Fermat survivors and no Williams number. The records include hashes of the binary, the source and the logs, the compiler, host and source revision. An external reviewer repeated both certifications from the clean tagged checkout.
+
+\section{Computational results for four prime factors}\label{sec:results}
 
 \begin{theorem}\label{thm:B}
 There is no Williams number with exactly four prime factors and $n\le10^{30}$, and there is none at all whose smallest prime factor is at most $500{,}000$. Consequently a four-prime Williams number, if one exists, has $p_1>500{,}000$ and $n>10^{30}$. (McIntosh and Dipra \cite{MD15} had $p_1>2\times10^4$ and $n>10^{24}$.)
 \end{theorem}
 
 \begin{proof}[Computation]
-Table~\ref{tab:k4} summarises the two campaigns (Apple M4 Pro, 14 threads). In each, the single survivor of the Fermat filter is the Carmichael number $26921089=13\cdot37\cdot97\cdot577$, for which $38\nmid26921090$. Both campaigns were then rerun with every window survivor written out, and certified by a script with hard assertions (\texttt{clc/k4/certify\_k4.py}): every block of pairs logged exactly once, block ranges contiguous over the admissible primes, per-block counts equal to the production run, and all $1{,}904+1{,}185$ distinct window survivors re-tested in Python (base-2 Fermat test, then factorisation and the four divisibilities on the original tuple); exactly one survivor in each campaign passes the Fermat test, the Carmichael number above, and none is a Williams number. The certification records, with hashes of the binary, source and logs, are \texttt{CERTIFY\_n1e30.txt} and \texttt{CERTIFY\_p1\_500000.txt}. The second statement combines the second campaign with Corollary~\ref{cor:A}.
+Table~\ref{tab:k4} summarises the two campaigns (Apple M4 Pro, 14 threads). In each, the single survivor of the Fermat filter is the Carmichael number $26921089=13\cdot37\cdot97\cdot577$, for which $38\nmid26921090$. The survivor totals are deduplicated within their respective campaigns. The second statement combines the second campaign with Corollary~\ref{cor:A}.
 \end{proof}
 
 \begin{table}[h]
@@ -206,16 +247,20 @@ all $n$, $p_1\le500{,}000$ & 86{,}517{,}004{,}140 & 1{,}185 & 1 & 0 & 146 min\\
 \section{No Williams number below \texorpdfstring{$10^{24}$}{10\^{}24}}\label{sec:bound}
 
 \begin{theorem}\label{thm:bound}
-No Williams number is smaller than $10^{24}$. Among the $308{,}279{,}939$ Carmichael numbers below $10^{24}$, the largest number of prime factors $p$ with $(p+1)\mid(n+1)$ is four, first attained at
+No Williams number is smaller than $10^{24}$. Among the $308{,}279{,}939$ Carmichael numbers below $10^{24}$, the largest number of prime factors $p$ with $(p+1)\mid(n+1)$ is four, attained, for example, at
 \[
 15500309690554865758009=37\cdot103\cdot109\cdot127\cdot307\cdot523\cdot613\cdot1429\cdot2089
 \]
-(the primes $37,109,1429,2089$); $826$ numbers have exactly three. Below $10^{22}$ the maximum is three, attained by $179$ numbers. (Our scan recorded the first number attaining the maximum and the count of three-match numbers; the number of four-match numbers was not recorded and would require a rerun.)
+(the primes $37,109,1429,2089$); $826$ numbers have exactly three. Below $10^{22}$ the maximum is three, attained by $179$ numbers.
 \end{theorem}
 
-This is, as far as we have found, the largest bound stated in print for Williams numbers with an arbitrary number of prime factors: Pinch's $10^{16}$ \cite{Pinch07} is restricted to an odd number of prime factors; McIntosh and Dipra \cite{MD15} give $10^{24}$ for four prime factors (indeed for Carmichael numbers with four prime factors whose largest prime $s$ satisfies $(s+1)\mid(N+1)$), note that Feitsma's list of base-2 pseudoprimes below $2^{64}$ contains no Williams number, and report a Pinch-style search for $4\le d\le13$ prime factors ``for various values of $X$ between $10^{20}$ and $10^{35}$'' without stating the bound reached for each $d$.
+We know of no larger published bound that applies without restriction on the number of prime factors: Pinch's $10^{16}$ \cite{Pinch07} is restricted to an odd number of prime factors; McIntosh and Dipra \cite{MD15} give $10^{24}$ for four prime factors (indeed for Carmichael numbers with four prime factors whose largest prime $s$ satisfies $(s+1)\mid(N+1)$), note that Feitsma's list of base-2 pseudoprimes below $2^{64}$ contains no Williams number, and report a Pinch-style search for $4\le d\le13$ prime factors ``for various values of $X$ between $10^{20}$ and $10^{35}$'' without stating the bound reached for each $d$.
 
-\paragraph{Method.} Carmichael numbers have been tabulated completely to $10^{21}$ by Pinch \cite{Pinch07,PinchTables}, to $10^{22}$ by Goutier \cite{Goutier} and to $10^{24}$ by Shallue and Webster \cite{SW24,SW25}, whose list is distributed by Stamm-Wilbrandt as a PARI/GP binary vector \cite{SW_bin}. A Williams number is in particular Carmichael, so it suffices to test every tabulated Carmichael number for the Lucas--Carmichael property. We did this ourselves rather than rely on flags computed by the tabulators: each $n$ was factored (the Miller--Rabin square-root-of-unity splitting, which always succeeds on Carmichael numbers, with a general factoring fallback), the factorisation was checked to be squarefree with product $n$ and to satisfy Korselt's criterion, and the number of primes $p$ with $(p+1)\mid(n+1)$ was recorded. Processing is line-based so that no entry can be skipped at a buffer boundary. Three completeness checks were applied to the $10^{24}$ list: the counts below $10^{22}$, $10^{23}$ and $10^{24}$ ($49{,}679{,}870$; $123{,}381{,}982$; $308{,}279{,}939$) equal the published ones \cite{SW25}, the list is strictly increasing, and it begins $561,1105,1729,2465,2821$. Our per-$\omg$ tallies agree with independently published counts: $1{,}494{,}738$ three-prime Carmichael numbers below $10^{24}$ (OEIS A132195, \cite{Chick}) and $6{,}529{,}921$ eleven-prime ones (OEIS A299711); below $10^{22}$ all eleven per-$\omg$ counts agree with Goutier's tally, and the $179$ three-match numbers below $10^{22}$ agree with OEIS A329948 (Suteu; b-file by Eldar). The converse direction was also checked: none of the $129{,}125$ Lucas--Carmichael numbers below $10^{15}$ tabulated by Suteu (OEIS A006972) is Carmichael. Table~\ref{tab:omega} gives the distribution below $10^{24}$.
+\subsection*{Input data} Carmichael numbers have been tabulated completely to $10^{21}$ by Pinch \cite{Pinch07,PinchTables}, to $10^{22}$ by Goutier \cite{Goutier} and to $10^{24}$ by Shallue and Webster \cite{SW24,SW25}, whose list is distributed by Stamm-Wilbrandt as a PARI/GP binary vector \cite{SW_bin}. A Williams number is in particular Carmichael, so it suffices to test every tabulated Carmichael number for the Lucas--Carmichael property. This is a factor-and-test pass over an external complete tabulation, not an independent tabulation of the Carmichael numbers; the tabulation's completeness is Shallue and Webster's result, which we check for consistency as described below.
+
+\subsection*{Per-entry verification} Each $n$ was factored and verified by us rather than read from the tabulators' flags: Miller--Rabin square-root-of-unity splitting (for a Carmichael number, bases that are strong liars yield no split, so bases are tried until a witness produces a nontrivial square root of $1$; general factorisation is the fallback), then the factorisation was checked to be squarefree with product $n$ and to satisfy Korselt's criterion, and the number of primes $p$ with $(p+1)\mid(n+1)$ was recorded. Processing is line-based so that no entry can be skipped at a buffer boundary.
+
+\subsection*{Integrity checks} The counts below $10^{22}$, $10^{23}$ and $10^{24}$ ($49{,}679{,}870$; $123{,}381{,}982$; $308{,}279{,}939$) equal the published ones \cite{SW25}; the list is strictly increasing and begins $561,1105,1729,2465,2821$; our per-$\omg$ tallies agree with independently published counts, $1{,}494{,}738$ three-prime Carmichael numbers below $10^{24}$ (OEIS A132195, \cite{Chick}) and $6{,}529{,}921$ eleven-prime ones (OEIS A299711); below $10^{22}$ all eleven per-$\omg$ counts agree with Goutier's tally, and the $179$ three-match numbers below $10^{22}$ agree with OEIS A329948 (Suteu; b-file by Eldar). The converse direction was also checked: none of the $129{,}125$ Lucas--Carmichael numbers below $10^{15}$ tabulated by Suteu (OEIS A006972) is Carmichael. Table~\ref{tab:omega} gives the distribution below $10^{24}$. The scan recorded the number of numbers with exactly three matching primes and one number attaining the maximum; it did not record the number of four-match numbers.
 
 \begin{table}[h]
 \centering\small
@@ -235,49 +280,40 @@ $\omg(n)$ & count & $\omg(n)$ & count & $\omg(n)$ & count\\
 \begin{corollary}\label{cor:apps}
 \begin{enumerate}[label=\textup{(\alph*)}]
 \item A counterexample to Agrawal's conjecture of the Lenstra--Pomerance type (a Williams number all of whose primes are $\equiv3\pmod{80}$) exceeds $10^{24}$.
-\item A Baillie--PSW counterexample of the Pomerance type (a Carmichael number with $(p+1)\mid(n+1)$ for all $p\mid n$) exceeds $10^{24}$.
+\item Any counterexample to the Baillie--PSW test produced by Pomerance's construction \cite{Pomerance84} exceeds $10^{24}$, because that construction produces a Williams number.
 \end{enumerate}
 \end{corollary}
-Statement (b) adds little to the known absence of Baillie--PSW counterexamples below $2^{64}\approx1.8\times10^{19}$ \cite{Gilchrist}, but it is a different kind of statement: it bounds every construction that proceeds through the Pomerance conditions, not only the tested range.
+Statement (b) adds little to the known absence of Baillie--PSW counterexamples below $2^{64}\approx1.8\times10^{19}$ \cite{Gilchrist}, but it bounds a construction rather than a tested range.
 
 \begin{remark}[Howe's order-$2$ Carmichael numbers]
 By Howe's criterion \cite{Howe00}, a squarefree $n$ is a Carmichael number of order $2$ iff for each $p\mid n$, $n\equiv1$ or $n\equiv p\pmod{p^2-1}$. For a Williams number the first option is impossible ($n\equiv p\pmod{L_p}$ and $n\equiv1\pmod{p^2-1}$ would give $L_p\mid p-1$), so a Williams number is of order $2$ iff $n\equiv p\pmod{p^2-1}$ for all $p\mid n$, i.e. iff $(n-p)/L_p$ is even for every $p\mid n$. Tabulations of order-$2$ Carmichael numbers therefore bound one $2$-adic type of Williams number; we have not pursued this.
 \end{remark}
 
-\section{Heuristics}\label{sec:heur}
+\section{Discussion}\label{sec:disc}
 
-This section is speculative: it records what a simple probabilistic model predicts, as motivation and as a consistency check against the computations. It proves nothing and is not used elsewhere in the paper.
+\paragraph{A heuristic for four prime factors (speculative).} Condition on Theorem~\ref{thm:A}(a). For $p\equiv1\pmod{12}$ the condition $n/p\equiv1\pmod{L_p}$ is automatic modulo $12$; treat the remaining condition as an event of probability $24/(p^2-1)\approx24/p^2$, independently for the four primes (the four events are in fact arithmetically dependent, and no error term is claimed). Summing $\prod_i24/p_i^2$ over quadruples of primes $\equiv1\pmod{12}$ with $p_2^2\le24p_1^3+1$ and $p_2<q<r<2p_1p_2$ gives about $6.3\times10^{-7}$ (script \texttt{agrawal/k4\_heuristic.py}), of which about $96\%$ comes from $p_1=13$; the contribution of $p_1>X$ decays like $X^{-4}$ up to logarithms. On this model four-prime Williams numbers are not expected, and Theorem~\ref{thm:B} is consistent with the prediction.
 
-
-\paragraph{Four prime factors.} Condition on Theorem~\ref{thm:A}(a). For $p\equiv1\pmod{12}$ the condition $n/p\equiv1\pmod{L_p}$ is automatic modulo $12$, so model the remaining condition as an event of probability $24/p^2$, independently for the four primes. Summing $\prod_i 24/p_i^2$ over quadruples of primes $\equiv1\pmod{12}$ with $p_2^2\le24p_1^3+1$ and $p_2<q<r<2p_1p_2$ (Theorem~\ref{thm:A}) gives an expected count of about $6.3\times10^{-7}$ (script \texttt{agrawal/k4\_heuristic.py}), of which about $96\%$ comes from $p_1=13$ (where $n<1.1\times10^{11}$, long excluded by Theorem~\ref{thm:bound}); the contribution of $p_1>X$ decays like $X^{-4}$ (up to logarithms) and is of order $10^{-25}$ for $X=500{,}000$. On this model the four-prime case is empty with overwhelming probability, and Theorem~\ref{thm:B} confirms the part of the prediction that can be tested.
-
-\paragraph{Onset of Williams numbers of any size.} A cruder Erd\H{o}s--Pomerance-style model for arbitrary numbers of prime factors is described in Appendix~\ref{app:onset}; it suggests that the first Williams number, if any, has hundreds of digits and on the order of a hundred prime factors.
-
-\section{Reproducibility}\label{sec:repro}
-
-All code is in the repository \url{https://github.com/razv2025/carmichael-lucas-carmichael}, tagged for this version. The $10^{24}$ scan (\texttt{clc/}) consists of the download--decode--verify--scan pipeline, the completeness report, the result files with per-$\omg$ and per-match counts, and SHA-256 checksums of the input data. The four-prime enumeration (\texttt{clc/k4/}) consists of the C program, its brute-force reference, the Python re-verifier, the per-block logs of both campaigns (one JSON line per block, so the coverage can be audited), the survivor dumps and the certification records \texttt{CERTIFY\_*.txt}, and \texttt{make test}, which runs the self-tests and the relaxed end-to-end comparison in under a minute. The family searches and the heuristic model are in \texttt{agrawal/}, with a \textsc{pytest} suite that includes symbolic checks of the identities used in the proofs of Theorems~\ref{thm:A} and~\ref{thm:fam3}--\ref{thm:famgen}. The consultation history, including the errors caught along the way, is in \texttt{docs/}.
-
-\section{Open problems}
-
+\paragraph{Open problems.}
 \begin{enumerate}[leftmargin=2em]
-\item Is $k=4$ impossible? By Theorem~\ref{thm:A}, fixing $p_1$ leaves a finite search over $(p_2,q,r)$; the nonzero integer $\delta=des-8p_1^3=8p_1^3(1/\Pi-1)$ ($\delta\ge1$ when $\Pi<1$, $\delta\le-1$ when $\Pi>1$) ties the sizes of $p_2,q,r$ to $p_1$ but does not by itself exclude them; McIntosh and Dipra prove $\delta\ge1$ \cite[proof of Thm.~2]{MD15}.
+\item Is $k=4$ impossible? By Theorem~\ref{thm:A}, fixing $p_1$ leaves a finite search over $(p_2,q,r)$; the integer $\delta=des-8p_1^3=8p_1^3(1/\Pi-1)$ satisfies $\delta\ge1$ \cite[proof of Thm.~2]{MD15} and ties the sizes of $p_2,q,r$ to $p_1$ but does not by itself exclude them.
 \item The $k=5$ case, where both classes modulo $4$ are allowed and the analogue of~\eqref{eq:des} has four factors.
-\item Closing the $m=4$ polynomial-family stratum with one repeated root.
-\item A rigorous two-sided analogue of Pomerance's upper bound for Carmichael numbers.
+\item Closing the $m=4$ polynomial-family stratum with one repeated root (Appendix~\ref{sec:obstr}).
 \end{enumerate}
+
+\paragraph{Reproducibility.}\label{sec:repro}
+All code is in the repository \url{https://github.com/razv2025/carmichael-lucas-carmichael}, tagged for this version. Inventory of the computations and their verification status: (i) the two four-prime campaigns were run twice, certified as described in \S\ref{sec:complete}, and the certifications were repeated by an external reviewer from the tagged source; (ii) the $10^{24}$ scan was run once, with the integrity checks of \S\ref{sec:bound} against externally published counts, and its input is identified by SHA-256; (iii) the relaxed-problem validation to $10^{12}$ and the self-tests are archived and re-runnable (\texttt{make test}, under a minute); (iv) the polynomial-family searches of Appendix~\ref{sec:obstr} are archived with their command lines. The four-prime enumeration (\texttt{clc/k4/}) consists of the C program, its brute-force reference for the relaxed problem, the Python re-verifier, the per-block logs and survivor dumps of both campaigns, the certification records and \texttt{make test}; the $10^{24}$ scan (\texttt{clc/}) consists of the download--decode--verify--scan pipeline, the completeness report and the result files. The code was developed with AI assistance; see the declaration below.
 
 \appendix
 
-\section{Obstructions to the classical constructions}\label{sec:obstr}
+\section{Polynomial families}\label{sec:obstr}
 
-Carmichael numbers are constructed in two ways: by polynomial families in the manner of Chernick \cite{Chernick39}, $n(k)=(6k+1)(12k+1)(18k+1)$, where the divisibilities are polynomial identities; and by subset products in the manner of Erd\H{o}s and Alford--Granville--Pomerance \cite{Erdos56,AGP94,LN96}, where many primes $p$ with $p-1$ dividing a fixed smooth $\Lambda$ are harvested and a subset with product $\equiv1\pmod\Lambda$ is sought. We show that the two-sided versions of both break down in their simplest forms.
+Carmichael numbers are constructed in two ways: by polynomial families in the manner of Chernick \cite{Chernick39}, $n(k)=(6k+1)(12k+1)(18k+1)$, where the divisibilities are polynomial identities; and by subset products in the manner of Erd\H{o}s and Alford--Granville--Pomerance \cite{Erdos56,AGP94,LN96}. This appendix shows that the first construction cannot be made two-sided in its simplest forms. \emph{The theorems concern families whose divisibilities hold identically in the parameter $k$; they say nothing about families that are Williams numbers only for $k$ in some residue classes, nor about sporadic values.} The second construction is discussed, with measurements, in the supplementary note \cite{Supp}.
 
-\subsection{Polynomial families}
-
-Consider $n(k)=\prod_{i=1}^m(a_ik+b_i)$ with integers $a_i>0$, the linear factors pairwise non-proportional, and require the CLC divisibilities as polynomial identities: $(a_ik+b_i-1)\mid(n(k)-1)$ and $(a_ik+b_i+1)\mid(n(k)+1)$ in $\mathbb Q[k]$. Since a linear polynomial divides $f$ iff $f$ vanishes at its root, this is $n\bigl((1-b_i)/a_i\bigr)=1$ and $n\bigl((-1-b_i)/a_i\bigr)=-1$. With $D_{ij}=a_ib_j-a_jb_i$ one computes $a_j\frac{1-b_i}{a_i}+b_j=(a_j+D_{ij})/a_i$, so the conditions read, for every $i$,
+Consider $n(k)=\prod_{i=1}^m(a_ik+b_i)$ with integers $a_i>0$, the linear factors pairwise non-proportional, and require $(a_ik+b_i-1)\mid(n(k)-1)$ and $(a_ik+b_i+1)\mid(n(k)+1)$ in $\mathbb Q[k]$. Since a linear polynomial divides $f$ iff $f$ vanishes at its root, this is $n\bigl((1-b_i)/a_i\bigr)=1$ and $n\bigl((-1-b_i)/a_i\bigr)=-1$. With $D_{ij}=a_ib_j-a_jb_i$ one computes $a_j\frac{1-b_i}{a_i}+b_j=(a_j+D_{ij})/a_i$, so the conditions read, for every $i$,
 \begin{equation}\label{eq:fam}
 \prod_{j\ne i}(a_j+D_{ij})=a_i^{m-1}=\prod_{j\ne i}(D_{ij}-a_j).
 \end{equation}
+If $g=\gcd(a_1,\dots,a_m)>1$, write $a_i=ga_i'$; then $D_{ij}=gD'_{ij}$ and~\eqref{eq:fam} for $(a,b)$ is $g^{m-1}$ times~\eqref{eq:fam} for $(a',b)$, so every family reduces to one with $\gcd(a_i)=1$ (the same numbers on the sub-progression $k\in g\mathbb Z$); the searches below therefore assume $\gcd(a_i)=1$.
 
 \begin{theorem}[three factors]\label{thm:fam3}
 No such family exists for $m=3$.
@@ -301,56 +337,45 @@ Let $G(\tau)=n(-\tau)$, of degree $m$ with leading coefficient $c=(-1)^m\prod a_
 \end{proof}
 
 \begin{corollary}
-Every CLC polynomial family has two indices $i\ne j$ with $p_j-1=\frac{a_j}{a_i}(p_i-1)$ or $p_j+1=\frac{a_j}{a_i}(p_i+1)$ as polynomial identities.
+Every such family has two indices $i\ne j$ with $p_j-1=\frac{a_j}{a_i}(p_i-1)$ or $p_j+1=\frac{a_j}{a_i}(p_i+1)$ as polynomial identities.
 \end{corollary}
 
-The degenerate strata left open by Theorem~\ref{thm:famgen} were searched exhaustively using the fact that each factor in~\eqref{eq:fam} divides $a_i^{m-1}$: no family exists with $m=4$ and all $a_i\le500$, with $m=5$ and $a_i\le150$, or with $m=6$ and $a_i\le60$ (45 min, 1.8 h and 54 h respectively). Theorem~\ref{thm:fampm1} was also confirmed by search for $m=5,7,9,11$ up to $a_i\le20000,5000,3000,1500$.
+The strata left open by Theorem~\ref{thm:famgen} were searched exhaustively using the fact that each factor in~\eqref{eq:fam} divides $a_i^{m-1}$: no family exists with $m=4$ and all $a_i\le500$, or with $m=5$ and $a_i\le150$; Theorem~\ref{thm:fampm1} was also confirmed by search for $m=5,7,9,11$ up to $a_i\le20000,5000,3000,1500$. The outputs of these runs, with their command lines, are archived in \texttt{agrawal/results/}. Theorem~\ref{thm:fam3} is the parametric shadow of Proposition~\ref{prop:k3}.
 
-\begin{remark}
-These theorems close families in which the divisibilities hold identically in $k$. They say nothing about families that are CLC only for $k$ in some residue classes, nor about sporadic solutions. Theorem~\ref{thm:fam3} is the parametric shadow of Proposition~\ref{prop:k3}.
-\end{remark}
-
-\subsection{Two-sided subset products}\label{sec:subset}
-
-In the subset-product method one fixes a smooth modulus $\Lambda$, harvests primes $p$ with $(p-1)\mid\Lambda$, and looks for a subset with product $\equiv1\pmod\Lambda$; the expected number of solutions is about $2^{\text{(pool size)}-\log_2\varphi(\Lambda)}$, and the method succeeds because the pool grows faster than $\log_2\varphi(\Lambda)$. For Williams numbers one needs simultaneously $(p+1)\mid\Lambda'$ and product $\equiv-1\pmod{\Lambda'}$, and the two moduli interact: an odd prime $\ell$ cannot divide both some $p_i-1$ and some $p_j+1$ (else $n\equiv1\equiv-1\pmod\ell$), so every small prime must be assigned to one side, and the $2$-adic branch is fixed. Define the \emph{margin} of a configuration as (number of usable primes) $-\log_2\varphi(\lcm\text{ of all required }p\mp1)$, so that the expected number of two-sided solutions is about $2^{\text{margin}}$.
-
-We measured the margin over three families of configurations: random smooth moduli ($3{,}250$ configurations, all with margin $>-14$ searched exhaustively by meet-in-the-middle, no solution); pools of all primes $p\le X$ with both $p-1$ and $p+1$ $y$-smooth, with the side assignment optimised by hill-climbing (hundreds of restarts); and pools restricted to primes with few prime factors in $p\mp1$. The best margins were $-8.2$ (tiny three-prime systems), $-29.0/-30.6/-31.0/-36.9$ for $y=60/100/140/200$, and $-36.9$ for the sparse pools. The wall is flat or worsening in every direction we varied: each usable prime contributes one bit of subset freedom but about $2.5$ bits of modulus, because a prime that is useful on one side is almost never useful on the other. This is a measurement, not a theorem. The side-assignment of the small primes was formalised by Zhang \cite{Zhang15}, who splits the prime factors of the modulus into two groups serving $p-1$ and $p+1$ respectively, conjectures that the number of Williams numbers built from a modulus with $s$ prime factors grows only like $2^{2^{s^{1/2-o(1)}}}$ (against $2^{2^{s(1+o(1))}}$ for Carmichael numbers), and exhibits a set of $1{,}029$ primes expected to contain at least $2^{24}$ Williams numbers, none of which has been found. Our margins are a small-scale measurement consistent with Zhang's conjecture and with the ``intractable'' judgement of \cite{BFW21}.
-
-\section{A heuristic onset estimate}\label{app:onset}
-
-\emph{This appendix is heuristic.} For comparison, Zhang \cite[Remark~7.4]{Zhang15} predicts that a Williams number built from his set of $1{,}029$ primes would have about $428$ prime factors; the estimate below concerns the smallest Williams numbers of any origin and gives fewer, but likewise many, prime factors.  An Erd\H{o}s--Pomerance-style count of $k$-factor products of primes with $p\mp1$ both $y$-smooth, including the side-consistency factor $2(1-1/\ell)^k-(1-2/\ell)^k$ for each odd prime $\ell\le y$ and a factor $2^{1-k}$ for the $2$-adic branch, calibrated on the one-sided side against Pinch's counts $C(10^{15})=105{,}212$, $C(10^{18})=1{,}401{,}644$ and on the two-sided side against our measured counts of twin-smooth primes, places the first Williams number near $10^{208}$--$10^{490}$ with $k\approx80$--$110$ and $y\approx40$--$90$, and the first Lenstra--Pomerance counterexample to Agrawal's conjecture near $10^{2400}$--$10^{2900}$ with $k\approx270$. The ranges reflect the sensitivity to the per-prime calibration; the qualitative conclusion---far beyond exhaustive search, reachable only by a construction that circumvents \S\ref{sec:obstr}---is robust. The same machinery places the first Carmichael number near $10^3$ (truth: $561$).
-
+\section*{Declaration of generative AI and AI-assisted technologies}
+An AI system (Claude, Anthropic) was used, under the author's direction, for: drafting and checking the proofs; writing the code (the enumerator, the scanners, the certification and test scripts); drafting this text; literature search; and adversarial checking of the proofs and of the numerical claims. The author reconstructed and checked every proof and every claim, reviewed the code, and accepts full responsibility for the content. AI checks are not a substitute for human review; the human reviews received are acknowledged below.
 
 \section*{Acknowledgements}
-We thank the authors of the tabulations this work rests on: R.~G.~E.~Pinch, C.~Goutier, A.~Shallue and J.~Webster, H.~Stamm-Wilbrandt (for making the $10^{24}$ list available), D.~Suteu, and the OEIS contributors whose independent counts served as cross-checks. An AI system (Claude, Anthropic) was used, under the author's direction, for proof discovery and drafting, for writing the code, for drafting this text, for literature search, and for adversarial checking of the proofs and of the numerical claims; the AI checks are not a substitute for human review. The author reconstructed and checked every proof, and every computation was re-verified by the routes described in \S\ref{sec:repro}.
+We thank the authors of the tabulations this work rests on: R.~G.~E.~Pinch, C.~Goutier, A.~Shallue and J.~Webster, H.~Stamm-Wilbrandt (for making the $10^{24}$ list available), D.~Suteu, and the OEIS contributors whose independent counts served as integrity checks; and the reviewers who read earlier drafts, pointed us to the Williams-number literature, and repeated the certifications.
 
 \begin{thebibliography}{99}
-\bibitem{AG13} I.~Al-Rasasi, N.~Ghanmi, On Williams numbers with three prime factors, \emph{Missouri J. Math. Sci.} 25 (2013), 134--152.
-\bibitem{AKS} M.~Agrawal, N.~Kayal, N.~Saxena, PRIMES is in P, \emph{Ann. of Math.} 160 (2004), 781--793.
-\bibitem{AGP94} W.~R.~Alford, A.~Granville, C.~Pomerance, There are infinitely many Carmichael numbers, \emph{Ann. of Math.} 139 (1994), 703--722.
-\bibitem{BEP10} K.~Bouall\`egue, O.~Echi, R.~G.~E.~Pinch, Korselt numbers and sets, \emph{Int. J. Number Theory} 6 (2010), 257--269.
-\bibitem{BFW21} R.~Baillie, A.~Fiori, S.~S.~Wagstaff Jr., Strengthening the Baillie--PSW primality test, \emph{Math. Comp.} 90 (2021), 1931--1955.
+\bibitem{AG13} I.~Al-Rasasi, N.~Ghanmi, On Williams numbers with three prime factors, \emph{Missouri J. Math. Sci.} 25 (2013), 134--152. \url{https://doi.org/10.35834/mjms/1384266199}
+\bibitem{AKS} M.~Agrawal, N.~Kayal, N.~Saxena, PRIMES is in P, \emph{Ann. of Math.} 160 (2004), 781--793. \url{https://doi.org/10.4007/annals.2004.160.781}
+\bibitem{AGP94} W.~R.~Alford, A.~Granville, C.~Pomerance, There are infinitely many Carmichael numbers, \emph{Ann. of Math.} 139 (1994), 703--722. \url{https://doi.org/10.2307/2118576}
+\bibitem{BEP10} K.~Bouall\`egue, O.~Echi, R.~G.~E.~Pinch, Korselt numbers and sets, \emph{Int. J. Number Theory} 6 (2010), 257--269. \url{https://doi.org/10.1142/S1793042110002922}
+\bibitem{BFW21} R.~Baillie, A.~Fiori, S.~S.~Wagstaff Jr., Strengthening the Baillie--PSW primality test, \emph{Math. Comp.} 90 (2021), 1931--1955. \url{https://doi.org/10.1090/mcom/3616}
 \bibitem{ChenGreene03} Z.~Chen, J.~Greene, Some comments on Baillie--PSW pseudoprimes, \emph{Fibonacci Quart.} 41 (2003), 334--344.
-\bibitem{Chernick39} J.~Chernick, On Fermat's simple theorem, \emph{Bull. Amer. Math. Soc.} 45 (1939), 269--274.
+\bibitem{Chernick39} J.~Chernick, On Fermat's simple theorem, \emph{Bull. Amer. Math. Soc.} 45 (1939), 269--274. \url{https://doi.org/10.1090/S0002-9904-1939-06953-X}
 \bibitem{Chick} J.~M.~Chick, Carmichael number variable relations: three-prime Carmichael numbers up to $10^{24}$, \texttt{arXiv:0711.2915} (2007); counts in OEIS A132195.
 \bibitem{Echi07} O.~Echi, Williams numbers, \emph{C. R. Math. Rep. Acad. Sci. Canada} 29 (2007), 41--47.
 \bibitem{Erdos56} P.~Erd\H{o}s, On pseudoprimes and Carmichael numbers, \emph{Publ. Math. Debrecen} 4 (1956), 201--206.
 \bibitem{Gilchrist} J.~Gilchrist, Pseudoprime enumeration with probabilistic primality tests, web page (2013), reporting the 2009 verification, from J.~Feitsma's table of base-2 pseudoprimes below $2^{64}$, that no Baillie--PSW pseudoprime exists below $2^{64}$; see also T.~R.~Nicely's Baillie--PSW page.
 \bibitem{Goutier} C.~Goutier, Carmichael numbers up to $10^{22}$ (2024), data and readme linked from OEIS A002997 and A055553.
 \bibitem{Grantham} J.~Grantham, Frobenius pseudoprimes, \emph{Math. Comp.} 70 (2001), 873--891; and the \$620 problem page.
-\bibitem{Howe00} E.~W.~Howe, Higher-order Carmichael numbers, \emph{Math. Comp.} 69 (2000), 1711--1719.
-\bibitem{LN96} G.~L\"oh, W.~Niebuhr, A new algorithm for constructing large Carmichael numbers, \emph{Math. Comp.} 65 (1996), 823--836.
-\bibitem{LP} H.~W.~Lenstra Jr., C.~Pomerance, Remarks on Agrawal's conjecture, in: \emph{Future directions in algorithmic number theory}, AIM workshop notes (2003), pp.~30--32 (archived copy of \texttt{aimath.org/WWN/primesinp/primesinp.pdf}).
+\bibitem{Howe00} E.~W.~Howe, Higher-order Carmichael numbers, \emph{Math. Comp.} 69 (2000), 1711--1719. \url{https://doi.org/10.1090/S0025-5718-00-01225-4}
+\bibitem{LN96} G.~L\"oh, W.~Niebuhr, A new algorithm for constructing large Carmichael numbers, \emph{Math. Comp.} 65 (1996), 823--836. \url{https://doi.org/10.1090/S0025-5718-96-00692-8}
+\bibitem{LP} H.~W.~Lenstra Jr., C.~Pomerance, Remarks on Agrawal's conjecture, in: \emph{Future directions in algorithmic number theory}, AIM workshop notes (2003), pp.~30--32; archived copy of \url{http://aimath.org/WWN/primesinp/primesinp.pdf}.
 \bibitem{McIntosh14} R.~J.~McIntosh, Carmichael numbers with $(p+1)\mid(n-1)$, \emph{Integers} 14 (2014), \#A59.
-\bibitem{MD15} R.~J.~McIntosh, M.~Dipra, Carmichael numbers with $p+1\mid n+1$, \emph{J. Number Theory} 147 (2015), 81--91.
+\bibitem{MD15} R.~J.~McIntosh, M.~Dipra, Carmichael numbers with $p+1\mid n+1$, \emph{J. Number Theory} 147 (2015), 81--91. \url{https://doi.org/10.1016/j.jnt.2014.06.005}
 \bibitem{Phatak20} D.~Phatak, Bounds on the range(s) of prime divisors of a class of Baillie--PSW pseudo-primes, \texttt{viXra:2007.0102} (2020), unrefereed.
 \bibitem{Pinch07} R.~G.~E.~Pinch, Absolute quadratic pseudoprimes, in: \emph{Proc. Conf. on Algorithmic Number Theory}, Turku 2007, TUCS General Publication 46, pp.~113--128.
-\bibitem{PinchTables} R.~G.~E.~Pinch, The Carmichael numbers up to $10^{21}$, \emph{Proc. Conf. on Algorithmic Number Theory}, Turku 2007; tables at \url{http://www.s369624816.websitehome.co.uk/rgep/carpsp.html}.
-\bibitem{Pomerance84} C.~Pomerance, Are there counter-examples to the Baillie--PSW primality test?, in: \emph{Dopo le parole} (H.~W.~Lenstra Jr., J.~K.~Lenstra, P.~van Emde Boas, eds.), Amsterdam 1984; \url{https://www.pseudoprime.com/dopo.pdf}.
-\bibitem{SW24} A.~Shallue, J.~Webster, Advances in tabulating Carmichael numbers, \emph{Res. Number Theory} 11 (2025), art.~8; \texttt{arXiv:2401.14495}.
+\bibitem{PinchTables} R.~G.~E.~Pinch, The Carmichael numbers up to $10^{21}$, \emph{Proc. Conf. on Algorithmic Number Theory}, Turku 2007; tables at \url{http://www.s369624816.websitehome.co.uk/rgep/carpsp.html}
+\bibitem{Pomerance84} C.~Pomerance, Are there counter-examples to the Baillie--PSW primality test?, in: \emph{Dopo le parole} (H.~W.~Lenstra Jr., J.~K.~Lenstra, P.~van Emde Boas, eds.), Amsterdam 1984. \url{https://www.pseudoprime.com/dopo.pdf}
+\bibitem{SW24} A.~Shallue, J.~Webster, Advances in tabulating Carmichael numbers, \emph{Res. Number Theory} 11 (2025), art.~8. \url{https://doi.org/10.1007/s40993-024-00598-3}
 \bibitem{SW25} A.~Shallue, J.~Webster, Algorithms for Carmichael numbers, \texttt{arXiv:2506.09903} (2025).
-\bibitem{SW_bin} H.~Stamm-Wilbrandt, \texttt{carm10e24.bin}, PARI/GP binary vector of all Carmichael numbers below $10^{24}$ (7 March 2026), \url{https://stamm-wilbrandt.de/carm10e24.bin}.
-\bibitem{Zhang15} Z.~Zhang, Estimating the counts of Carmichael and Williams numbers with small multiple seeds, \emph{Math. Comp.} 84 (2015), 309--337.
-\bibitem{Williams77} H.~C.~Williams, On numbers analogous to the Carmichael numbers, \emph{Canad. Math. Bull.} 20 (1977), 133--143.
+\bibitem{SW_bin} H.~Stamm-Wilbrandt, \texttt{carm10e24.bin}, PARI/GP binary vector of all Carmichael numbers below $10^{24}$ (7 March 2026). \url{https://stamm-wilbrandt.de/carm10e24.bin}
+\bibitem{Supp} R.~Vakil, Supplementary note: two-sided subset products and an onset heuristic for Williams numbers; file \texttt{paper/supplement.pdf} in the repository.
+\bibitem{Williams77} H.~C.~Williams, On numbers analogous to the Carmichael numbers, \emph{Canad. Math. Bull.} 20 (1977), 133--143. \url{https://doi.org/10.4153/CMB-1977-025-9}
+\bibitem{Zhang15} Z.~Zhang, Estimating the counts of Carmichael and Williams numbers with small multiple seeds, \emph{Math. Comp.} 84 (2015), 309--337. \url{https://doi.org/10.1090/S0025-5718-2014-02837-8}
 \end{thebibliography}
 \end{document}

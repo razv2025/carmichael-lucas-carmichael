@@ -14,12 +14,15 @@ Lucas–Carmichael ((p+1) | (n+1) for every p | n). The same objects appear in t
 | 2 | **Theorem B.** No four-prime Williams number with n ≤ 10³⁰; none with p₁ ≤ 500,000 (any n). Extends McIntosh–Dipra's p₁ > 2×10⁴, N > 10²⁴. | computation | **certified** 2026-11-01 (`clc/k4/CERTIFY_*.txt`): full coverage, all survivors re-tested in Python |
 | 3 | No CLC number below 10²⁴ (factor-and-test of the complete Carmichael tabulations; completeness and per-class cross-checks; maximum of four matching primes). | computation on external data | done; a rescan recording the full match histogram is running (~21 h) |
 | 4 | Synthesis of the Lucas–Carmichael / Baillie–PSW / Agrawal / Howe connections. | exposition | wording depends on §5 |
-| 5 | Polynomial-family impossibility theorems; exhaustive strata; subset-product margin measurement. | theorems + measurement | moved to Appendix A |
-| 6 | Heuristics (four-prime expected count ≈ 6×10⁻⁷; onset model). | speculative | labelled as such; onset model in Appendix B |
+| 5 | Polynomial-family impossibility theorems; exhaustive strata (outputs being regenerated into `agrawal/results/`). | theorems + searches | Appendix A |
+| 6 | Subset-product margin measurement; onset model; four-prime heuristic. | speculative | supplement (`paper/supplement.pdf`) and one moderated paragraph in §8 |
 
-Recommended core (per the external review of 2026-11-01): lead with Theorem A, the certified enumeration (Theorem B) and
-the 10²⁴ scan; keep items 5–6 as appendices. Working title: *Explicit bounds and exhaustive searches for four-prime
-Williams numbers (Carmichael ∩ Lucas–Carmichael)*, to be fixed after §5.
+Structure after the second referee review (2026-11-01): Introduction with a comparison table against McIntosh–Dipra → Preliminaries →
+structural bounds (Theorem A, attributed) → algorithm (displayed pseudocode, reconstruction lemma) → completeness/validation/
+certification → results → the 10²⁴ census (input data / per-entry verification / integrity checks) → discussion → Appendix A
+(polynomial families only). The subset-product measurement and the onset model are now a separate supplementary note
+(`paper/supplement.tex`). Title: *Exhaustive searches for Williams numbers: the four-prime case and a general 10²⁴ bound*.
+AI use is declared in a separate section before the references (Elsevier/JNT format).
 
 ## 2. Venues
 
@@ -91,6 +94,19 @@ and OEIS record are recommended regardless.
 | AI policy compliance | roles disclosed; venue matrix | recheck policies at submission; human-authored prose where required |
 | Process errors | the rerun's last blocks were lost to a `git stash -u` on live log files (2026-11-01) and recomputed; the wrapper now fails fast and certifies coverage | never run file-removing git commands while a job writes into the tree |
 
+## 6a. Second referee review (2026-11-01, `docs/review-referee-2026-11-01.pdf`)
+
+Major revision with a favourable view; both certifications repeated by the reviewer from the clean tag. All requested items
+applied the same day: 'first attained at' → 'attained, for example, at' (the exact four-match count follows from the running
+rescan); displayed pseudocode + reconstruction lemma + completeness proposition placed after the algorithm; certificate asserts
+per-block survivor counts and Fermat counts; Pomerance claim narrowed to 'any counterexample produced by the construction';
+heuristic moderated (24/(p²−1), 'consistent with'); Appendix A qualified (identities in k; gcd normalisation explained; outputs
+archived); subset-product and onset material moved to a supplement; section order as recommended; precise inventory of what was
+rerun / cross-checked / single-run; 'integrity checks' wording; MR-splitting sentence clarified; rescan worker errors fatal +
+rescan certifier; survivors 'deduplicated within campaigns'; shorter title; concise abstract; internal audit chronology removed
+from the paper; MSC/keywords/PDF metadata; DOIs added. Not changed: Pinch 2007 page range (reviewer says 129–131, our
+fact-check found 113–128 via OEIS) — **verify against the TUCS volume before submission**.
+
 ## 7. Gates
 
 **Gate A — before any public posting**
@@ -103,7 +119,9 @@ and OEIS record are recommended regardless.
 **Gate B — release candidate**
 - [ ] `./run_tests.sh` passes from a clean clone on a second machine (transcript saved).
 - [ ] Source, compiler flags, binaries' hashes, inputs' hashes, command lines and logs frozen; Zenodo DOI.
-- [ ] 10²⁴ histogram rescan finished, or the four-match count claim removed.
+- [ ] 10²⁴ histogram rescan finished and certified (`clc/certify_rescan.py`); exact four-match count inserted in §7.
+- [ ] Family-search outputs regenerated (`agrawal/results/`, m=4 a≤500 and m=5 a≤150 running 2026-11-01 afternoon).
+- [ ] Pinch 2007 page range verified.
 - [ ] Every bibliography entry verified against the primary source.
 
 **Gate C — journal submission**

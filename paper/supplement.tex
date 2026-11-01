@@ -1,0 +1,34 @@
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,url,enumitem}
+\usepackage[dvipsnames]{xcolor}\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black}
+\providecommand{\lcm}{\operatorname{lcm}}
+\title[Supplement: subset products and an onset heuristic]{Supplementary note to ``Exhaustive searches for Williams numbers'':\\ two-sided subset products and an onset heuristic}
+\author{Raz Vakil}\address{Tel Aviv, Israel}\email{Raz.Vakil@gmail.com}\date{1 November 2026}
+\begin{document}
+\begin{abstract}
+This note records two heuristic experiments that accompanied the computations of the main paper: a measurement of how the Erd\H{o}s--Alford--Granville--Pomerance subset-product construction degrades when both $p-1$ and $p+1$ must be controlled, and an Erd\H{o}s--Pomerance-style estimate of the size at which the first Williams number might appear. Neither is a theorem; both are reported with their assumptions so that they can be compared with Zhang's conjectures and improved upon. Code: \texttt{agrawal/} in the repository \url{https://github.com/razv2025/carmichael-lucas-carmichael}.
+\end{abstract}
+\maketitle
+A \emph{Williams number} is a squarefree composite $n$ with $(p-1)\mid(n-1)$ and $(p+1)\mid(n+1)$ for every prime $p\mid n$; see the main paper for background, notation and references (cited here by the same keys).
+
+\section{Two-sided subset products: a measurement}\label{sec:subset}
+
+In the subset-product method one fixes a smooth modulus $\Lambda$, harvests primes $p$ with $(p-1)\mid\Lambda$, and looks for a subset with product $\equiv1\pmod\Lambda$; the expected number of solutions is about $2^{\text{(pool size)}-\log_2\varphi(\Lambda)}$, and the method succeeds because the pool grows faster than $\log_2\varphi(\Lambda)$. For Williams numbers one needs simultaneously $(p+1)\mid\Lambda'$ and product $\equiv-1\pmod{\Lambda'}$, and the two moduli interact: an odd prime $\ell$ cannot divide both some $p_i-1$ and some $p_j+1$ (else $n\equiv1\equiv-1\pmod\ell$), so every small prime must be assigned to one side, and the $2$-adic branch is fixed. Define the \emph{margin} of a configuration as (number of usable primes) $-\log_2\varphi(\lcm\text{ of all required }p\mp1)$, so that the expected number of two-sided solutions is about $2^{\text{margin}}$.
+
+We measured the margin over three families of configurations: random smooth moduli ($3{,}250$ configurations, all with margin $>-14$ searched exhaustively by meet-in-the-middle, no solution); pools of all primes $p\le X$ with both $p-1$ and $p+1$ $y$-smooth, with the side assignment optimised by hill-climbing (hundreds of restarts); and pools restricted to primes with few prime factors in $p\mp1$. The best margins were $-8.2$ (tiny three-prime systems), $-29.0/-30.6/-31.0/-36.9$ for $y=60/100/140/200$, and $-36.9$ for the sparse pools. The wall is flat or worsening in every direction we varied: each usable prime contributes one bit of subset freedom but about $2.5$ bits of modulus, because a prime that is useful on one side is almost never useful on the other. This is a measurement, not a theorem. The side-assignment of the small primes was formalised by Zhang \cite{Zhang15}, who splits the prime factors of the modulus into two groups serving $p-1$ and $p+1$ respectively, conjectures that the number of Williams numbers built from a modulus with $s$ prime factors grows only like $2^{2^{s^{1/2-o(1)}}}$ (against $2^{2^{s(1+o(1))}}$ for Carmichael numbers), and exhibits a set of $1{,}029$ primes expected to contain at least $2^{24}$ Williams numbers, none of which has been found. Our margins are a small-scale measurement consistent with Zhang's conjecture and with the ``intractable'' judgement of \cite{BFW21}.
+
+
+\section{A heuristic onset estimate}\label{app:onset}
+
+\emph{This appendix is heuristic.} For comparison, Zhang \cite[Remark~7.4]{Zhang15} predicts that a Williams number built from his set of $1{,}029$ primes would have about $428$ prime factors; the estimate below concerns the smallest Williams numbers of any origin and gives fewer, but likewise many, prime factors.  An Erd\H{o}s--Pomerance-style count of $k$-factor products of primes with $p\mp1$ both $y$-smooth, including the side-consistency factor $2(1-1/\ell)^k-(1-2/\ell)^k$ for each odd prime $\ell\le y$ and a factor $2^{1-k}$ for the $2$-adic branch, calibrated on the one-sided side against Pinch's counts $C(10^{15})=105{,}212$, $C(10^{18})=1{,}401{,}644$ and on the two-sided side against our measured counts of twin-smooth primes, places the first Williams number near $10^{208}$--$10^{490}$ with $k\approx80$--$110$ and $y\approx40$--$90$, and the first Lenstra--Pomerance counterexample to Agrawal's conjecture near $10^{2400}$--$10^{2900}$ with $k\approx270$. The ranges reflect the sensitivity to the per-prime calibration; the qualitative conclusion---far beyond exhaustive search, reachable only by a construction that circumvents \S\ref{sec:obstr}---is robust. The same machinery places the first Carmichael number near $10^3$ (truth: $561$).
+
+
+
+\begin{thebibliography}{9}
+\bibitem{BFW21} R.~Baillie, A.~Fiori, S.~S.~Wagstaff Jr., Strengthening the Baillie--PSW primality test, \emph{Math. Comp.} 90 (2021), 1931--1955.
+\bibitem{Zhang15} Z.~Zhang, Estimating the counts of Carmichael and Williams numbers with small multiple seeds, \emph{Math. Comp.} 84 (2015), 309--337.
+\bibitem{Pinch07} R.~G.~E.~Pinch, Absolute quadratic pseudoprimes, Turku 2007.
+\end{thebibliography}
+\end{document}
