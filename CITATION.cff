@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this code or these results, please cite the preprint."
-title: "Explicit bounds and exhaustive searches for four-prime Williams numbers (Carmichael numbers that are also Lucas-Carmichael)"
+title: "An exhaustive search for four-prime Williams numbers (Carmichael numbers that are also Lucas-Carmichael) to 10^30, and a verified bound of 10^24 for all of them"
 authors:
   - family-names: Vakil
     given-names: Raz

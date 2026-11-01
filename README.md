@@ -2,14 +2,14 @@
 
 Code, data and notes behind the preprint (repository: https://github.com/razv2025/carmichael-lucas-carmichael)
 
-> R. Vakil, *Explicit bounds and exhaustive searches for four-prime Williams numbers (Carmichael numbers that are also Lucas–Carmichael)* (2026) — `paper/clc.tex`, `paper/clc.pdf`.
+> R. Vakil, *An exhaustive search for four-prime Williams numbers (Carmichael numbers that are also Lucas–Carmichael) to 10³⁰, and a verified bound of 10²⁴ for all of them* (2026) — `paper/clc.tex`, `paper/clc.pdf`.
 
 A squarefree composite n is **Carmichael** if (p−1) | (n−1) for every prime p | n and **Lucas–Carmichael** if (p+1) | (n+1) for every p | n. Numbers that are both are **Williams numbers** (Echi 2007; the question is H. C. Williams's, 1977); no example is known. The code and older notes call them CLC numbers. Prior work: McIntosh–Dipra (JNT 2015) proved finiteness with all but three primes fixed and excluded four-prime examples with p₁ ≤ 2×10⁴ or N ≤ 10²⁴; see `docs/literature-williams-numbers.md`. Results in this repository:
 
 | result | where |
 |---|---|
 | No such number below 10²⁴ (independent scan of all 308,279,939 Carmichael numbers < 10²⁴, with completeness and OEIS cross-checks; near-miss statistics) | `clc/` — `RESULT_1e24_2026-10-21.txt`, `RESULT_1e22_2026-10-20.txt`, `VERIFY_1e24_list_completeness.txt`, `DATA_SHA256.txt` |
-| **Theorem A** (four prime factors p₁<p₂<p₃<p₄): all pᵢ ≡ 1 (mod 12), p₃ < 2p₁p₂, p₄ < √(2p₁p₂p₃), **p₂² ≤ 24p₁³ + 1**, n < 477 p₁^{15/2} | `paper/clc.tex` §3, `docs/k4-notes.md` |
+| Theorem A (four prime factors p₁<p₂<p₃<p₄): all pᵢ ≡ 1 (mod 12), p₃ < 2p₁p₂, p₄ < √(2p₁p₂p₃), p₂² ≤ 24p₁³ + 1 — **this is McIntosh–Dipra's theorem (JNT 2015, Thms 2–3, d = 4)**, restated with an independent proof | `paper/clc.tex` §3, `docs/k4-notes.md` |
 | **Theorem B**: no four-prime example with n ≤ 10³⁰, and none at all with smallest prime ≤ 500,000 | `clc/k4/` — `RESULT_n1e30.txt`, `RESULT_p1_500000.txt`, per-block logs `k4_*.jsonl` |
 | Impossibility theorems for two-sided Chernick-type polynomial families; exhaustive searches of the remaining strata; quantified failure of the two-sided subset-product method; heuristics | `agrawal/`, `docs/obstructions.md`, `data/` |
 
