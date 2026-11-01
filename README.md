@@ -2,9 +2,9 @@
 
 Code, data and notes behind the preprint (repository: https://github.com/razv2025/carmichael-lucas-carmichael)
 
-> R. Vakil, *Numbers that are both Carmichael and Lucas–Carmichael: a verified bound of 10²⁴, the four-prime case, and obstructions to constructions* (2026) — `paper/clc.tex`, `paper/clc.pdf`.
+> R. Vakil, *Explicit bounds and exhaustive searches for four-prime Williams numbers (Carmichael numbers that are also Lucas–Carmichael)* (2026) — `paper/clc.tex`, `paper/clc.pdf`.
 
-A squarefree composite n is **Carmichael** if (p−1) | (n−1) for every prime p | n and **Lucas–Carmichael** if (p+1) | (n+1) for every p | n. Whether a number can be both was asked by H. C. Williams in 1977; no example is known. Results in this repository:
+A squarefree composite n is **Carmichael** if (p−1) | (n−1) for every prime p | n and **Lucas–Carmichael** if (p+1) | (n+1) for every p | n. Numbers that are both are **Williams numbers** (Echi 2007; the question is H. C. Williams's, 1977); no example is known. The code and older notes call them CLC numbers. Prior work: McIntosh–Dipra (JNT 2015) proved finiteness with all but three primes fixed and excluded four-prime examples with p₁ ≤ 2×10⁴ or N ≤ 10²⁴; see `docs/literature-williams-numbers.md`. Results in this repository:
 
 | result | where |
 |---|---|

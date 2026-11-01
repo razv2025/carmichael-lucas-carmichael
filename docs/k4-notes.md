@@ -1,4 +1,8 @@
-# Carmichael ∩ Lucas–Carmichael numbers with four prime factors
+# Carmichael ∩ Lucas–Carmichael numbers (Williams numbers) with four prime factors
+
+**Prior work (added 2026-11-01):** these are the *Williams numbers* of Echi (2007); McIntosh–Dipra, J. Number Theory 147 (2015)
+proved finiteness with d−3 primes fixed by the product-of-quotients mechanism used below and showed four-prime examples have
+p₁ > 2×10⁴, N > 10²⁴. Theorem A below is the explicit form; Theorem B extends their exclusion. See `docs/literature-williams-numbers.md`.
 
 *Working note, version 2026-11-01 (first version 2026-10-29). Code, logs and result files: `clc/k4/`.*
 

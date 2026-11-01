@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this code or these results, please cite the preprint."
-title: "Numbers that are both Carmichael and Lucas-Carmichael: a verified bound of 10^24, the four-prime case, and obstructions to constructions"
+title: "Explicit bounds and exhaustive searches for four-prime Williams numbers (Carmichael numbers that are also Lucas-Carmichael)"
 authors:
   - family-names: Vakil
     given-names: Raz

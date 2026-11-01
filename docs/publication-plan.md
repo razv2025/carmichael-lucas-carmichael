@@ -59,17 +59,16 @@ independently reconstruct and accept responsibility for every proof, computation
 reports in `docs/` are adversarial checks, not independent human review, and are labelled accordingly. A consultant is offered
 co-authorship only for a contribution meeting ordinary authorship standards.
 
-## 5. Literature and novelty — PENDING
+## 5. Literature and novelty
 
-The external review identified prior work on exactly these objects under the names *Williams numbers* / *1-Williams numbers*:
-McIntosh–Dipra, J. Number Theory 147 (2015) 81–91 (finiteness with d−3 primes fixed; a four-factor computation);
-McIntosh, Integers 14 (2014) #A59 §4; Zhang, Math. Comp. 84 (2015) 309–337 (counting heuristics for Williams numbers);
-Echi, C. R. Math. Rep. Acad. Sci. Canada 29 (2007) 41–47; Ghanmi–Al-Rasasi, Missouri J. Math. Sci. 25 (2013) 134–152.
-A primary-source check of each is in progress (`docs/literature-williams-numbers.md` when done). Until it is complete, the
-manuscript's statements "the only theorem since 1977", "first open case untouched", "the literatures do not cite each
-other" and "first printed bound since Pinch" are **suspended**, and the introduction will be rewritten around this
-literature with a theorem-by-theorem, bound-by-bound comparison. Pinch's 10¹⁶ statement is parity-restricted and is stated
-separately, not as a directly comparable bound.
+The primary-source check is written up in `docs/literature-williams-numbers.md`. Summary: the objects are **Williams numbers**
+(Echi 2007); McIntosh–Dipra (JNT 2015) proved finiteness with d−3 primes fixed, by the same product-of-quotients mechanism
+McIntosh used in 2014, and showed a four-prime example has p₁ > 2×10⁴ and N > 10²⁴; Zhang (Math. Comp. 2015) formalised the
+two-sided subset-product heuristics. The manuscript has been rewritten accordingly: name changed, prior results cited and
+compared, Theorem A presented as the explicit form of their finiteness theorem (its sharpness relative to their constants is
+**provisional** until Raz has read their PDF — free, link in the literature note), Theorem B as the extension from
+(2×10⁴, 10²⁴) to (500,000, 10³⁰). Two TODO markers remain in the paper at exactly these two points. The all-k bound 10²⁴
+stands as the largest found in print, subject to the same read. Pinch's 10¹⁶ is stated with its parity restriction.
 
 ## 6. Risk register (neutral form)
 
@@ -79,7 +78,7 @@ separately, not as a directly comparable bound.
 | Enumeration completeness (Theorem B) | lemmas stated and proved; both candidate walks agree on six instances; relaxed-problem regression to 10¹² archived (`clc/k4/validation/`); per-block logs; certification script with hard assertions (`clc/k4/certify_k4.py`) | finish the rerun and archive `CERTIFY_*.txt`; write the implementation-completeness proposition |
 | Verifier soundness | verifier checks the original tuple without normalisation; negative tests; C Fermat routine cross-checked against Python | — |
 | Dependence on external tabulations (10²⁴) | three completeness checks; per-ω cross-checks against two OEIS sequences; checksums | — |
-| Prior art | — | §5 |
+| Prior art | literature note written; manuscript reframed | read McIntosh–Dipra and Zhang in full; resolve the two TODOs |
 | AI policy compliance | roles disclosed; venue matrix | recheck policies at submission; human-authored prose where required |
 | Process errors | the rerun's last blocks were lost to a `git stash -u` on live log files (2026-11-01) and recomputed; the wrapper now fails fast and certifies coverage | never run file-removing git commands while a job writes into the tree |
 
@@ -88,7 +87,8 @@ separately, not as a directly comparable bound.
 **Gate A — before any public posting**
 - [ ] Theorem A proof text final (both Π branches explicit; δ sign correct); reviewed by a human number theorist.
 - [ ] `CERTIFY_n1e30.txt` and `CERTIFY_p1_500000.txt` present, ending in CERTIFIED (323/323 blocks, 1,185 distinct survivors, all re-tested in Python).
-- [ ] Literature comparison written; novelty claims rewritten bound-by-bound against McIntosh–Dipra and Zhang.
+- [x] Literature comparison written; novelty claims rewritten against McIntosh–Dipra and Zhang.
+- [ ] McIntosh–Dipra and Zhang read in full by the author; the two TODOs in the paper resolved.
 - [ ] Implementation-completeness proposition written into §3.
 
 **Gate B — release candidate**
