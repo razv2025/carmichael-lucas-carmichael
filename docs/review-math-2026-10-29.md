@@ -1,4 +1,4 @@
-# Independent adversarial referee report on `paper/clc.tex` (2026-10-29)
+# AI-agent adversarial audit of `paper/clc.tex` (2026-10-29) — not an independent human review
 
 *Produced by a reviewer agent given only the LaTeX source and instructed to re-derive every proof, test every claim
 numerically, and look for gaps. It did not read any other repository file. Each finding is followed by its resolution.*

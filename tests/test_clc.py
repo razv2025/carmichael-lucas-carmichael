@@ -71,3 +71,16 @@ def test_c_fermat_routine_matches_python():
     assert len(got) == len(set(ns))
     for n in ns:
         assert got[n] == pow(2, n - 1, n), n
+
+
+def test_verifier_rejects_repeated_or_unordered_factors():
+    v = load("verify_k4", "clc/k4/verify_k4.py")
+    # repeated factor, unordered tuple, composite factor, wrong length: all rejected without normalisation
+    assert v.check(2, [13, 13, 37, 97])[1] is False
+    assert v.check(2, [37, 13, 97, 577])[1] is False
+    assert v.check(2, [13, 37, 91, 577])[1] is False
+    assert v.check(2, [13, 37, 97])[1] is False
+    # the relaxed solution passes only as the exact increasing tuple
+    assert v.check(24, [5, 7, 17, 23])[1] is True
+    assert v.check(24, [7, 5, 17, 23])[1] is False
+    assert v.check(2, [13, 37, 97, 577])[1] is False      # Carmichael but not Lucas–Carmichael

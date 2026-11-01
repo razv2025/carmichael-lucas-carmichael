@@ -1,4 +1,4 @@
-# Independent fact-check of `paper/clc.tex` (2026-10-29)
+# AI-agent fact-check audit of `paper/clc.tex` (2026-10-29) — not an independent human review
 
 *Produced by an independent reviewer agent given only the LaTeX source and instructed to verify every numerical and
 factual claim against primary evidence (raw result files, block logs, OEIS, Crossref, arXiv, the cited PDFs). No

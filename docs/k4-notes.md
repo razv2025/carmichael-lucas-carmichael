@@ -1,6 +1,6 @@
 # Carmichael ∩ Lucas–Carmichael numbers with four prime factors
 
-*Working note, 2026-10-29. Code, logs and result files: `clc/k4/`.*
+*Working note, version 2026-11-01 (first version 2026-10-29). Code, logs and result files: `clc/k4/`.*
 
 ## 1. Statement
 
@@ -19,10 +19,10 @@ Hence any 4-prime CLC number has p₁ > 500,000 and n > 10³⁰.
 ## 2. Proofs
 
 **Lemma 1.** For p | n: n is CLC at p ⟺ n/p ≡ 1 (mod L_p), L_p := (p²−1)/2.
-*Proof.* (p−1)|(n−1) and (p+1)|(n+1) ⟺ n ≡ p (mod lcm(p−1,p+1)) = (mod L_p) ⟺ L_p | n−p = p(n/p−1) ⟺ L_p | n/p − 1, since gcd(p, p²−1) = 1. ∎
+*Proof.* (p−1)|(n−1) and (p+1)|(n+1) ⟺ n ≡ 1 (mod p−1) and n ≡ −1 (mod p+1) ⟺ n ≡ p (mod L_p), since L_p = lcm(p−1, p+1); and L_p | n − p = p(n/p − 1) ⟺ L_p | n/p − 1, since gcd(p, p²−1) = 1. ∎
 
 **(a).** 4 | L_p for every odd p, so n ≡ p (mod 4) for all p | n: all pᵢ lie in one class c mod 4 and n ≡ c⁴ ≡ 1, so c = 1.
-For p ≠ 3, 3 | L_p, so n ≡ p (mod 3) for every p | n with p ≠ 3; if 3 | n this forces every other prime ≡ 0 (mod 3), absurd, so 3 ∤ n (Williams) and all pᵢ ≡ n ≡ c⁴ ≡ 1 (mod 3). ∎
+For p ≠ 3, 3 | L_p, so n ≡ p (mod 3) for every p | n with p ≠ 3; if 3 | n this forces every other prime ≡ 0 (mod 3), absurd, so 3 ∤ n (this re-proves Williams's observation) and all pᵢ lie in one class c′ mod 3 with n ≡ c′⁴ ≡ 1 (mod 3), so c′ = 1. ∎
 
 **(b).** Write P = p₁p₂, q = p₃, r = p₄. Lemma 1 at r: Pq − 1 = d·L_r with an integer d ≥ 1, i.e.
   2Pq = d(r²−1) + 2.                                   (iii)
@@ -59,7 +59,7 @@ For each admissible pair p₁ < p₂ (both ≡ 1 mod 12; p₂ ≤ min((B/p₁)^{
 3. Survivors: base-2 Fermat test on n (necessary for Carmichael numbers), then r is recovered as an integer root of
    dx³ − (d−2)x − 2n for d ≤ 2p₁, q = m/r, and all four conditions plus primality are checked; everything is re-verified
    independently in Python (`verify_k4.py`).
-Cost: ~B^{1/2}/log²B pairs for the n-bounded run, ~X^{5/2} for the p₁-bounded run; 32 million pairs/s on the M4 Pro.
+Cost: ~B^{1/2}/log²B pairs for the n-bounded run, ~X^{5/2} for the p₁-bounded run; 44 and 10 million pairs/s in the two campaigns on the M4 Pro.
 
 **Validation.** Brute-force self-tests on the (q,r) half-problem in four relaxed variants (43 half-solutions) check (iii), the
 window inequality, the cubic, and both reconstruction paths; the CRT class is brute-forced for 13,037 pairs; the two-sweep walk
@@ -82,8 +82,9 @@ Conditioning on (a), each condition n/p ≡ 1 (mod L_p/12) has "probability" 24/
 p₂² ≤ 24p₁³+1 and q, r ∈ (p₂, 2P) gives an expected count ≈ 6.3×10⁻⁷ (`python3 -m agrawal.k4_heuristic`), about 96% of it from
 p₁ = 13 (where n < 1.1×10¹¹, long excluded). The mass left after Theorem B (p₁ > 5×10⁵) decays like X⁻⁴ and is of order 10⁻²⁵.
 
-A proof that k = 4 is impossible would need a bound on p₁ itself. Theorem A reduces the problem to one free parameter
-(given p₁ everything is bounded polynomially), and the identity d·e·s·Π = 8p₁³ with p₁ ∤ des shows the integer
-δ = des − 8p₁³ ≥ 1 equals 8p₁³(1/Π − 1), which pins the sizes of q, r, p₂ relative to p₁ but does not by itself exclude them.
+A proof that k = 4 is impossible would need a bound on p₁ itself. By Theorem A, fixing p₁ leaves a finite search over
+(p₂, q, r), all bounded polynomially in p₁. The identity d·e·s·Π = 8p₁³ with p₁ ∤ des makes δ = des − 8p₁³ a nonzero
+integer (δ ≥ 1 if Π < 1, δ ≤ −1 if Π > 1) equal to 8p₁³(1/Π − 1); this ties the sizes of p₂, q, r to p₁ but does not by
+itself exclude them.
 Natural next steps: analyse δ for small values; a 128-bit version of the enumerator would reach B = 10³² or p₁ ≤ 10⁶ in about
 half a day each.

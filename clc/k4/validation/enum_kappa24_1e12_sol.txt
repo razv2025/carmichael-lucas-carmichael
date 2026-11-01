@@ -1,0 +1,1 @@
+SOLUTION kappa=24 n=13685 p1=5 p2=7 q=17 r=23 m=391 j=1804
