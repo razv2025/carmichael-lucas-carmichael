@@ -11,7 +11,7 @@ Lucas–Carmichael ((p+1) | (n+1) for every p | n). The same objects appear in t
 | # | result | type | status |
 |---|---|---|---|
 | 1 | **Theorem A.** A four-prime CLC number has all pᵢ ≡ 1 (mod 12), p₃ < 2p₁p₂, p₄ < √(2p₁p₂p₃), **p₂² ≤ 24p₁³ + 1**, hence n < 477 p₁^{15/2}; for each p₁ a finite search remains. | theorem, elementary | proof reconstructed twice; one error found and repaired in the AI audits; **awaiting human review** |
-| 2 | **Theorem B.** No four-prime CLC number with n ≤ 10³⁰; none with p₁ ≤ 500,000 (any n). | computation | production logs complete and consistent; **certification of the all-survivor rerun in progress** (`clc/k4/CERTIFY_*.txt`) |
+| 2 | **Theorem B.** No four-prime Williams number with n ≤ 10³⁰; none with p₁ ≤ 500,000 (any n). Extends McIntosh–Dipra's p₁ > 2×10⁴, N > 10²⁴. | computation | **certified** 2026-11-01 (`clc/k4/CERTIFY_*.txt`): full coverage, all survivors re-tested in Python |
 | 3 | No CLC number below 10²⁴ (factor-and-test of the complete Carmichael tabulations; completeness and per-class cross-checks; maximum of four matching primes). | computation on external data | done; a rescan recording the full match histogram is running (~21 h) |
 | 4 | Synthesis of the Lucas–Carmichael / Baillie–PSW / Agrawal / Howe connections. | exposition | wording depends on §5 |
 | 5 | Polynomial-family impossibility theorems; exhaustive strata; subset-product margin measurement. | theorems + measurement | moved to Appendix A |
@@ -75,7 +75,7 @@ stands as the largest found in print, subject to the same read. Pinch's 10¹⁶ 
 | risk | mitigation in place | still to do |
 |---|---|---|
 | Proof correctness (Theorem A) | two reconstructions; executable checks of every identity (`tests/test_theorems.py`); two AI audits, one of which found and repaired a false estimate in the Π > 1 case | human number-theorist review of §3 |
-| Enumeration completeness (Theorem B) | lemmas stated and proved; both candidate walks agree on six instances; relaxed-problem regression to 10¹² archived (`clc/k4/validation/`); per-block logs; certification script with hard assertions (`clc/k4/certify_k4.py`) | finish the rerun and archive `CERTIFY_*.txt`; write the implementation-completeness proposition |
+| Enumeration completeness (Theorem B) | lemmas stated and proved; completeness proposition in §3; both candidate walks agree on six instances; relaxed-problem regression to 10¹² archived; per-block logs; **certified** by `certify_k4.py` (`CERTIFY_*.txt`) | — |
 | Verifier soundness | verifier checks the original tuple without normalisation; negative tests; C Fermat routine cross-checked against Python | — |
 | Dependence on external tabulations (10²⁴) | three completeness checks; per-ω cross-checks against two OEIS sequences; checksums | — |
 | Prior art | literature note written; manuscript reframed | read McIntosh–Dipra and Zhang in full; resolve the two TODOs |
@@ -86,10 +86,10 @@ stands as the largest found in print, subject to the same read. Pinch's 10¹⁶ 
 
 **Gate A — before any public posting**
 - [ ] Theorem A proof text final (both Π branches explicit; δ sign correct); reviewed by a human number theorist.
-- [ ] `CERTIFY_n1e30.txt` and `CERTIFY_p1_500000.txt` present, ending in CERTIFIED (323/323 blocks, 1,185 distinct survivors, all re-tested in Python).
+- [x] `CERTIFY_n1e30.txt` and `CERTIFY_p1_500000.txt` present, ending in CERTIFIED (3,811/3,811 and 323/323 blocks; 1,904 and 1,185 distinct survivors, all re-tested in Python) — 2026-11-01 13:04.
 - [x] Literature comparison written; novelty claims rewritten against McIntosh–Dipra and Zhang.
 - [ ] McIntosh–Dipra and Zhang read in full by the author; the two TODOs in the paper resolved.
-- [ ] Implementation-completeness proposition written into §3.
+- [x] Implementation-completeness proposition written into §3 (Proposition 3.6).
 
 **Gate B — release candidate**
 - [ ] `./run_tests.sh` passes from a clean clone on a second machine (transcript saved).
