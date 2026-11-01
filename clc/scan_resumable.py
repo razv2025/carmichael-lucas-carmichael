@@ -120,7 +120,8 @@ def main():
     with Pool(a.workers) as pool:
         for idx, start, nums in chunks(a.list, a.chunk, done, st["offsets"]):
             if stop.is_set(): break
-            st["offsets"][str(idx)] = start
+            with lock:                      # the callback thread serialises st under this lock (race fixed 2026-11-01)
+                st["offsets"][str(idx)] = start
             inflight.acquire()
             pool.apply_async(work, ((idx, nums),), callback=merge,
                              error_callback=lambda e: (print("FATAL worker error:", e, flush=True), os._exit(3)))
