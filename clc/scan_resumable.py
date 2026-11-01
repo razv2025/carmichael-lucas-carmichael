@@ -123,7 +123,7 @@ def main():
             st["offsets"][str(idx)] = start
             inflight.acquire()
             pool.apply_async(work, ((idx, nums),), callback=merge,
-                             error_callback=lambda e: (print("worker error:", e), inflight.release()))
+                             error_callback=lambda e: (print("FATAL worker error:", e, flush=True), os._exit(3)))
         pool.close(); pool.join()
     save_state(a.state, st)
     finished = not stop.is_set()

@@ -1,13 +1,13 @@
-# k=4 enumeration certification — 2026-11-01 13:04:43
+# k=4 enumeration certification — 2026-11-01 14:27:12
 log: k4_p1_500000_dump.jsonl   sol: k4_p1_500000_dump_sol.txt   reference: k4_p1_500000.jsonl
 header: {"header": 1, "B": "none", "p1max": 500000, "kappa": 2, "filter": 1, "test": 0, "bs": 32, "nblk": 323, "n_p1": 10329, "np": 21415861}
 blocks: 323/323 unique, ranges contiguous over 10329 admissible primes 13..500000
 totals: pairs=86,517,004,140 cand=4,123,687,754,495 skip_gcd=19,759,807,334 skip_inv=467,395 window_survivors=1185 fermat_survivors=1 solutions=0
-W lines: 1185 distinct (p1,p2,m) tuples, all re-tested in Python in 0s; passing base-2 Fermat: 1; CLC: 0
+W lines: 1185 distinct (p1,p2,m) tuples within this campaign, per-block counts equal to the log, all re-tested in Python in 0s; passing base-2 Fermat: 1 (= logged); CLC: 0
   survivor passing Fermat: p1=13 p2=97 m=21349 = {37: 1, 577: 1}
 provenance: host=Razs-MacBook-Pro.local machine=arm64 os=macOS-26.5.2-arm64-arm-64bit-Mach-O
   compiler: Apple clang version 21.0.0 (clang-2100.1.1.101)
-  git revision: 04f415488bd0659a3dd615b6a3ebf7cae67795eb  (dirty files: ?? CERTIFY_n1e30.txt)
+  git revision: d004ca65bfd8abbd390f0afb49c2b6013857e41b  (dirty files: M CERTIFY_n1e30.txt)
   sha256 enum_k4: 8a4a581ce0f3e86ce7fbf133a32cb74137bd717cb5b210c4361b42f7a2289677
   sha256 enum_k4.c: c351242aaa0d32f2c84f31fcfa663948c025b9cfab2b04162eab96e9732843be
   sha256 k4_p1_500000_dump.jsonl: 500ca23ed390c0cc6f3dbce425c4492f6748979f11c2b76ea3b3c80cc6ad403b

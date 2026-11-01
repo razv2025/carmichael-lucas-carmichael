@@ -85,6 +85,16 @@ def main():
         elif line.startswith('SOLUTION'): sols.append(line)
     must(len(W) == tot['wsurv'], f"distinct W tuples {len(W)} != sum(wsurv) {tot['wsurv']}")
     must(fsurv == tot['fsurv'], f"FSURV lines {fsurv} != sum(fsurv) {tot['fsurv']}")
+    # per-block survivor counts: p1 determines the block (blocks are consecutive ranges of admissible primes)
+    import bisect
+    starts = [blocks[b]['p1lo'] for b in range(nblk)] if ok_ranges else []
+    if starts:
+        per_blk = {}
+        for (p1, p2, m) in W:
+            b = bisect.bisect_right(starts, p1) - 1
+            per_blk[b] = per_blk.get(b, 0) + 1
+        bad_blocks = [b for b in range(nblk) if per_blk.get(b, 0) != blocks[b]['wsurv']]
+        must(not bad_blocks, f"per-block W counts differ from logged wsurv in blocks {bad_blocks[:10]}")
     # Python re-test of every survivor
     t0 = time.time(); ferm = 0; clc_found = 0
     for (p1, p2, m) in sorted(W):
@@ -97,6 +107,7 @@ def main():
             if check_clc_tuple(p1, p2, q, r): clc_found += 1; fails.append(f"CLC FOUND: {p1} {p2} {q} {r}")
         notes.append(f"survivor passing Fermat: p1={p1} p2={p2} m={m} = {dict(f)}")
     must(clc_found == len(sols), f"{clc_found} CLC tuples found in Python vs {len(sols)} SOLUTION lines")
+    must(ferm == tot['fsurv'], f"Python base-2 Fermat survivors {ferm} != logged fermat_survivors {tot['fsurv']}")
     for line in sols:
         kv = dict(x.split('=') for x in line.split()[1:])
         must(check_clc_tuple(*(int(kv[k]) for k in ('p1','p2','q','r'))), "SOLUTION line fails exact check: " + line.strip())
@@ -114,7 +125,7 @@ def main():
            f"header: {json.dumps(hdr)}",
            f"blocks: {len(blocks)}/{nblk} unique, ranges contiguous over {len(pr)} admissible primes 13..{p1max}",
            f"totals: pairs={tot['pairs']:,} cand={tot['cand']:,} skip_gcd={tot['skip_g']:,} skip_inv={tot['skip_inv']:,} window_survivors={tot['wsurv']} fermat_survivors={tot['fsurv']} solutions={tot['sol']}",
-           f"W lines: {len(W)} distinct (p1,p2,m) tuples, all re-tested in Python in {time.time()-t0:.0f}s; passing base-2 Fermat: {ferm}; CLC: {clc_found}",
+           f"W lines: {len(W)} distinct (p1,p2,m) tuples within this campaign, per-block counts equal to the log, all re-tested in Python in {time.time()-t0:.0f}s; passing base-2 Fermat: {ferm} (= logged); CLC: {clc_found}",
            *["  " + n for n in notes],
            f"provenance: host={platform.node()} machine={platform.machine()} os={platform.platform()}",
            f"  compiler: {run(['cc', '--version'])}",
