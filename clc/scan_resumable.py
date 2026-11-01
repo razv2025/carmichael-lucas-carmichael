@@ -138,6 +138,11 @@ def main():
             k = int(key.split(",")[1]); by_k[k] = by_k.get(k, 0) + v
         print(f"count by omega: {dict(sorted(by_k.items()))}")
         print(f"numbers with exactly 3 matching primes: {sum(v for key,v in st['hist'].items() if key.startswith('3,'))}")
+        # full (matching primes, omega) histogram — added 2026-11-01 so the count of 4-match numbers is on record
+        gs = sorted(set(int(key.split(',')[0]) for key in st['hist']))
+        for g in gs:
+            row = {int(key.split(',')[1]): v for key, v in st['hist'].items() if int(key.split(',')[0]) == g}
+            print(f"numbers with exactly {g} matching primes: {sum(row.values()):,}  by omega: {dict(sorted(row.items()))}")
 
 if __name__ == "__main__":
     main()

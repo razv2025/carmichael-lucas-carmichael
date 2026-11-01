@@ -13,7 +13,7 @@ case "${1:-status}" in
     echo "$P" | xargs -I{} ps -o stat= -p {} | cut -c1 | sort | uniq -c | awk '{print $1" processes in state "$2"  (R/S=running, T=paused)"}'
     echo "$P" | xargs -I{} ps -o pcpu= -p {} | awk '{s+=$1} END {printf "CPU %.0f%%\n", s}'
     echo "$P" | xargs -I{} ps -o rss= -p {} | awk '{s+=$1} END {printf "memory %.2f GB\n", s/1048576}'
-    for f in /Users/razvakil/.claude/jobs/*/tmp/c24/scan24.out /Users/razvakil/.claude/jobs/*/tmp/c24/scan_resumable.out; do
+    for f in /Users/razvakil/.claude/jobs/*/tmp/c24/scan24.out /Users/razvakil/.claude/jobs/*/tmp/c24/scan_resumable.out /Users/razvakil/Claude/Math/clc/rescan_1e24.log; do
       [ -f "$f" ] && echo "progress: $(tail -1 "$f")"; done; exit 0 ;;
   pause)  pids | xargs kill -STOP && sleep 1 && "$0" status ;;
   resume) pids | xargs kill -CONT && sleep 1 && "$0" status ;;

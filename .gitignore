@@ -21,3 +21,5 @@ paper/*.fls
 paper/*.fdb_latexmk
 clc/k4/*_dump.out
 clc/k4/rerun_dump.log
+clc/rescan_1e24_state.json
+clc/rescan_1e24.log
