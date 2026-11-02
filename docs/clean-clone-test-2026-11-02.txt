@@ -1,0 +1,56 @@
+# Clean-clone test on an ephemeral AWS EC2 instance (created, used and terminated 2026-11-02)
+# Source: git archive of tag v1.0-rc5 (commit 7eff3f0d184deecd9a2dc160c61f50be78638727), staged via a temporary S3 bucket; instance c7i.2xlarge, Ubuntu 24.04, il-central-1, launched from ami-0d90db2309bc7836b, no inbound network, driven over SSM; dependencies installed fresh (build-essential, python3 venv with sympy and pytest).
+# Transcript (SSM standard output):
+# clean-clone test of carmichael-lucas-carmichael v1.0-rc5 on a fresh EC2 instance
+# Mon Nov  2 09:18:07 UTC 2026 host=ip-172-31-34-47 type=c7i.2xlarge id=i-0f018b801640a33b2
+Linux ip-172-31-34-47 7.0.0-1014-aws #14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+Ubuntu 24.04.5 LTS
+cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Python 3.12.3
+sympy 1.14.0 pytest 9.2.0
+# sha256 of archive: c96b0382414c0914ccd90c76ec9f4defc9d30347a4c5747c4fb992bf70b94d81
+# ---- ./run_tests.sh ----
+== Python unit tests (agrawal/, clc/ scanners, theorem identities)
+...............................................                          [100%]
+47 passed in 8.44s
+== k=4 enumerator self-tests and end-to-end checks
+make: Entering directory '/opt/test/clc/clc/k4'
+cc -O3 -march=native -Wall -o brute_k4 brute_k4.c -lm
+brute_k4.c:12:12: warning: ‘cmp’ defined but not used [-Wunused-function]
+   12 | static int cmp(const void*a,const void*b){ u64 x=*(u64*)a,y=*(u64*)b; return x<y?-1:x>y; }
+      |            ^~~
+./enum_k4 --B 1e14 --kappa 24  --integers --selftest 90  --log _t_a.jsonl --sol _t_a.txt | tail -1
+B=100000000000000 kappa=24 filter=0 test=1  p1min=5 p1max=3162 p2max=27144 threads=14 bs=128
+sieve: 9047 admissible primes ≤ p2max, 1053 usable as p1, 9 blocks (0.0s)
+SELFTEST kappa=24 integers=1 pairs(p2<=90): T1 half-solutions=11 (true j not floor/ceil in 10) violations=0 | T2 pairs=406 violations=0
+./enum_k4 --B 1e14 --kappa 120 --integers --selftest 200 --log _t_b.jsonl --sol _t_b.txt | tail -1
+B=100000000000000 kappa=120 filter=0 test=1  p1min=11 p1max=3162 p2max=20870 threads=14 bs=128
+sieve: 2782 admissible primes ≤ p2max, 421 usable as p1, 4 blocks (0.0s)
+SELFTEST kappa=120 integers=1 pairs(p2<=200): T1 half-solutions=16 (true j not floor/ceil in 15) violations=0 | T2 pairs=325 violations=0
+./enum_k4 --B 1e14 --kappa 24  --selftest 400 --log _t_c.jsonl --sol _t_c.txt | tail -1
+B=100000000000000 kappa=24 filter=0 test=1  p1min=5 p1max=3162 p2max=27144 threads=14 bs=128
+sieve: 2974 admissible primes ≤ p2max, 444 usable as p1, 4 blocks (0.0s)
+SELFTEST kappa=24 integers=0 pairs(p2<=400): T1 half-solutions=15 (true j not floor/ceil in 14) violations=0 | T2 pairs=2850 violations=0
+./enum_k4 --B 1e14 --kappa 2   --integers --selftest 130 --log _t_d.jsonl --sol _t_d.txt | tail -1
+B=100000000000000 kappa=2 filter=0 test=1  p1min=5 p1max=3162 p2max=27144 threads=14 bs=128
+sieve: 13570 admissible primes ≤ p2max, 1579 usable as p1, 13 blocks (0.0s)
+SELFTEST kappa=2 integers=1 pairs(p2<=130): T1 half-solutions=1 (true j not floor/ceil in 0) violations=0 | T2 pairs=1953 violations=0
+./enum_k4 --B 1e11 --kappa 24 --test --threads 4 --log _t_e.jsonl --sol _t_e.txt 2>/dev/null | tail -1
+COMPLETE blocks=1/1 pairs=9887 skip_gcd=2518 skip_inv=578 cand=875694 window_survivors=346409 fermat_survivors=0 solutions=1 wall=1.2s
+./brute_k4 24 1e11 2>/dev/null | awk '{print $1}' | sort > _t_brute.txt
+grep '^SOLUTION' _t_e.txt | sed 's/.* n=\([0-9]*\) .*/\1/' | sort > _t_enum.txt
+cmp _t_brute.txt _t_enum.txt && echo "END-TO-END: enumerator == brute force on kappa=24 to 1e11 ($(wc -l < _t_enum.txt) solution(s))"
+END-TO-END: enumerator == brute force on kappa=24 to 1e11 (1 solution(s))
+./enum_k4 --B 1e24 --kappa 2 --filter --threads 8 --log _t_f.jsonl --sol _t_f.txt 2>/dev/null | tail -1
+COMPLETE blocks=153/153 pairs=359696710 skip_gcd=82056633 skip_inv=9952 cand=21931537 window_survivors=656 fermat_survivors=1 solutions=0 wall=18.6s
+python3 verify_k4.py _t_f.txt | tail -1
+verified: 0 SOLUTION lines, 0 WSURV lines (window survivors checked in Python), 1 base-2 Fermat pseudoprimes examined, 0 problems
+make: Leaving directory '/opt/test/clc/clc/k4'
+ALL CHECKS PASSED
+
+real	7m8.056s
+user	9m17.463s
+sys	0m0.288s
+# run_tests exit status: 0
+===TRANSCRIPT-LINES 51===
+

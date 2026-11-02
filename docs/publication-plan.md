@@ -117,7 +117,7 @@ fact-check found 113–128 via OEIS) — **verify against the TUCS volume before
 - [x] Implementation-completeness proposition written into §3 (Proposition 3.6).
 
 **Gate B — release candidate**
-- [ ] `./run_tests.sh` passes from a clean clone on a second machine (transcript saved).
+- [x] `./run_tests.sh` passed from a clean archive of v1.0-rc5 on a fresh EC2 c7i.2xlarge (Ubuntu 24.04, gcc, fresh venv), 2026-11-02; transcript `docs/clean-clone-test-2026-11-02.txt`.
 - [ ] Source, compiler flags, binaries' hashes, inputs' hashes, command lines and logs frozen; Zenodo DOI.
 - [x] 10²⁴ histogram rescan finished and certified 2026-11-02 (`clc/CERTIFY_1e24_rescan.txt`): exactly 14 four-match numbers; inserted in §7.
 - [ ] Family-search outputs regenerated (`agrawal/results/`, m=4 a≤500 and m=5 a≤150 running 2026-11-01 afternoon).
