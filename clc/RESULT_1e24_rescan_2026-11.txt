@@ -1,0 +1,13 @@
+# Rescan of all 308,279,939 Carmichael numbers < 1e24 with the full histogram — Mon Nov  2 09:52:02 IST 2026
+# input SHA-256: see DATA_SHA256.txt (carm10e24.txt)
+FINISHED: 308,279,939 numbers, 3083 chunks, 69430s
+verification failures: 0  []
+FULL CLC hits: 0  []
+BEST partial: 4 of 9 primes, n = 15500309690554865758009
+count by omega: {3: 1494738, 4: 548265, 5: 3429390, 6: 19665194, 7: 62338997, 8: 99469866, 9: 81041495, 10: 33199094, 11: 6529921, 12: 547590, 13: 15328, 14: 61}
+numbers with exactly 3 matching primes: 826
+numbers with exactly 0 matching primes: 302,408,522  by omega: {3: 1494710, 4: 547696, 5: 3408403, 6: 19478785, 7: 61471076, 8: 97641952, 9: 79167151, 10: 32308934, 11: 6342293, 12: 532419, 13: 15042, 14: 61}
+numbers with exactly 1 matching primes: 5,807,346  by omega: {3: 27, 4: 568, 5: 20851, 6: 185426, 7: 860645, 8: 1810260, 9: 1851519, 10: 877941, 11: 184872, 12: 14954, 13: 283}
+numbers with exactly 2 matching primes: 63,231  by omega: {3: 1, 4: 1, 5: 136, 6: 978, 7: 7203, 8: 17472, 9: 22512, 10: 12005, 11: 2706, 12: 214, 13: 3}
+numbers with exactly 3 matching primes: 826  by omega: {6: 5, 7: 73, 8: 182, 9: 306, 10: 209, 11: 48, 12: 3}
+numbers with exactly 4 matching primes: 14  by omega: {9: 7, 10: 5, 11: 2}

@@ -12,7 +12,7 @@ Lucas–Carmichael ((p+1) | (n+1) for every p | n). The same objects appear in t
 |---|---|---|---|
 | 1 | **Theorem A** (= McIntosh–Dipra 2015, Thms 2–3, d = 4; restated with an independent proof). All pᵢ ≡ 1 (mod 12), p₃ < 2p₁p₂, p₄ < √(2p₁p₂p₃), p₂² ≤ 24p₁³ + 1. | known theorem, our proof | **not new** (established 2026-11-01 from the full text); kept as a self-contained restatement |
 | 2 | **Theorem B.** No four-prime Williams number with n ≤ 10³⁰; none with p₁ ≤ 500,000 (any n). Extends McIntosh–Dipra's p₁ > 2×10⁴, N > 10²⁴. | computation | **certified** 2026-11-01 (`clc/k4/CERTIFY_*.txt`): full coverage, all survivors re-tested in Python |
-| 3 | No CLC number below 10²⁴ (factor-and-test of the complete Carmichael tabulations; completeness and per-class cross-checks; maximum of four matching primes). | computation on external data | done; a rescan recording the full match histogram is running (~21 h) |
+| 3 | No Williams number below 10²⁴ (factor-and-test of the complete Carmichael tabulations; integrity checks; full match histogram: 14 four-match numbers, 826 three-match). | computation on external data | done twice; second run certified |
 | 4 | Synthesis of the Lucas–Carmichael / Baillie–PSW / Agrawal / Howe connections. | exposition | wording depends on §5 |
 | 5 | Polynomial-family impossibility theorems; exhaustive strata (outputs being regenerated into `agrawal/results/`). | theorems + searches | Appendix A |
 | 6 | Subset-product margin measurement; onset model; four-prime heuristic. | speculative | supplement (`paper/supplement.pdf`) and one moderated paragraph in §8 |
@@ -119,7 +119,7 @@ fact-check found 113–128 via OEIS) — **verify against the TUCS volume before
 **Gate B — release candidate**
 - [ ] `./run_tests.sh` passes from a clean clone on a second machine (transcript saved).
 - [ ] Source, compiler flags, binaries' hashes, inputs' hashes, command lines and logs frozen; Zenodo DOI.
-- [ ] 10²⁴ histogram rescan finished and certified (`clc/certify_rescan.py`); exact four-match count inserted in §7.
+- [x] 10²⁴ histogram rescan finished and certified 2026-11-02 (`clc/CERTIFY_1e24_rescan.txt`): exactly 14 four-match numbers; inserted in §7.
 - [ ] Family-search outputs regenerated (`agrawal/results/`, m=4 a≤500 and m=5 a≤150 running 2026-11-01 afternoon).
 - [ ] Pinch 2007 page range verified.
 - [ ] Every bibliography entry verified against the primary source.

@@ -55,9 +55,9 @@ verification and was unaware of the prior literature. The record:
   PARI binary; completeness verified against the published counts at 10²²,
   10²³ and 10²⁴; code, logs and output in `clc/`): **zero Lucas–Carmichael**,
   zero verification failures; per-prime-factor-count tallies match independent OEIS data (A132195: 1,494,738 three-prime Carmichael numbers below 10²⁴; A299711: 6,529,921 eleven-prime). The best near-miss anywhere below 10²⁴ is
-  15500309690554865758009 ≈ 1.55×10²² (nine prime factors) is the first number
-  with four primes satisfying p+1 | n+1 (the count of such numbers was not
-  recorded); 826 numbers have exactly three. **This is the
+  15500309690554865758009 ≈ 1.55×10²² (nine prime factors) is one of exactly
+  14 numbers with four primes satisfying p+1 | n+1 (rescan 2026-11-02, certified);
+  826 numbers have exactly three. **This is the
   largest verified bound; nothing beyond 10²⁴ has been tabulated.**
   Previously the 10²² frontier was only implicit:
   Goutier's per-number `D` flag never occurs, and Eldar's 2024 near-miss list

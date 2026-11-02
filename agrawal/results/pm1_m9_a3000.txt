@@ -1,0 +1,2 @@
+# Sun Nov  1 14:27:41 IST 2026  --mode pm1 --m 9 --amax 3000
+pm1 m=9 search a<=3000: 0 families, 1s

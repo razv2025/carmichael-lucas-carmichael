@@ -64,3 +64,13 @@ Independent per-ω cross-checks of the 10²⁴ scan against published OEIS data
   a(24) (J. M. Chick's tabulation, arXiv:0711.2915); below 10²²: 420,658 ✓.
 - eleven-prime Carmichael numbers below 10²⁴: ours 6,529,921 = OEIS A299711
   a(24); below 10²²: 262,818 ✓.
+
+## Rescan with the full match histogram — 2026-11-02
+
+`rescan_1e24.sh` reran the complete list with `scan_resumable.py` (checkpointed) to record how many Carmichael numbers below
+10²⁴ have exactly g primes with p+1 | n+1, for every g (the first run kept only the g = 3 count and one maximiser).
+Result (`RESULT_1e24_rescan_2026-11.txt`, certified by `certify_rescan.py` → `CERTIFY_1e24_rescan.txt`): all per-ω counts,
+the 826 three-match count and the maximiser agree with the first run; **exactly 14 numbers have four matching primes**
+(ω = 9: 7, ω = 10: 5, ω = 11: 2), none has five; 63,231 have two and 5,807,346 have one. Zero verification failures, zero hits.
+(During this run a checkpoint race in `scan_resumable.py` was found and fixed: the main loop wrote `offsets` outside the lock
+used by the result-callback thread while it serialised the state.)

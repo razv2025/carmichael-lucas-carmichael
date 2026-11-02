@@ -1,0 +1,2 @@
+# Sun Nov  1 14:27:36 IST 2026  python3 -m agrawal.family --mode pm1 --m 5 --amax 20000
+pm1 m=5 search a<=20000: 0 families, 3s
