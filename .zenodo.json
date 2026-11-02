@@ -1,0 +1,10 @@
+{
+  "title": "Exhaustive searches for Williams numbers: the four-prime case and a general 10^24 bound — code, logs, certificates and manuscript",
+  "upload_type": "software",
+  "description": "<p>Source code, per-block logs, survivor dumps, certification records and the manuscript (with its exploratory supplementary note) for the paper <em>Exhaustive searches for Williams numbers: the four-prime case and a general 10^24 bound</em>. A Williams number is a squarefree composite n that is both Carmichael ((p-1) | (n-1) for every prime p | n) and Lucas-Carmichael ((p+1) | (n+1) for every p | n); none is known. The repository contains the C enumerator for four-prime Williams numbers (certified exclusions: none with n &le; 10^30, none with smallest prime &le; 500,000), the factor-and-test scan of all 308,279,939 Carmichael numbers below 10^24 (no Williams number; full histogram of matching primes), the polynomial-family searches, the test suite, and the review record. Third-party input tabulations (Shallue-Webster via Stamm-Wilbrandt, Goutier, Suteu) are cited and identified by SHA-256, not redistributed.</p>",
+  "creators": [{"name": "Vakil, Raz"}],
+  "keywords": ["Carmichael numbers", "Lucas-Carmichael numbers", "Williams numbers", "Baillie-PSW primality test", "exhaustive search", "computational number theory"],
+  "license": "MIT",
+  "access_right": "open",
+  "related_identifiers": [{"identifier": "https://github.com/razv2025/carmichael-lucas-carmichael", "relation": "isSupplementTo", "scheme": "url"}]
+}
