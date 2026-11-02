@@ -174,7 +174,12 @@ Results (all **empty**):
 | m = 6, general offsets | aᵢ ≤ 60 | 54 h |
 | bᵢ = −1, m = 5/7/9/11 | aᵢ ≤ 20000/5000/3000/1500 | seconds (verifies Thm 2) |
 
-## 6. Density heuristic and onset estimates
+## 6. Density heuristic and onset estimates — WITHDRAWN 2026-11-02
+
+**The onset estimates below are withdrawn.** A review (docs/review-codex-2026-11-02.pdf) showed that at the 10²⁰⁸ endpoint the
+model selects k = 81 primes from a pool for which only 37 eligible primes exist (the fitted density multiplier ≈ 8.8 predicts 548),
+so the endpoint is impossible within the modelled construction; the calibration constant, residue factor, 2-adic factor and the
+'561 sanity check' have further defects (see paper/supplement.tex §Withdrawn). Kept here as a record only.
 
 An Erdős–Pomerance-style count (code: `heuristic.py`) models the expected
 number of k-factor objects ≤ x built from primes with p−1 (and p+1) y-smooth,

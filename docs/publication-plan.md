@@ -15,7 +15,7 @@ Lucas–Carmichael ((p+1) | (n+1) for every p | n). The same objects appear in t
 | 3 | No Williams number below 10²⁴ (factor-and-test of the complete Carmichael tabulations; integrity checks; full match histogram: 14 four-match numbers, 826 three-match). | computation on external data | done twice; second run certified |
 | 4 | Synthesis of the Lucas–Carmichael / Baillie–PSW / Agrawal / Howe connections. | exposition | wording depends on §5 |
 | 5 | Polynomial-family impossibility theorems; exhaustive strata (outputs being regenerated into `agrawal/results/`). | theorems + searches | Appendix A |
-| 6 | Subset-product margin measurement; onset model; four-prime heuristic. | speculative | supplement (`paper/supplement.pdf`) and one moderated paragraph in §8 |
+| 6 | Subset-product margin measurement (exploratory, with limitations); four-prime heuristic (one moderated paragraph in §8). **Onset model withdrawn 2026-11-02.** | speculative | `paper/supplement.pdf` v2 |
 
 Structure after the second referee review (2026-11-01): Introduction with a comparison table against McIntosh–Dipra → Preliminaries →
 structural bounds (Theorem A, attributed) → algorithm (displayed pseudocode, reconstruction lemma) → completeness/validation/
@@ -107,6 +107,17 @@ rescan certifier; survivors 'deduplicated within campaigns'; shorter title; conc
 from the paper; MSC/keywords/PDF metadata; DOIs added. Not changed: Pinch 2007 page range (reviewer says 129–131, our
 fact-check found 113–128 via OEIS) — **verify against the TUCS volume before submission**.
 
+## 6b. Third review (Codex, 2026-11-02, `docs/review-codex-2026-11-02.pdf`)
+
+Main paper "close to submission-ready". Applied: final tag `v1.0` cited in the paper and certificates regenerated from the clean
+tag (binary rebuilt from tagged source; reports record tag, source/binary hashes, no dirty tracked files); AI declaration now names
+both systems (Claude: authoring/code/checks; OpenAI Codex: three review rounds, literature discovery, repeated certifications) and
+states that no independent human review had been completed; Algorithm 1: M* condition and the +1/+3 bound made explicit;
+Reproducibility is a numbered section; PDF metadata title fixed; Table 1 caption broadened; date updated.
+**Supplement: the quantitative onset estimate (10²⁰⁸–10⁴⁹⁰, k ≈ 80–110) was found to be internally inconsistent and is WITHDRAWN**;
+the note is now an exploratory report of the subset-product measurement with an explicit limitations section, and the main paper
+cites it only as unpublished material on which nothing depends. `docs/obstructions.md` §6 carries the same withdrawal notice.
+
 ## 7. Gates
 
 **Gate A — before any public posting**
@@ -118,7 +129,8 @@ fact-check found 113–128 via OEIS) — **verify against the TUCS volume before
 
 **Gate B — release candidate**
 - [x] `./run_tests.sh` passed from a clean archive of v1.0-rc5 on a fresh EC2 c7i.2xlarge (Ubuntu 24.04, gcc, fresh venv), 2026-11-02; transcript `docs/clean-clone-test-2026-11-02.txt`.
-- [ ] Source, compiler flags, binaries' hashes, inputs' hashes, command lines and logs frozen; Zenodo DOI.
+- [x] Source frozen at tag `v1.0`; certificates regenerated from it with binary/source/log hashes; GitHub release with source archive.
+- [ ] Zenodo DOI (needs the repository public or a Zenodo token; author action).
 - [x] 10²⁴ histogram rescan finished and certified 2026-11-02 (`clc/CERTIFY_1e24_rescan.txt`): exactly 14 four-match numbers; inserted in §7.
 - [ ] Family-search outputs regenerated (`agrawal/results/`, m=4 a≤500 and m=5 a≤150 running 2026-11-01 afternoon).
 - [x] Pinch 2007 page range: resolved 2026-11-02. The referee's 129–131 is Pinch's *other* paper in TUCS GP 46, "The Carmichael numbers up to 10²¹" (so cited in Baillie–Fiori–Wagstaff 2021's references); "Absolute quadratic pseudoprimes" is pp. 113–128 (OEIS A392556/A392557). Both now in the bibliography. Final visual check possible from the volume PDF: https://tucs.fi/publications/attachment.php?fname=G46.pdf (site certificate chain incomplete; a browser may warn).

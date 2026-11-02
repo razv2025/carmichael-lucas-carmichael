@@ -2,7 +2,7 @@
 
 Code, data and notes behind the preprint (repository: https://github.com/razv2025/carmichael-lucas-carmichael)
 
-> R. Vakil, *Exhaustive searches for Williams numbers: the four-prime case and a general 10²⁴ bound* (2026) — `paper/clc.tex`, `paper/clc.pdf`; supplementary note `paper/supplement.pdf`.
+> R. Vakil, *Exhaustive searches for Williams numbers: the four-prime case and a general 10²⁴ bound* (2026) — `paper/clc.tex`, `paper/clc.pdf`; exploratory note `paper/supplement.pdf` (subset-product measurement with its limitations; its earlier onset estimate is withdrawn).
 
 A squarefree composite n is **Carmichael** if (p−1) | (n−1) for every prime p | n and **Lucas–Carmichael** if (p+1) | (n+1) for every p | n. Numbers that are both are **Williams numbers** (Echi 2007; the question is H. C. Williams's, 1977); no example is known. The code and older notes call them CLC numbers. Prior work: McIntosh–Dipra (JNT 2015) proved finiteness with all but three primes fixed and excluded four-prime examples with p₁ ≤ 2×10⁴ or N ≤ 10²⁴; see `docs/literature-williams-numbers.md`. Results in this repository:
 

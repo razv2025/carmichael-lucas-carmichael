@@ -3,7 +3,7 @@
 \usepackage{amsmath,amssymb,amsthm,booktabs,array,url,enumitem}
 \usepackage{algorithm,algpseudocode}
 \usepackage[dvipsnames]{xcolor}
-\usepackage[pdftitle={Exhaustive searches for Williams numbers: the four-prime case and a general 10^24 bound},pdfauthor={Raz Vakil},pdfkeywords={Carmichael numbers, Lucas-Carmichael numbers, Williams numbers, Baillie-PSW, exhaustive search}]{hyperref}
+\usepackage[pdftitle={Exhaustive searches for Williams numbers: the four-prime case and a general 10\^{}24 bound},pdfauthor={Raz Vakil},pdfkeywords={Carmichael numbers, Lucas-Carmichael numbers, Williams numbers, Baillie-PSW, exhaustive search}]{hyperref}
 \hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
@@ -22,7 +22,7 @@
 \email{Raz.Vakil@gmail.com}
 \subjclass[2020]{Primary 11Y11; Secondary 11A51, 11Y16}
 \keywords{Carmichael numbers, Lucas--Carmichael numbers, Williams numbers, Baillie--PSW test, exhaustive search}
-\date{1 November 2026}
+\date{2 November 2026. Version \texttt{v1.0} of the repository cited in \S\ref{sec:repro}.}
 
 \begin{document}
 
@@ -61,10 +61,10 @@ four primes excluded & $p_1\le2\times10^4$; $n\le10^{24}$ & $p_1\le500{,}000$; $
 all $d$ & searches for $4\le d\le13$ at unstated bounds in $[10^{20},10^{35}]$ & none below $10^{24}$, any $d$ (Thm.~\ref{thm:bound})\\
 \bottomrule
 \end{tabular}
-\caption{Four-prime Williams numbers: prior and present results.}\label{tab:compare}
+\caption{Prior and present results: four-prime Williams numbers (rows 1--6) and all Williams numbers (last row).}\label{tab:compare}
 \end{table}
 
-All code, logs and certification records are available (\S\ref{sec:repro}). Appendix~\ref{sec:obstr} proves that Chernick-type polynomial families whose divisibilities hold identically in the parameter cannot produce Williams numbers with three factors, with uniform offsets $\pm1$, or in generic position; a supplementary note \cite{Supp} records two heuristic experiments.
+All code, logs and certification records are available (\S\ref{sec:repro}). Appendix~\ref{sec:obstr} proves that Chernick-type polynomial families whose divisibilities hold identically in the parameter cannot produce Williams numbers with three factors, with uniform offsets $\pm1$, or in generic position; an unpublished exploratory note in the repository \cite{Supp} records a measurement of the two-sided subset-product method; none of its conclusions is used here.
 
 \section{Preliminaries}\label{sec:prelim}
 
@@ -188,10 +188,10 @@ Multiplying the first equation of~\eqref{eq:three} by $r$ gives $2n=2Pqr=dr^3-(d
 \begin{algorithmic}[1]
 \State \textbf{Input:} $B$ (campaign 1) or $X$ (campaign 2). Put $S=\lceil\sqrt{2p_1}\rceil$, $R_j=\max(2jS,8p_1)$; call $(m,j)$ \emph{admissible} if $|jm-T|\le R_j$ where $T=4P^2$.
 \ForAll{primes $p_1\equiv1\ (12)$ with $p_1<B^{1/4}$ (campaign 1) or $p_1\le X$ (campaign 2)}
-\ForAll{primes $p_2\equiv1\ (12)$, $p_1<p_2\le\sqrt{24p_1^3+3}$, and $p_2<(B/p_1)^{1/3}$ in campaign 1}
+\ForAll{primes $p_2\equiv1\ (12)$, $p_1<p_2\le\sqrt{24p_1^3+1}$, and $p_2<(B/p_1)^{1/3}$ in campaign 1} \Comment{the implementation uses $\sqrt{24p_1^3+3}$, equivalent by the congruence modulo 24}
 \State $P\gets p_1p_2$; \textbf{if} $p_1\mid p_2^2-1$ or $p_1\not\equiv p_2\pmod{\gcd(L_{p_1},L_{p_2})}$ \textbf{then skip} (Lemma~\ref{lem:crt})
 \State compute $m_0,\Lambda$ by CRT; $m_{\max}\gets\min(4P^2-1,\lfloor B/P\rfloor)$ (no second term in campaign 2)
-\State $M^*\gets\lfloor\sqrt{T}\sqrt{\Lambda}\rfloor$ (floating point; any value works, this balances the two walks)
+\State $M^*\gets\min\bigl(m_{\max},\lfloor\sqrt{T}\sqrt{\Lambda}\rfloor\bigr)$ \Comment{any $M^*$ with $2S<M^*\le m_{\max}$ is valid; this choice balances the two walks; if $M^*=m_{\max}$ walk B is empty}
 \ForAll{$m\equiv m_0\ (\Lambda)$ with $p_2^2<m\le\min(M^*,m_{\max})$} \Comment{walk A}
 \State keep $m$ iff $(m,\lfloor T/m\rfloor)$ or $(m,\lceil T/m\rceil)$ is admissible
 \EndFor
@@ -219,7 +219,7 @@ By Theorem~\ref{thm:A}(a) both $p_1,p_2$ are primes $\equiv1\pmod{12}$. If $n\le
 
 \paragraph{Validation.} The implementation was tested against brute force on a \emph{relaxed} problem that has solutions: replace $L_p$ by $(p^2-1)/\kappa$ with $\kappa\in\{24,120\}$ (Theorem~\ref{thm:A}(b) and Lemmas~\ref{lem:crt}--\ref{lem:cbrt}, which are all the algorithm uses, go through with $2$ replaced by $\kappa$; Theorem~\ref{thm:A}(c) and the Fermat filter are specific to $\kappa=2$ and are switched off in these runs). On the relaxed problem the enumerator finds exactly the solution set that a direct four-fold loop finds; for $\kappa=24$ the unique solution below $10^{12}$ is $13685=5\cdot7\cdot17\cdot23$, and the outputs of both programs are archived. Separate self-tests brute-force the two-prime sub-problem $(q,r)$ for small $(p_1,p_2)$ in four relaxed variants and check every inequality of Lemmas~\ref{lem:window}--\ref{lem:cbrt} on the solutions found, brute-force the residue class of Lemma~\ref{lem:crt} for $13{,}037$ pairs, and compare the $128$-bit Fermat routine with Python on random moduli. The two walks were checked to produce identical survivor lists on six instances, two of them relaxed instances with $346{,}409$ and $11{,}007{,}875$ survivors. These are regression tests of the implementation on instances with known answers, not an independent validation of the production campaigns, which rests on Proposition~\ref{prop:complete} and the certification below.
 
-\paragraph{Certification.} Each campaign is processed in blocks of consecutive $p_1$ and logs one record per block (its $p_1$ range, number of pairs, survivors, Fermat survivors, solutions). Both campaigns were run twice, the second time with every window survivor written out, and a certification script asserts: every block identifier appears exactly once; block ranges are increasing, disjoint and contiguous over the admissible primes; per-block counts equal those of the first run; the distinct survivors, within each campaign, number exactly the logged total, block by block; every survivor re-tested in Python (base-2 Fermat test on $n=Pm$, then factorisation of $m$ and the four conditions of Lemma~\ref{lem:quotient} on the original tuple) yields the logged number of Fermat survivors and no Williams number. The records include hashes of the binary, the source and the logs, the compiler, host and source revision. An external reviewer repeated both certifications from the clean tagged checkout, and the complete test suite was run from a clean archive of the tagged source on a freshly created cloud machine (transcript in the repository).
+\paragraph{Certification.} Each campaign is processed in blocks of consecutive $p_1$ and logs one record per block (its $p_1$ range, number of pairs, survivors, Fermat survivors, solutions). Both campaigns were run twice, the second time with every window survivor written out, and a certification script asserts: every block identifier appears exactly once; block ranges are increasing, disjoint and contiguous over the admissible primes; per-block counts equal those of the first run; the distinct survivors, within each campaign, number exactly the logged total, block by block; every survivor re-tested in Python (base-2 Fermat test on $n=Pm$, then factorisation of $m$ and the four conditions of Lemma~\ref{lem:quotient} on the original tuple) yields the logged number of Fermat survivors and no Williams number. The records include hashes of the binary, the source and the logs, the compiler, host and source revision. The certifications were repeated from a clean tagged checkout in an independent AI-based review process (see the declaration below), and the complete test suite was run from a clean archive of the tagged source on a freshly created cloud machine (transcript in the repository).
 
 \section{Computational results for four prime factors}\label{sec:results}
 
@@ -300,14 +300,14 @@ By Howe's criterion \cite{Howe00}, a squarefree $n$ is a Carmichael number of or
 \item Closing the $m=4$ polynomial-family stratum with one repeated root (Appendix~\ref{sec:obstr}).
 \end{enumerate}
 
-\paragraph{Reproducibility.}\label{sec:repro}
-All code is in the repository \url{https://github.com/razv2025/carmichael-lucas-carmichael}, tagged for this version. Inventory of the computations and their verification status: (i) the two four-prime campaigns were run twice, certified as described in \S\ref{sec:complete}, and the certifications were repeated by an external reviewer from the tagged source; (ii) the $10^{24}$ scan was run twice (the second run with the full match histogram and a certification record), with the integrity checks of \S\ref{sec:bound} against externally published counts, and its input is identified by SHA-256; (iii) the relaxed-problem validation to $10^{12}$ and the self-tests are archived and re-runnable (\texttt{make test}, under a minute); (iv) the polynomial-family searches of Appendix~\ref{sec:obstr} are archived with their command lines. The four-prime enumeration (\texttt{clc/k4/}) consists of the C program, its brute-force reference for the relaxed problem, the Python re-verifier, the per-block logs and survivor dumps of both campaigns, the certification records and \texttt{make test}; the $10^{24}$ scan (\texttt{clc/}) consists of the download--decode--verify--scan pipeline, the completeness report and the result files. The code was developed with AI assistance; see the declaration below.
+\section{Reproducibility}\label{sec:repro}
+All code is in the repository \url{https://github.com/razv2025/carmichael-lucas-carmichael}; this paper corresponds to tag \texttt{v1.0}, and the certification records state the SHA-256 of the enumerator source and binary they certify. Inventory of the computations and their verification status: (i) the two four-prime campaigns were run twice, certified as described in \S\ref{sec:complete}, and the certifications were repeated by an external reviewer from the tagged source; (ii) the $10^{24}$ scan was run twice (the second run with the full match histogram and a certification record), with the integrity checks of \S\ref{sec:bound} against externally published counts, and its input is identified by SHA-256; (iii) the relaxed-problem validation to $10^{12}$ and the self-tests are archived and re-runnable (\texttt{make test}, under a minute); (iv) the polynomial-family searches of Appendix~\ref{sec:obstr} are archived with their command lines. The four-prime enumeration (\texttt{clc/k4/}) consists of the C program, its brute-force reference for the relaxed problem, the Python re-verifier, the per-block logs and survivor dumps of both campaigns, the certification records and \texttt{make test}; the $10^{24}$ scan (\texttt{clc/}) consists of the download--decode--verify--scan pipeline, the completeness report and the result files. The code was developed with AI assistance; see the declaration below.
 
 \appendix
 
 \section{Polynomial families}\label{sec:obstr}
 
-Carmichael numbers are constructed in two ways: by polynomial families in the manner of Chernick \cite{Chernick39}, $n(k)=(6k+1)(12k+1)(18k+1)$, where the divisibilities are polynomial identities; and by subset products in the manner of Erd\H{o}s and Alford--Granville--Pomerance \cite{Erdos56,AGP94,LN96}. This appendix shows that the first construction cannot be made two-sided in its simplest forms. \emph{The theorems concern families whose divisibilities hold identically in the parameter $k$; they say nothing about families that are Williams numbers only for $k$ in some residue classes, nor about sporadic values.} The second construction is discussed, with measurements, in the supplementary note \cite{Supp}.
+Carmichael numbers are constructed in two ways: by polynomial families in the manner of Chernick \cite{Chernick39}, $n(k)=(6k+1)(12k+1)(18k+1)$, where the divisibilities are polynomial identities; and by subset products in the manner of Erd\H{o}s and Alford--Granville--Pomerance \cite{Erdos56,AGP94,LN96}. This appendix shows that the first construction cannot be made two-sided in its simplest forms. \emph{The theorems concern families whose divisibilities hold identically in the parameter $k$; they say nothing about families that are Williams numbers only for $k$ in some residue classes, nor about sporadic values.} A measurement of the second construction is reported, with its limitations, in the exploratory note \cite{Supp}; nothing here depends on it.
 
 Consider $n(k)=\prod_{i=1}^m(a_ik+b_i)$ with integers $a_i>0$, the linear factors pairwise non-proportional, and require $(a_ik+b_i-1)\mid(n(k)-1)$ and $(a_ik+b_i+1)\mid(n(k)+1)$ in $\mathbb Q[k]$. Since a linear polynomial divides $f$ iff $f$ vanishes at its root, this is $n\bigl((1-b_i)/a_i\bigr)=1$ and $n\bigl((-1-b_i)/a_i\bigr)=-1$. With $D_{ij}=a_ib_j-a_jb_i$ one computes $a_j\frac{1-b_i}{a_i}+b_j=(a_j+D_{ij})/a_i$, so the conditions read, for every $i$,
 \begin{equation}\label{eq:fam}
@@ -343,10 +343,10 @@ Every such family has two indices $i\ne j$ with $p_j-1=\frac{a_j}{a_i}(p_i-1)$ o
 The strata left open by Theorem~\ref{thm:famgen} were searched exhaustively using the fact that each factor in~\eqref{eq:fam} divides $a_i^{m-1}$: no family exists with $m=4$ and all $a_i\le500$, or with $m=5$ and $a_i\le150$; Theorem~\ref{thm:fampm1} was also confirmed by search for $m=5,7,9,11$ up to $a_i\le20000,5000,3000,1500$. The outputs of these runs, with their command lines, are archived in \texttt{agrawal/results/}. Theorem~\ref{thm:fam3} is the parametric shadow of Proposition~\ref{prop:k3}.
 
 \section*{Declaration of generative AI and AI-assisted technologies}
-An AI system (Claude, Anthropic) was used, under the author's direction, for: drafting and checking the proofs; writing the code (the enumerator, the scanners, the certification and test scripts); drafting this text; literature search; and adversarial checking of the proofs and of the numerical claims. The author reconstructed and checked every proof and every claim, reviewed the code, and accepts full responsibility for the content. AI checks are not a substitute for human review; the human reviews received are acknowledged below.
+Two AI systems were used, under the author's direction. Claude (Anthropic) drafted and checked the proofs, wrote the code (the enumerator, the scanners, the certification and test scripts), drafted this text, performed the literature search, and ran adversarial checks of the proofs and of the numerical claims. OpenAI Codex, operated separately from the authoring system, produced three rounds of review comments on successive drafts, identified the prior Williams-number literature, and repeated both production certifications from a clean tagged checkout; its findings led to the corrections recorded in the repository. The author reconstructed and checked every proof and every claim, reviewed the code, and accepts full responsibility for the content. No independent human review of this manuscript had been completed at the time of writing; AI checks are not a substitute for it.
 
 \section*{Acknowledgements}
-We thank the authors of the tabulations this work rests on: R.~G.~E.~Pinch, C.~Goutier, A.~Shallue and J.~Webster, H.~Stamm-Wilbrandt (for making the $10^{24}$ list available), D.~Suteu, and the OEIS contributors whose independent counts served as integrity checks; and the reviewers who read earlier drafts, pointed us to the Williams-number literature, and repeated the certifications.
+We thank the authors of the tabulations this work rests on: R.~G.~E.~Pinch, C.~Goutier, A.~Shallue and J.~Webster, H.~Stamm-Wilbrandt (for making the $10^{24}$ list available), D.~Suteu, and the OEIS contributors whose independent counts served as integrity checks; and R.~J.~McIntosh and M.~Dipra, whose paper settles the theory of the four-prime case.
 
 \begin{thebibliography}{99}
 \bibitem{AG13} I.~Al-Rasasi, N.~Ghanmi, On Williams numbers with three prime factors, \emph{Missouri J. Math. Sci.} 25 (2013), 134--152. \url{https://doi.org/10.35834/mjms/1384266199}
@@ -374,7 +374,7 @@ We thank the authors of the tabulations this work rests on: R.~G.~E.~Pinch, C.~G
 \bibitem{SW24} A.~Shallue, J.~Webster, Advances in tabulating Carmichael numbers, \emph{Res. Number Theory} 11 (2025), art.~8. \url{https://doi.org/10.1007/s40993-024-00598-3}
 \bibitem{SW25} A.~Shallue, J.~Webster, Algorithms for Carmichael numbers, \texttt{arXiv:2506.09903} (2025).
 \bibitem{SW_bin} H.~Stamm-Wilbrandt, \texttt{carm10e24.bin}, PARI/GP binary vector of all Carmichael numbers below $10^{24}$ (7 March 2026). \url{https://stamm-wilbrandt.de/carm10e24.bin}
-\bibitem{Supp} R.~Vakil, Supplementary note: two-sided subset products and an onset heuristic for Williams numbers; file \texttt{paper/supplement.pdf} in the repository.
+\bibitem{Supp} R.~Vakil, Exploratory note: two-sided subset products for Williams numbers (unpublished; its earlier quantitative onset estimate has been withdrawn); file \texttt{paper/supplement.pdf} in the repository.
 \bibitem{Williams77} H.~C.~Williams, On numbers analogous to the Carmichael numbers, \emph{Canad. Math. Bull.} 20 (1977), 133--143. \url{https://doi.org/10.4153/CMB-1977-025-9}
 \bibitem{Zhang15} Z.~Zhang, Estimating the counts of Carmichael and Williams numbers with small multiple seeds, \emph{Math. Comp.} 84 (2015), 309--337. \url{https://doi.org/10.1090/S0025-5718-2014-02837-8}
 \end{thebibliography}
