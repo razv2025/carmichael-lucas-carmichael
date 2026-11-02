@@ -129,7 +129,7 @@ cites it only as unpublished material on which nothing depends. `docs/obstructio
 
 **Gate B — release candidate**
 - [x] `./run_tests.sh` passed from a clean archive of v1.0-rc5 on a fresh EC2 c7i.2xlarge (Ubuntu 24.04, gcc, fresh venv), 2026-11-02; transcript `docs/clean-clone-test-2026-11-02.txt`.
-- [x] Source frozen at tag `v1.0`; certificates regenerated from it with binary/source/log hashes; GitHub release with source archive.
+- [x] Source frozen at tag `v1.0` (commit b2af6b3). The certificates were generated from commit f5e2e50, whose source is identical to `v1.0` except for the certificate files themselves (a certificate cannot be inside the commit it names); they record the SHA-256 of the enumerator source and binary, which are the same at both commits. GitHub release `v1.0` carries the source archive.
 - [ ] Zenodo DOI (needs the repository public or a Zenodo token; author action).
 - [x] 10²⁴ histogram rescan finished and certified 2026-11-02 (`clc/CERTIFY_1e24_rescan.txt`): exactly 14 four-match numbers; inserted in §7.
 - [ ] Family-search outputs regenerated (`agrawal/results/`, m=4 a≤500 and m=5 a≤150 running 2026-11-01 afternoon).

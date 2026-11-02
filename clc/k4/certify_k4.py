@@ -129,7 +129,7 @@ def main():
            *["  " + n for n in notes],
            f"provenance: host={platform.node()} machine={platform.machine()} os={platform.platform()}",
            f"  compiler: {run(['cc', '--version'])}",
-           f"  git revision: {run(['git', '-C', here, 'rev-parse', 'HEAD'])}  tag: {run(['git', '-C', here, 'describe', '--tags', '--always'])}  (dirty tracked files other than CERTIFY_*.txt: {run(['git', '-C', here, 'status', '--short', '--untracked-files=no', '--', here, ':!' + here + '/CERTIFY_n1e30.txt', ':!' + here + '/CERTIFY_p1_500000.txt']) or 'none'})",
+           f"  git revision: {run(['git', '-C', here, 'rev-parse', 'HEAD'])}  tag: {run(['git', '-C', here, 'describe', '--tags', '--always'])}  (dirty tracked files other than CERTIFY_*.txt: {'; '.join(l for l in subprocess.run(['git', '-C', here, 'status', '--short', '--untracked-files=no', '--', here], capture_output=True, text=True).stdout.split('\n') if l.strip() and 'CERTIFY_' not in l) or 'none'})",
            *[f"  sha256 {k}: {v}" for k, v in prov.items()],
            ("CERTIFIED: all assertions hold" if not fails else "FAILED:\n  " + "\n  ".join(fails))]
     text = "\n".join(rep); print(text)
