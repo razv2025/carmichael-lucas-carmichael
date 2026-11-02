@@ -121,7 +121,7 @@ fact-check found 113–128 via OEIS) — **verify against the TUCS volume before
 - [ ] Source, compiler flags, binaries' hashes, inputs' hashes, command lines and logs frozen; Zenodo DOI.
 - [x] 10²⁴ histogram rescan finished and certified 2026-11-02 (`clc/CERTIFY_1e24_rescan.txt`): exactly 14 four-match numbers; inserted in §7.
 - [ ] Family-search outputs regenerated (`agrawal/results/`, m=4 a≤500 and m=5 a≤150 running 2026-11-01 afternoon).
-- [ ] Pinch 2007 page range verified.
+- [x] Pinch 2007 page range: resolved 2026-11-02. The referee's 129–131 is Pinch's *other* paper in TUCS GP 46, "The Carmichael numbers up to 10²¹" (so cited in Baillie–Fiori–Wagstaff 2021's references); "Absolute quadratic pseudoprimes" is pp. 113–128 (OEIS A392556/A392557). Both now in the bibliography. Final visual check possible from the volume PDF: https://tucs.fi/publications/attachment.php?fname=G46.pdf (site certificate chain incomplete; a browser may warn).
 - [ ] Every bibliography entry verified against the primary source.
 
 **Gate C — journal submission**
