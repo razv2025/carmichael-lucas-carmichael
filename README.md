@@ -1,4 +1,6 @@
-# Carmichael ∩ Lucas–Carmichael numbers
+# Carmichael ∩ Lucas–Carmichael numbers (Williams numbers)
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23886954.svg)](https://doi.org/10.5281/zenodo.23886954)
 
 Code, data and notes behind the preprint (repository: https://github.com/razv2025/carmichael-lucas-carmichael)
 
@@ -33,4 +35,4 @@ Reproducing the computations: the 10²⁴ scan needs the Shallue–Webster list 
 
 ## License
 
-MIT (see `LICENSE`). Please cite the preprint (`CITATION.cff`).
+MIT (see `LICENSE`). Please cite the preprint (`CITATION.cff`) and the Zenodo archive, DOI 10.5281/zenodo.23886954 (concept DOI, all versions).

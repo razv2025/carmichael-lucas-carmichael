@@ -22,7 +22,7 @@
 \email{Raz.Vakil@gmail.com}
 \subjclass[2020]{Primary 11Y11; Secondary 11A51, 11Y16}
 \keywords{Carmichael numbers, Lucas--Carmichael numbers, Williams numbers, Baillie--PSW test, exhaustive search}
-\date{2 November 2026. Version \texttt{v1.0} of the repository cited in \S\ref{sec:repro}.}
+\date{2 November 2026. Version \texttt{v1.1} of the repository cited in \S\ref{sec:repro}.}
 
 \begin{document}
 
@@ -301,7 +301,7 @@ By Howe's criterion \cite{Howe00}, a squarefree $n$ is a Carmichael number of or
 \end{enumerate}
 
 \section{Reproducibility}\label{sec:repro}
-All code is in the repository \url{https://github.com/razv2025/carmichael-lucas-carmichael}; this paper corresponds to tag \texttt{v1.0}, and the certification records state the SHA-256 of the enumerator source and binary they certify. Inventory of the computations and their verification status: (i) the two four-prime campaigns were run twice, certified as described in \S\ref{sec:complete}, and the certifications were repeated by an external reviewer from the tagged source; (ii) the $10^{24}$ scan was run twice (the second run with the full match histogram and a certification record), with the integrity checks of \S\ref{sec:bound} against externally published counts, and its input is identified by SHA-256; (iii) the relaxed-problem validation to $10^{12}$ and the self-tests are archived and re-runnable (\texttt{make test}, under a minute); (iv) the polynomial-family searches of Appendix~\ref{sec:obstr} are archived with their command lines. The four-prime enumeration (\texttt{clc/k4/}) consists of the C program, its brute-force reference for the relaxed problem, the Python re-verifier, the per-block logs and survivor dumps of both campaigns, the certification records and \texttt{make test}; the $10^{24}$ scan (\texttt{clc/}) consists of the download--decode--verify--scan pipeline, the completeness report and the result files. The code was developed with AI assistance; see the declaration below.
+All code is in the repository \url{https://github.com/razv2025/carmichael-lucas-carmichael}, archived on Zenodo under the concept DOI \url{https://doi.org/10.5281/zenodo.23886954} (which resolves to the latest archived version; this paper corresponds to tag \texttt{v1.1}); the certification records state the SHA-256 of the enumerator source and binary they certify. Inventory of the computations and their verification status: (i) the two four-prime campaigns were run twice, certified as described in \S\ref{sec:complete}, and the certifications were repeated by an external reviewer from the tagged source; (ii) the $10^{24}$ scan was run twice (the second run with the full match histogram and a certification record), with the integrity checks of \S\ref{sec:bound} against externally published counts, and its input is identified by SHA-256; (iii) the relaxed-problem validation to $10^{12}$ and the self-tests are archived and re-runnable (\texttt{make test}, under a minute); (iv) the polynomial-family searches of Appendix~\ref{sec:obstr} are archived with their command lines. The four-prime enumeration (\texttt{clc/k4/}) consists of the C program, its brute-force reference for the relaxed problem, the Python re-verifier, the per-block logs and survivor dumps of both campaigns, the certification records and \texttt{make test}; the $10^{24}$ scan (\texttt{clc/}) consists of the download--decode--verify--scan pipeline, the completeness report and the result files. The code was developed with AI assistance; see the declaration below.
 
 \appendix
 

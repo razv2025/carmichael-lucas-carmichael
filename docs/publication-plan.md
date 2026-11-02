@@ -130,7 +130,7 @@ cites it only as unpublished material on which nothing depends. `docs/obstructio
 **Gate B — release candidate**
 - [x] `./run_tests.sh` passed from a clean archive of v1.0-rc5 on a fresh EC2 c7i.2xlarge (Ubuntu 24.04, gcc, fresh venv), 2026-11-02; transcript `docs/clean-clone-test-2026-11-02.txt`.
 - [x] Source frozen at tag `v1.0` (commit b2af6b3). The certificates were generated from commit f5e2e50, whose source is identical to `v1.0` except for the certificate files themselves (a certificate cannot be inside the commit it names); they record the SHA-256 of the enumerator source and binary, which are the same at both commits. GitHub release `v1.0` carries the source archive.
-- [ ] Zenodo DOI (needs the repository public or a Zenodo token; author action).
+- [x] Zenodo: repository public 2026-11-02; GitHub integration enabled; release v1.0.1 archived as 10.5281/zenodo.23886955; concept DOI 10.5281/zenodo.23886954 cited in the paper, README and CITATION.cff; release v1.1 archived as the version matching the paper.
 - [x] 10²⁴ histogram rescan finished and certified 2026-11-02 (`clc/CERTIFY_1e24_rescan.txt`): exactly 14 four-match numbers; inserted in §7.
 - [ ] Family-search outputs regenerated (`agrawal/results/`, m=4 a≤500 and m=5 a≤150 running 2026-11-01 afternoon).
 - [x] Pinch 2007 page range: resolved 2026-11-02. The referee's 129–131 is Pinch's *other* paper in TUCS GP 46, "The Carmichael numbers up to 10²¹" (so cited in Baillie–Fiori–Wagstaff 2021's references); "Absolute quadratic pseudoprimes" is pp. 113–128 (OEIS A392556/A392557). Both now in the bibliography. Final visual check possible from the volume PDF: https://tucs.fi/publications/attachment.php?fname=G46.pdf (site certificate chain incomplete; a browser may warn).
