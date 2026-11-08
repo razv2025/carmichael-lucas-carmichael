@@ -4,8 +4,8 @@ title: "Exhaustive searches for Williams numbers: the four-prime case and a gene
 authors:
   - family-names: Vakil
     given-names: Raz
-version: 1.1.0
-date-released: 2026-11-02
+version: 1.1.1
+date-released: 2026-11-08
 doi: 10.5281/zenodo.23886954
 repository-code: "https://github.com/razv2025/carmichael-lucas-carmichael"
 license: MIT

@@ -22,7 +22,7 @@
 \email{Raz.Vakil@gmail.com}
 \subjclass[2020]{Primary 11Y11; Secondary 11A51, 11Y16}
 \keywords{Carmichael numbers, Lucas--Carmichael numbers, Williams numbers, Baillie--PSW test, exhaustive search}
-\date{2 November 2026. Version \texttt{v1.1} of the repository cited in \S\ref{sec:repro}.}
+\date{8 November 2026. Version \texttt{v1.1.1} of the repository cited in \S\ref{sec:repro}.}
 
 \begin{document}
 
@@ -301,7 +301,7 @@ By Howe's criterion \cite{Howe00}, a squarefree $n$ is a Carmichael number of or
 \end{enumerate}
 
 \section{Reproducibility}\label{sec:repro}
-All code is in the repository \url{https://github.com/razv2025/carmichael-lucas-carmichael}, archived on Zenodo under the concept DOI \url{https://doi.org/10.5281/zenodo.23886954} (which resolves to the latest archived version; this paper corresponds to tag \texttt{v1.1}); the certification records state the SHA-256 of the enumerator source and binary they certify. Inventory of the computations and their verification status: (i) the two four-prime campaigns were run twice, certified as described in \S\ref{sec:complete}, and the certifications were repeated by an external reviewer from the tagged source; (ii) the $10^{24}$ scan was run twice (the second run with the full match histogram and a certification record), with the integrity checks of \S\ref{sec:bound} against externally published counts, and its input is identified by SHA-256; (iii) the relaxed-problem validation to $10^{12}$ and the self-tests are archived and re-runnable (\texttt{make test}, under a minute); (iv) the polynomial-family searches of Appendix~\ref{sec:obstr} are archived with their command lines. The four-prime enumeration (\texttt{clc/k4/}) consists of the C program, its brute-force reference for the relaxed problem, the Python re-verifier, the per-block logs and survivor dumps of both campaigns, the certification records and \texttt{make test}; the $10^{24}$ scan (\texttt{clc/}) consists of the download--decode--verify--scan pipeline, the completeness report and the result files. The code was developed with AI assistance; see the declaration below.
+All code is in the repository \url{https://github.com/razv2025/carmichael-lucas-carmichael}, archived on Zenodo under the concept DOI \url{https://doi.org/10.5281/zenodo.23886954} (which resolves to the latest archived version; this paper corresponds to tag \texttt{v1.1.1}); the certification records state the SHA-256 of the enumerator source and binary they certify. Inventory of the computations and their verification status: (i) the two four-prime campaigns were run twice, certified as described in \S\ref{sec:complete}, and the certifications were repeated by an external reviewer from the tagged source; (ii) the $10^{24}$ scan was run twice (the second run with the full match histogram and a certification record), with the integrity checks of \S\ref{sec:bound} against externally published counts, and its input is identified by SHA-256; (iii) the relaxed-problem validation to $10^{12}$ and the self-tests are archived and re-runnable (\texttt{make test}, under a minute); (iv) the polynomial-family searches of Appendix~\ref{sec:obstr} are archived with their command lines. The four-prime enumeration (\texttt{clc/k4/}) consists of the C program, its brute-force reference for the relaxed problem, the Python re-verifier, the per-block logs and survivor dumps of both campaigns, the certification records and \texttt{make test}; the $10^{24}$ scan (\texttt{clc/}) consists of the download--decode--verify--scan pipeline, the completeness report and the result files. The code was developed with AI assistance; see the declaration below.
 
 \appendix
 
@@ -349,28 +349,28 @@ Two AI systems were used, under the author's direction. Claude (Anthropic) draft
 We thank the authors of the tabulations this work rests on: R.~G.~E.~Pinch, C.~Goutier, A.~Shallue and J.~Webster, H.~Stamm-Wilbrandt (for making the $10^{24}$ list available), D.~Suteu, and the OEIS contributors whose independent counts served as integrity checks; and R.~J.~McIntosh and M.~Dipra, whose paper settles the theory of the four-prime case.
 
 \begin{thebibliography}{99}
-\bibitem{AG13} I.~Al-Rasasi, N.~Ghanmi, On Williams numbers with three prime factors, \emph{Missouri J. Math. Sci.} 25 (2013), 134--152. \url{https://doi.org/10.35834/mjms/1384266199}
+\bibitem{AG13} I.~Al-Rasasi, N.~Ghanmi, On Williams numbers with three prime factors, \emph{Missouri J. Math. Sci.} 25 (2013), no.~2, 134--152. \url{https://doi.org/10.35834/mjms/1384266199}
 \bibitem{AKS} M.~Agrawal, N.~Kayal, N.~Saxena, PRIMES is in P, \emph{Ann. of Math.} 160 (2004), 781--793. \url{https://doi.org/10.4007/annals.2004.160.781}
 \bibitem{AGP94} W.~R.~Alford, A.~Granville, C.~Pomerance, There are infinitely many Carmichael numbers, \emph{Ann. of Math.} 139 (1994), 703--722. \url{https://doi.org/10.2307/2118576}
 \bibitem{BEP10} K.~Bouall\`egue, O.~Echi, R.~G.~E.~Pinch, Korselt numbers and sets, \emph{Int. J. Number Theory} 6 (2010), 257--269. \url{https://doi.org/10.1142/S1793042110002922}
 \bibitem{BFW21} R.~Baillie, A.~Fiori, S.~S.~Wagstaff Jr., Strengthening the Baillie--PSW primality test, \emph{Math. Comp.} 90 (2021), 1931--1955. \url{https://doi.org/10.1090/mcom/3616}
-\bibitem{ChenGreene03} Z.~Chen, J.~Greene, Some comments on Baillie--PSW pseudoprimes, \emph{Fibonacci Quart.} 41 (2003), 334--344.
+\bibitem{ChenGreene03} Z.~Chen, J.~Greene, Some comments on Baillie--PSW pseudoprimes, \emph{Fibonacci Quart.} 41 (2003), no.~4, 334--344. \url{https://doi.org/10.1080/00150517.2003.12428566}
 \bibitem{Chernick39} J.~Chernick, On Fermat's simple theorem, \emph{Bull. Amer. Math. Soc.} 45 (1939), 269--274. \url{https://doi.org/10.1090/S0002-9904-1939-06953-X}
 \bibitem{Chick} J.~M.~Chick, Carmichael number variable relations: three-prime Carmichael numbers up to $10^{24}$, \texttt{arXiv:0711.2915} (2007); counts in OEIS A132195.
-\bibitem{Echi07} O.~Echi, Williams numbers, \emph{C. R. Math. Rep. Acad. Sci. Canada} 29 (2007), 41--47.
-\bibitem{Erdos56} P.~Erd\H{o}s, On pseudoprimes and Carmichael numbers, \emph{Publ. Math. Debrecen} 4 (1956), 201--206.
-\bibitem{Gilchrist} J.~Gilchrist, Pseudoprime enumeration with probabilistic primality tests, web page (2013), reporting the 2009 verification, from J.~Feitsma's table of base-2 pseudoprimes below $2^{64}$, that no Baillie--PSW pseudoprime exists below $2^{64}$; see also T.~R.~Nicely's Baillie--PSW page.
+\bibitem{Echi07} O.~Echi, Williams numbers, \emph{C. R. Math. Acad. Sci. Soc. R. Can.} 29 (2007), no.~2, 41--47.
+\bibitem{Erdos56} P.~Erd\H{o}s, On pseudoprimes and Carmichael numbers, \emph{Publ. Math. Debrecen} 4 (1956), 201--206. \url{https://doi.org/10.5486/PMD.1956.4.3-4.16}
+\bibitem{Gilchrist} J.~Gilchrist, Pseudoprime enumeration with probabilistic primality tests, web page (last updated 7 July 2013), archived at \url{https://web.archive.org/web/20220516232450/http://gilchrist.ca/jeff/factoring/pseudoprimes.html}, reporting the 2009 verification (with D.~Cleaver), from J.~Feitsma and W.~Galway's table of base-2 pseudoprimes below $2^{64}$, that no Baillie--PSW pseudoprime exists below $2^{64}$; see also T.~R.~Nicely's Baillie--PSW page, archived at \url{https://web.archive.org/web/20181218221425/http://www.trnicely.net/misc/bpsw.html}.
 \bibitem{Goutier} C.~Goutier, Carmichael numbers up to $10^{22}$ (2024), data and readme linked from OEIS A002997 and A055553.
-\bibitem{Grantham} J.~Grantham, Frobenius pseudoprimes, \emph{Math. Comp.} 70 (2001), 873--891; and the \$620 problem page.
+\bibitem{Grantham} J.~Grantham, Frobenius pseudoprimes, \emph{Math. Comp.} 70 (2001), 873--891, \url{https://doi.org/10.1090/S0025-5718-00-01197-2}; and the \$620 problem page, \url{https://www.pseudoprime.com/pseudo.html}.
 \bibitem{Howe00} E.~W.~Howe, Higher-order Carmichael numbers, \emph{Math. Comp.} 69 (2000), 1711--1719. \url{https://doi.org/10.1090/S0025-5718-00-01225-4}
 \bibitem{LN96} G.~L\"oh, W.~Niebuhr, A new algorithm for constructing large Carmichael numbers, \emph{Math. Comp.} 65 (1996), 823--836. \url{https://doi.org/10.1090/S0025-5718-96-00692-8}
-\bibitem{LP} H.~W.~Lenstra Jr., C.~Pomerance, Remarks on Agrawal's conjecture, in: \emph{Future directions in algorithmic number theory}, AIM workshop notes (2003), pp.~30--32; archived copy of \url{http://aimath.org/WWN/primesinp/primesinp.pdf}.
-\bibitem{McIntosh14} R.~J.~McIntosh, Carmichael numbers with $(p+1)\mid(n-1)$, \emph{Integers} 14 (2014), \#A59.
+\bibitem{LP} H.~W.~Lenstra Jr., C.~Pomerance, Remarks on Agrawal's conjecture, in: \emph{Future directions in algorithmic number theory}, AIM workshop notes (2003), pp.~30--32; archived copy of \url{http://aimath.org/WWN/primesinp/primesinp.pdf} at \url{https://web.archive.org/web/20031207093805/http://www.aimath.org/WWN/primesinp/primesinp.pdf}.
+\bibitem{McIntosh14} R.~J.~McIntosh, Carmichael numbers with $(p+1)\mid(n-1)$, \emph{Integers} 14 (2014), \#A59. \url{https://doi.org/10.5281/zenodo.10452565}
 \bibitem{MD15} R.~J.~McIntosh, M.~Dipra, Carmichael numbers with $p+1\mid n+1$, \emph{J. Number Theory} 147 (2015), 81--91. \url{https://doi.org/10.1016/j.jnt.2014.06.005}
 \bibitem{Phatak20} D.~Phatak, Bounds on the range(s) of prime divisors of a class of Baillie--PSW pseudo-primes, \texttt{viXra:2007.0102} (2020), unrefereed.
-\bibitem{Pinch07} R.~G.~E.~Pinch, Absolute quadratic pseudoprimes, in: \emph{Proc. Conf. on Algorithmic Number Theory} (A.-M.~Ernvall-Hyt\"onen, M.~Jutila, J.~Karhum\"aki, A.~Lepist\"o, eds.), Turku 2007, TUCS General Publication 46, pp.~113--128; preprint at \url{http://www.s369624816.websitehome.co.uk/rgep/p20.pdf}.
+\bibitem{Pinch07} R.~G.~E.~Pinch, Absolute quadratic pseudoprimes, in: \emph{Proc. Conf. on Algorithmic Number Theory} (A.-M.~Ernvall-Hyt\"onen, M.~Jutila, J.~Karhum\"aki, A.~Lepist\"o, eds.), Turku 2007, TUCS General Publication 46, pp.~113--128, \url{https://tucs.fi/publications/attachment.php?fname=G46.pdf}; preprint at \url{http://www.s369624816.websitehome.co.uk/rgep/p20.pdf}.
 \bibitem{PinchTables} R.~G.~E.~Pinch, The Carmichael numbers up to $10^{21}$, in: \emph{Proc. Conf. on Algorithmic Number Theory}, Turku 2007, TUCS General Publication 46, pp.~129--131; tables at \url{http://www.s369624816.websitehome.co.uk/rgep/carpsp.html}
-\bibitem{Pomerance84} C.~Pomerance, Are there counter-examples to the Baillie--PSW primality test?, in: \emph{Dopo le parole} (H.~W.~Lenstra Jr., J.~K.~Lenstra, P.~van Emde Boas, eds.), Amsterdam 1984. \url{https://www.pseudoprime.com/dopo.pdf}
+\bibitem{Pomerance84} C.~Pomerance, Are there counter-examples to the Baillie--PSW primality test?, in: \emph{Dopo le parole aangeboden aan Dr.\ A.~K.~Lenstra} (H.~W.~Lenstra Jr., J.~K.~Lenstra, P.~van Emde Boas, eds.), privately published, Amsterdam 1984. \url{https://www.pseudoprime.com/dopo.pdf}
 \bibitem{SW24} A.~Shallue, J.~Webster, Advances in tabulating Carmichael numbers, \emph{Res. Number Theory} 11 (2025), art.~8. \url{https://doi.org/10.1007/s40993-024-00598-3}
 \bibitem{SW25} A.~Shallue, J.~Webster, Algorithms for Carmichael numbers, \texttt{arXiv:2506.09903} (2025).
 \bibitem{SW_bin} H.~Stamm-Wilbrandt, \texttt{carm10e24.bin}, PARI/GP binary vector of all Carmichael numbers below $10^{24}$ (7 March 2026). \url{https://stamm-wilbrandt.de/carm10e24.bin}
