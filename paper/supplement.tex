@@ -18,7 +18,22 @@ A \emph{Williams number} is a squarefree composite $n$ with $(p-1)\mid(n-1)$ and
 
 In the subset-product method one fixes a smooth modulus $\Lambda$, harvests primes $p$ with $(p-1)\mid\Lambda$, and looks for a subset with product $\equiv1\pmod\Lambda$; the expected number of solutions is about $2^{\text{(pool size)}-\log_2\varphi(\Lambda)}$, and the method succeeds because the pool grows faster than $\log_2\varphi(\Lambda)$. For Williams numbers one needs simultaneously $(p+1)\mid\Lambda'$ and product $\equiv-1\pmod{\Lambda'}$, and the two moduli interact: an odd prime $\ell$ cannot divide both some $p_i-1$ and some $p_j+1$ (else $n\equiv1\equiv-1\pmod\ell$), so every small prime must be assigned to one side, and the $2$-adic branch is fixed. Define the \emph{margin} of a configuration as (number of usable primes) $-\log_2\varphi(\lcm\text{ of all required }p\mp1)$, so that the expected number of two-sided solutions is about $2^{\text{margin}}$.
 
-We measured the margin over three families of configurations: random smooth moduli ($3{,}250$ configurations, all with margin $>-14$ searched exhaustively by meet-in-the-middle, no solution); pools of all primes $p\le X$ with both $p-1$ and $p+1$ $y$-smooth, with the side assignment optimised by hill-climbing (hundreds of restarts); and pools restricted to primes with few prime factors in $p\mp1$. The best margins were $-8.2$ (tiny three-prime systems), $-29.0/-30.6/-31.0/-36.9$ for $y=60/100/140/200$, and $-36.9$ for the sparse pools. The wall is flat or worsening in every direction we varied: each usable prime contributes one bit of subset freedom but about $2.5$ bits of modulus, because a prime that is useful on one side is almost never useful on the other. This is a measurement, not a theorem. The side-assignment of the small primes was formalised by Zhang \cite{Zhang15}, who splits the prime factors of the modulus into two groups serving $p-1$ and $p+1$ respectively, conjectures that the number of Williams numbers built from a modulus with $s$ prime factors grows only like $2^{2^{s^{1/2-o(1)}}}$ (against $2^{2^{s(1+o(1))}}$ for Carmichael numbers), and exhibits a set of $1{,}029$ primes expected to contain at least $2^{24}$ Williams numbers, none of which has been found. Our margins are a small-scale measurement consistent with Zhang's conjecture and with the ``intractable'' judgement of \cite{BFW21}.
+We measured the margin over three families of configurations, summarised in Table~\ref{tab:margins}: random smooth moduli ($3{,}250$ configurations; those with margin $>-14$ were searched by meet-in-the-middle within a time limit, no solution found); pools of all primes $p\le X$ with both $p-1$ and $p+1$ $y$-smooth, with the side assignment optimised by hill-climbing (hundreds of restarts); and pools restricted to primes with few prime factors in $p\mp1$. The wall is flat or worsening in every direction we varied: each usable prime contributes one bit of subset freedom but about $2.5$ bits of modulus, because a prime that is useful on one side is almost never useful on the other.
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{llr}
+\toprule
+pool & parameters & best margin\\
+\midrule
+random smooth moduli & $3{,}250$ configurations & $-8.2$ (a three-prime pool)\\
+twin-smooth primes, optimised split & $y=60/100/140/200$ & $-29.0/-30.6/-31.0/-36.9$\\
+sparse $p\mp1$ (``golden'') pools & $y=200$ & $-36.9$\\
+\bottomrule
+\end{tabular}
+\caption{Measured margins (expected number of two-sided solutions $\approx2^{\text{margin}}$).}\label{tab:margins}
+\end{table}
+
 
 
 \section{Limitations of the measurement}\label{sec:limits}
@@ -33,6 +48,5 @@ This note was drafted, and its code written, with the assistance of Claude (Anth
 \begin{thebibliography}{9}
 \bibitem{BFW21} R.~Baillie, A.~Fiori, S.~S.~Wagstaff Jr., Strengthening the Baillie--PSW primality test, \emph{Math. Comp.} 90 (2021), 1931--1955.
 \bibitem{Zhang15} Z.~Zhang, Estimating the counts of Carmichael and Williams numbers with small multiple seeds, \emph{Math. Comp.} 84 (2015), 309--337.
-\bibitem{Pinch07} R.~G.~E.~Pinch, Absolute quadratic pseudoprimes, Turku 2007.
 \end{thebibliography}
 \end{document}
