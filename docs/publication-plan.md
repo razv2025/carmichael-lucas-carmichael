@@ -118,6 +118,13 @@ Reproducibility is a numbered section; PDF metadata title fixed; Table 1 caption
 the note is now an exploratory report of the subset-product measurement with an explicit limitations section, and the main paper
 cites it only as unpublished material on which nothing depends. `docs/obstructions.md` §6 carries the same withdrawal notice.
 
+## 6c. Endorsement timeline
+
+Andrew Shallue (11 Nov 2026): will resolve the arXiv endorsement before the Thanksgiving break (26 Nov); cite his 10²⁴ paper by
+arXiv link until the journal version appears, then switch. A WhatsApp reminder is scheduled for 25 Nov 09:00 (macOS LaunchAgent
+`com.razvakil.wa-ping-2026-11-25`, self-removing). arXiv submission follows his answer; add the third Shallue–Webster paper if he
+sends it.
+
 ## 7. Gates
 
 **Gate A — before any public posting**
