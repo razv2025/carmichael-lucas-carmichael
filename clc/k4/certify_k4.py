@@ -36,6 +36,7 @@ def check_clc_tuple(p1, p2, q, r):
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('log'); ap.add_argument('sol')
     ap.add_argument('--reference'); ap.add_argument('--out')
+    ap.add_argument('--reference-prefix', action='store_true', help='the reference is an earlier campaign with a smaller p1max and the same block size: compare its full blocks (all but its last) only')
     a = ap.parse_args()
     fails = []; notes = []
     def must(cond, msg):
@@ -70,11 +71,15 @@ def main():
         for line in open(a.reference):
             o = json.loads(line)
             if 'blk' in o: ref[o['blk']] = o
+        if a.reference_prefix:
+            last = max(ref); ref = {b: o for b, o in ref.items() if b != last}     # the reference's last block is partial
+            must(sorted(ref) == list(range(last)) and set(ref) <= set(blocks), "prefix reference is not a block prefix of this campaign")
+            notes.append(f"prefix reference: blocks 0..{last-1} compared field by field (pairs, cand, skips, survivors) with {a.reference}")
         for b, o in blocks.items():
             if b in ref:
-                for k in ('pairs','wsurv','fsurv','sol','p1lo','p1hi'):
+                for k in ('pairs','wsurv','fsurv','sol','p1lo','p1hi') + (('cand','skip_g','skip_inv') if a.reference_prefix else ()):
                     must(o[k] == ref[b][k], f"block {b}: {k} {o[k]} != reference {ref[b][k]}")
-        must(sorted(ref) == sorted(blocks), "reference log covers a different block set")
+        if not a.reference_prefix: must(sorted(ref) == sorted(blocks), "reference log covers a different block set")
     # W lines
     W = set(); wsurv_lines = 0; fsurv = 0; sols = []
     for line in open(a.sol):

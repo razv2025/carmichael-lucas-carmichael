@@ -1,7 +1,7 @@
 #!/bin/sh
 # k4ctl.sh status|pause|resume|stop  — control the detached run_k4.sh campaign.
 cd "$(dirname "$0")"
-pids() { { pgrep -f 'run_k4.sh'; pgrep -f 'enum_k4 --'; } 2>/dev/null | sort -u; }
+pids() { { pgrep -f 'run_k4[a-z_]*.sh'; pgrep -f 'enum_k4 --'; } 2>/dev/null | sort -u; }
 case "${1:-status}" in
   pause)  pids | xargs kill -STOP 2>/dev/null; echo "paused (SIGSTOP); memory stays allocated — use stop to release it";;
   resume) pids | xargs kill -CONT 2>/dev/null; echo "resumed";;

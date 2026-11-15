@@ -277,6 +277,9 @@ static void do_pair(u64 p1, u64 L1, u64 p2, Stats *st){
     }
     u128 Lam = (u128)L1 * L2g;
     u128 m0 = (u128)a1 + (u128)L1 * k0;                      /* 0 ≤ m0 < Lam */
+#ifdef K4_TRACE   /* test aid (highend_test.c): expose the CRT class of the pair; never defined in production builds */
+    k4_trace(p1, p2, m0, Lam);
+#endif
     u64 P = p1 * p2;
     u128 T = (u128)KAPPA * KAPPA * P; T *= P;                /* kappa^2 P^2 */
     u128 mmax = T - 1; if (HAVE_B) { u128 bp = B / P; if (bp < mmax) mmax = bp; }

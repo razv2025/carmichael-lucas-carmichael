@@ -20,6 +20,11 @@ test: all
 	./enum_k4 --B 1e24 --kappa 2 --filter --threads 8 --log _t_f.jsonl --sol _t_f.txt 2>/dev/null | tail -1
 	python3 verify_k4.py _t_f.txt | tail -1
 	@rm -f _t_*.jsonl _t_*.txt
+# High-end arithmetic check: CRT class, candidate counts and survivor lists of do_pair() against independent Python
+# big-integer arithmetic on pairs with (p2^2-1)/2 between 2^63 and 2^64 (p1 > 915,000).  ~2 min.
+highend: enum_k4.c highend_test.c
+	$(CC) $(CFLAGS) -Wno-unused-function -DK4_TRACE -o highend_test highend_test.c -lpthread -lm
+	python3 highend_test.py --pairs 20000
 clean:
-	rm -f enum_k4 brute_k4 _t_*
-.PHONY: all test clean
+	rm -f enum_k4 brute_k4 highend_test _t_*
+.PHONY: all test highend clean
