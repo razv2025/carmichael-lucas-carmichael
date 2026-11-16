@@ -1,0 +1,8 @@
+# 4-prime Williams-number enumeration — campaign p1_1000000 — Mon Nov 16 13:18:35 IST 2026
+# command: enum_k4 --p1max 1000000 --bs 32 --kappa 2 --filter --dumpw
+# host: Razs-MacBook-Pro.local Apple M4 Pro
+COMPLETE blocks=612/612 pairs=441962984992 skip_gcd=101335570457 skip_inv=1188156 cand=21110666858040 window_survivors=1482 fermat_survivors=1 solutions=0 wall=80187.1s
+# Python re-verification of every SOLUTION / FSURV / WSURV / W line:
+W passed Fermat: p1=13 p2=97 m=21349 = {37: 1, 577: 1}  -> not CLC
+FSURV p1=13 p2=97 m=21349 = {37: 1, 577: 1}  -> not CLC
+verified: 0 SOLUTION lines, 1967 WSURV lines (window survivors checked in Python), 2 base-2 Fermat pseudoprimes examined, 0 problems
