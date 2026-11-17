@@ -1,0 +1,5 @@
+# make highend — 2026-11-15, before the p1 <= 10^6 campaign (enum_k4.c at commit d63cce8, built with -DK4_TRACE)
+# python3 highend_test.py --pairs 20000   (seed 1; both walk modes)
+HIGHEND: {'pairs': 20000, 'skipped': 4539, 'L2_ge_2_63': 15433, 'cand': 64373568, 'W': 0, 'maxL2bits': 64}  mismatches=0
+# 'skipped' = pairs inconsistent (p1 != p2 mod gcd(L1,L2)) in both implementations; 'L2_ge_2_63' counts consistent pairs only
+# (19,960 of the 20,000 pairs have L2 >= 2^63); independently reproduced by the audit agent on 2026-11-17.

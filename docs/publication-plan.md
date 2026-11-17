@@ -11,7 +11,7 @@ Lucas–Carmichael ((p+1) | (n+1) for every p | n). The same objects appear in t
 | # | result | type | status |
 |---|---|---|---|
 | 1 | **Theorem A** (= McIntosh–Dipra 2015, Thms 2–3, d = 4; restated with an independent proof). All pᵢ ≡ 1 (mod 12), p₃ < 2p₁p₂, p₄ < √(2p₁p₂p₃), p₂² ≤ 24p₁³ + 1. | known theorem, our proof | **not new** (established 2026-11-01 from the full text); kept as a self-contained restatement |
-| 2 | **Theorem B.** No four-prime Williams number with n ≤ 10³⁰; none with p₁ ≤ 500,000 (any n). Extends McIntosh–Dipra's p₁ > 2×10⁴, N > 10²⁴. | computation | **certified** 2026-11-01 (`clc/k4/CERTIFY_*.txt`): full coverage, all survivors re-tested in Python |
+| 2 | **Theorem B.** No four-prime Williams number with n ≤ 10³²; none with p₁ ≤ 10⁶ (any n). Extends McIntosh–Dipra's p₁ > 2×10⁴, N > 10²⁴. | computation | **certified**: n ≤ 10³⁰ and p₁ ≤ 500,000 on 2026-11-01 (run twice; certifications repeated by Codex); extension to n ≤ 10³² and p₁ ≤ 10⁶ on 2026-11-16/17 (run once; prefix blocks and survivor sets cross-checked against the earlier runs, `clc/k4/CROSSCHECK_ext.txt`; not yet through the separate Codex review) |
 | 3 | No Williams number below 10²⁴ (factor-and-test of the complete Carmichael tabulations; integrity checks; full match histogram: 14 four-match numbers, 826 three-match). | computation on external data | done twice; second run certified |
 | 4 | Synthesis of the Lucas–Carmichael / Baillie–PSW / Agrawal / Howe connections. | exposition | wording depends on §5 |
 | 5 | Polynomial-family impossibility theorems; exhaustive strata (outputs being regenerated into `agrawal/results/`). | theorems + searches | Appendix A |
@@ -68,7 +68,7 @@ Full texts of McIntosh–Dipra (JNT 2015) and Zhang (Math. Comp. 2015) were read
 **Theorem A is not new**: it is McIntosh–Dipra's Theorems 2–3 for d = 4 (they even have the better p₃ < p₁p₂ and prove Π < 1
 outright). Lemma 2.2(c) and the k = 3 proof are theirs as well. What the manuscript still contributes:
 
-1. **Theorem B** — the four-prime exclusion extended from (p₁ > 2×10⁴, N > 10²⁴) to (p₁ > 500,000, n > 10³⁰), by a different
+1. **Theorem B** — the four-prime exclusion extended from (p₁ > 2×10⁴, N > 10²⁴) to (p₁ > 10⁶, n > 10³²), by a different
    and faster algorithm (CRT class for the cofactor + window filter), with a certified completeness record.
 2. **The 10²⁴ all-k verification** with completeness/OEIS cross-checks and near-miss statistics (McIntosh–Dipra's all-d
    search states no per-d bound).
@@ -130,6 +130,7 @@ sends it.
 **Gate A — before any public posting**
 - [ ] Theorem A proof text final (both Π branches explicit; δ sign correct); reviewed by a human number theorist.
 - [x] `CERTIFY_n1e30.txt` and `CERTIFY_p1_500000.txt` present, ending in CERTIFIED (3,811/3,811 and 323/323 blocks; 1,904 and 1,185 distinct survivors, all re-tested in Python) — 2026-11-01 13:04.
+- [x] Extension: `CERTIFY_n1e32.txt` and `CERTIFY_p1_1000000.txt` present, ending in CERTIFIED (11,251/11,251 and 612/612 blocks; 2,616 and 1,482 distinct survivors, all re-tested in Python); `CROSSCHECK_ext.txt` OK — 2026-11-17. Single executions; a second execution or an external re-certification is optional and not done.
 - [x] Literature comparison written; novelty claims rewritten against McIntosh–Dipra and Zhang.
 - [x] McIntosh–Dipra and Zhang read in full (2026-11-01); the two TODOs in the paper resolved; Theorem A reattributed.
 - [x] Implementation-completeness proposition written into §3 (Proposition 3.6).

@@ -1,15 +1,19 @@
 # clc/k4 — Carmichael ∩ Lucas–Carmichael numbers with exactly four prime factors
 
-**Status (2026-10-29): BOTH CAMPAIGNS COMPLETE — no 4-prime CLC number exists with n ≤ 10³⁰, and none exists (for any n) with smallest prime ≤ 500,000.**
+**Status (2026-11-17): no 4-prime CLC (Williams) number exists with n ≤ 10³², and none exists (for any n) with smallest prime ≤ 10⁶.** (October 2026: n ≤ 10³⁰ and p1 ≤ 500,000, each run twice; November 2026: n ≤ 10³² and p1 ≤ 10⁶, each run once and cross-checked against the October runs and each other.)
 
 | campaign | scope | pairs (p1,p2) | window survivors | Fermat survivors | solutions | wall |
 |---|---|---|---|---|---|---|
 | `RESULT_n1e30.txt` | all n ≤ 10³⁰ | 230,612,582,193 | 1,904 | 1 | **0** | 87 min |
+| `RESULT_n1e32.txt` | all n ≤ 10³² | 2,023,458,339,412 | 2,616 | 1 | **0** | ≈12 h running time (est.; suspended by sleep) |
 | `RESULT_p1_500000.txt` | all n, smallest prime p1 ≤ 500,000 | 86,517,004,140 | 1,185 | 1 | **0** | 146 min |
+| `RESULT_p1_1000000.txt` | all n, smallest prime p1 ≤ 10⁶ | 441,962,984,992 | 1,482 | 1 | **0** | ≈12 h running time (est.; suspended by sleep) |
 
-The single Fermat survivor in both is the Carmichael number 26921089 = 13·37·97·577 (not Lucas–Carmichael). Every survivor with
-P > 2⁴⁰ (907 + 222 lines) was re-verified independently in Python (`verify_k4.py`): 0 problems. Host: Apple M4 Pro, 14 threads.
-Corollary (with Theorem A, n < 477 p1^{15/2}): **any 4-prime CLC number has p1 > 500,000 and n > 10³⁰**; in fact n > p1⁴ > 6×10²².
+The single Fermat survivor in all four runs is the Carmichael number 26921089 = 13·37·97·577 (not Lucas–Carmichael). Every survivor with
+P > 2⁴⁰ (907 + 222 lines in October; 1,619 + 485 in November) was re-verified independently in Python (`verify_k4.py`): 0 problems. Host: Apple M4 Pro, 14 threads.
+Corollary: **any 4-prime CLC number has p1 > 10⁶ and n > 10³²**.
+
+November extension, extra checks: `CERTIFY_p1_1000000.txt` asserts blocks 0–321 equal to the October p1 ≤ 500,000 log field by field; `CROSSCHECK_ext.txt` (`crosscheck_ext.py`): the survivor sets of the four runs agree exactly on all three overlaps; `make highend` (`highend_test.c`, `highend_test.py`): CRT class, candidate counts and survivors of the production routine vs. Python big integers on 20,000 pairs with p1 > 915,000 (4,539 inconsistent in both; of the other 15,461, 15,433 have (p2²−1)/2 ≥ 2⁶³), 0 mismatches; output archived in `HIGHEND_2026-11-15.txt`. Driver: `run_k4_ext.sh`.
 
 ## What this is
 Williams (1977) proved a CLC number cannot have k = 3 prime factors. k = 4 is the first open case
@@ -55,9 +59,9 @@ Notation: n = p1 p2 q r (p1<p2<q<r), P = p1 p2, L_p = (p²−1)/2.  CLC ⟺ n/p 
 - Two-sweep walk vs. simple walk (`--oldwalk --dumpw`): identical survivor lists on six instances (incl. 11,007,875 survivors).
 - Real problem: `--B 1e24` → 0 solutions in 6 s (consistent with the full 10²⁴ scan in `clc/`); only base-2
   pseudoprime survivor is the Carmichael number 26921089 = 13·37·97·577, correctly rejected.
-- Timings: `--p1max 30000` 42 s; cost ∝ X^{2.5}; `--B 1e24` 6 s, cost ∝ B^{1/2}.  Limits: p2 < 4.29×10⁹ (64-bit L2),
-  so B ≤ ~10³⁰ and X ≤ ~8×10⁵ without a 128-bit extension.
+- Timings: `--p1max 30000` 42 s; cost ∝ X^{2.5}; `--B 1e24` 6 s, cost ∝ B^{1/2}.  Limit: L2 = (p2²−1)/2 < 2⁶⁴ (asserted per pair),
+  i.e. p2 < 6.07×10⁹: X ≤ ~1.15×10⁶ in `--p1max` mode; in `--B` mode p2 stays far below this (≤ 7.1×10⁸ at B = 10³²), only the sieve grows.
 
 ## Possible extensions
-- 128-bit L2 arithmetic would allow B = 10³² (~15 h) or p1 ≤ 10⁶ (~10 h); heuristic value is small (remaining mass ~ X⁻⁴).
+- Done in November 2026 without any 128-bit extension: B = 10³² and p1 ≤ 10⁶ (≈12 h each). Going further in p1 needs 128-bit L2; heuristic value is small (remaining mass ~ X⁻⁴).
 - Proofs and discussion: `docs/k4-notes.md`.

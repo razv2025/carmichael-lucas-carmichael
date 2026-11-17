@@ -1,5 +1,5 @@
 /* highend_test.c — exercises do_pair() of enum_k4.c on pairs given on stdin ("p1 p2" per line), in the regime
- * where L2 = (p2^2-1)/2 lies between 2^63 and 2^64 (p1 > 915,000), and prints everything an independent
+ * where L2 = (p2^2-1)/2 lies between 2^63 and 2^64 (p1 > 916,000), and prints everything an independent
  * implementation can check:  TRACE p1 p2 m0 Lam  (CRT class),  W p1 p2 m (window survivors),
  * PAIR p1 p2 skip_g skip_inv cand wsurv  (cand = number of class members in (p2^2, 4P^2), single-sweep walk).
  * Compared against pure-Python big-integer arithmetic by highend_test.py.

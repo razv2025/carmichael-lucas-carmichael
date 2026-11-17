@@ -1,0 +1,5 @@
+survivor sets: n<=1e30: 1904  n<=1e32: 2616  p1<=500000: 1185  p1<=1e6: 1482
+OK   n<=1e32 campaign restricted to n<=1e30  ==  n<=1e30 campaign: 1904 vs 1904 tuples
+OK   p1<=1e6 campaign restricted to p1<=500000  ==  p1<=500000 campaign: 1185 vs 1185 tuples
+OK   n<=1e32 campaign restricted to p1<=1e6  ==  p1<=1e6 campaign restricted to n<=1e32: 1477 vs 1477 tuples
+CROSSCHECK: all survivor sets agree on the overlaps

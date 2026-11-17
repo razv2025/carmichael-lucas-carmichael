@@ -20,6 +20,8 @@ Consequently p₃, p₄ < 9.9 p₁^{5/2}, n < 477 p₁^{15/2}, and for each p₁
 **Theorem B (computation).** There is no 4-prime CLC number with n ≤ 10³⁰, and none whatsoever with p₁ ≤ 500,000.
 Hence any 4-prime CLC number has p₁ > 500,000 and n > 10³⁰.
 
+**Update (17 Nov 2026).** Extended by two further certified runs to n ≤ 10³² (2,023,458,339,412 pairs, 2,616 window survivors) and p₁ ≤ 10⁶ (441,962,984,992 pairs, 1,482 window survivors), 0 solutions: any 4-prime CLC number has p₁ > 10⁶ and n > 10³². See `clc/k4/README.md`.
+
 ## 2. Proofs
 
 **Lemma 1.** For p | n: n is CLC at p ⟺ n/p ≡ 1 (mod L_p), L_p := (p²−1)/2.
