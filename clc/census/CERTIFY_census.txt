@@ -1,0 +1,11 @@
+# census of the Carmichael numbers below 10^24 — certification 2026-11-20 21:31
+pass 1: 3083 chunks contiguous, total 308,279,939, verification failures 0, records 4,150 (all re-verified)
+pass 2: 3083 chunks contiguous, total 308,279,939, verification failures 0, records 77,461 (all re-verified)
+pass 1 and pass 2: joint histogram (#'+', #'-', omega) and smallest/largest-prime histograms identical
+(#'+', omega) histogram identical to the certified rescan of 2 Nov 2026 (rescan_1e24_state.json)
+lists: >=3 '+': 840 (4 '+': 14, 5+: 0); >=2 '+': 64,071; at least half '+': 7; largest prime '+': 14,062; all '-' (super-Carmichael): 14; all but one '-' with omega>=7: 3,294; Williams numbers: 0
+largest prime '+', by omega: {5: 9, 6: 99, 7: 849, 8: 2866, 9: 4776, 10: 3857, 11: 1374, 12: 225, 13: 7}
+OEIS b335336.txt (3150 terms, sha256 f0464b1b2f644737…): Carmichael k with gpf(k)+1 | k+1 (A335336, Eldar/Suteu, below 1e22): 3150 terms = our 3150: EQUAL
+OEIS b329948.txt (179 terms, sha256 9ceadd61991c5e27…): Carmichael numbers with >= 3 primes p+1 | n+1 (A329948, Suteu/Eldar, below 1e22): 179 terms = our 179: EQUAL
+OEIS b299799.txt (196 terms, sha256 49b953031990abf0…): Chebyshev-Carmichael = super-Carmichael numbers (A299799, Puddefoot's census, restricted to < 1e24): 14 terms = our 14: EQUAL
+CERTIFIED: all assertions hold

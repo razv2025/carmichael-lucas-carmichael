@@ -27,3 +27,8 @@ clc/k4/finish_dump.log
 docs/sources/
 clc/k4/highend_test
 clc/k4/run_k4_ext.log
+clc/census_1e24.log
+clc/census_1e24_state.json
+clc/census_1e24_state.json.tmp
+clc/census_1e24_state2.json
+clc/census_1e24_state2.json.tmp
