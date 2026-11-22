@@ -1,4 +1,4 @@
-# arXiv submission kit (v1.2)
+# arXiv submission kit (v1.3)
 
 Upload **only** `paper/clc.tex` (single file; bibliography is inline, no .bbl or figures needed). arXiv compiles with pdflatex;
 the packages used (amsart, amsmath, amssymb, amsthm, booktabs, array, url, enumitem, algorithm, algpseudocode, xcolor, hyperref)
@@ -6,10 +6,10 @@ are all in TeX Live. If the build fails, download the log from the submission pa
 
 Form fields:
 - **Archive / category:** math (Number Theory, `math.NT`). No cross-list needed.
-- **Title:** Exhaustive searches for Williams numbers: the four-prime case and a general 10^24 bound
+- **Title:** Exhaustive searches for Williams numbers: the four-prime case and a census of near-misses below 10^24
 - **Authors:** Raz Vakil
 - **Abstract:** `abstract.txt` (plain text; arXiv accepts the inline TeX math as written).
-- **Comments:** 12 pages, 1 algorithm, 3 tables. Code, logs and certification records: https://doi.org/10.5281/zenodo.23886954
+- **Comments:** 16 pages, 1 algorithm, 4 tables. Code, logs and certification records: https://doi.org/10.5281/zenodo.23886954
 - **MSC classes:** 11Y11 (Primary), 11A51, 11Y16
 - **License:** arXiv.org perpetual, non-exclusive license is sufficient; CC BY 4.0 if you prefer maximal reuse.
 - **Report number / Journal ref / DOI:** leave empty (the Zenodo DOI is for the code archive, not the article).
