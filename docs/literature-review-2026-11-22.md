@@ -120,3 +120,23 @@ Not accessible: Echi 2007; Lidl–Müller–Oswald and Müller–Oswald original
 2010 and Al-Rasasi–Ghanmi 2013 beyond abstracts; Pinch 1993; Phatak 2020; Google Scholar, MathSciNet, the NMBRTHRY list,
 mersenneforum's internal search, GitHub code search. OEIS drafts are invisible until approved. A result posted only in
 those places would have been missed. Puddefoot's census completeness was read, not re-run.
+
+### Addendum, 22 Nov 2026 (later)
+
+- **Williams 1977 now read in full** (PDF from Cambridge Core, in `docs/sources/`). Closing section, verbatim in substance:
+  the problem is "whether there exists a Carmichael number n which possesses property (A) for some Δ such that
+  (Δ | n) = −1"; such n "must be the product of an odd number of distinct primes" with ε(pᵢ) = −1, pᵢ+1 | n+1,
+  pᵢ−1 | n−1; 3 ∤ n (shown in passing); "It is not known to the author whether any such numbers exist. It can be shown,
+  however, that if n is such a number, k ≥ 5. To show this it suffices to show that k ≠ 3." The k ≠ 3 argument uses
+  only the two divisibility systems, so it holds for the bare definition; the oddness of k comes from (Δ | n) = −1 and
+  does not apply to the bare definition (Echi / McIntosh–Dipra sense). This confirms fault 7 of §4.
+- A second-hand summary of items 1–11 of the inaccessible list was supplied by the author (not primary text). It agrees
+  with what we have on Echi (definition without parity condition; a-Williams numbers), Bouallègue–Echi–Pinch and
+  Al-Rasasi–Ghanmi (finiteness for three prime factors; no search bound for a = 1). It reports a Müller–Oswald theorem:
+  n is a strong (−1)-Dickson pseudoprime iff n is Carmichael and for every p | n, 2(p+1) | n−1 or 2(p+1) | n−p — this is
+  Pinch's form of *all* strong Fibonacci pseudoprimes, not of Type II only, and so conflicts with Pinch's parenthesis
+  "(A strong type II Fibonacci pseudoprime is termed a strong (−1)-Dickson pseudoprime in [23])". Unresolved until the
+  Müller–Oswald or Lidl–Müller–Oswald text is seen; the paper should therefore cite the Type I/II statements "as
+  described by Pinch" and avoid the Dickson name.
+- Still not seen in primary form: Echi 2007; Lidl–Müller–Oswald 1990; Müller–Oswald 1991; Lidl–Müller 1990;
+  Ballot–Williams 2023 p. 271; Pinch 1993; Guillaume–Morain 1996.
