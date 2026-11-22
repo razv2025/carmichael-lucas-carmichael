@@ -21,7 +21,7 @@ Structure after the second referee review (2026-11-01): Introduction with a comp
 structural bounds (Theorem A, attributed) → algorithm (displayed pseudocode, reconstruction lemma) → completeness/validation/
 certification → results → the 10²⁴ census (input data / per-entry verification / integrity checks) → discussion → Appendix A
 (polynomial families only). The subset-product measurement and the onset model are now a separate supplementary note
-(`paper/supplement.tex`). Title: *Exhaustive searches for Williams numbers: the four-prime case and a general 10²⁴ bound*.
+(`paper/supplement.tex`). Title: *Exhaustive searches for Williams numbers: the four-prime case and a census of near-misses below 10²⁴*.
 AI use is declared in a separate section before the references (Elsevier/JNT format).
 
 ## 2. Venues

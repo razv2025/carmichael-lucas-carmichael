@@ -1,3 +1,3 @@
-/private/tmp/claude-501/-Users-razvakil-Claude-Math/f1eeeb4f-3179-41d1-a56a-781b752906ec/scratchpad/lc18/lucas-carmichael-1e18-plain.txt (sha256 0c4a2d4ef4e1c92f…): 1,792,712 numbers, max 999999014807089439
+lucas-carmichael-1e18-plain.txt (sha256 0c4a2d4ef4e1c92f4ae65fe6fdf7a07b6b1b8985df07e132f0ba468f70a1c15a): 1,792,712 numbers, max 999999014807089439
 counts below 10^k: {12: 9967, 15: 129125, 16: 308080, 17: 739670, 18: 1792712}
 sample of 3000 not Lucas–Carmichael: 0; base-2 Fermat pseudoprimes: 0; Carmichael (= Williams) numbers: 0 []
