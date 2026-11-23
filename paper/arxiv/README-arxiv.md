@@ -9,7 +9,7 @@ Form fields:
 - **Title:** Exhaustive searches for Williams numbers: the four-prime case and a census of near-misses below 10^24
 - **Authors:** Raz Vakil
 - **Abstract:** `abstract.txt` (plain text; arXiv accepts the inline TeX math as written).
-- **Comments:** 16 pages, 1 algorithm, 4 tables. Code, logs and certification records: https://doi.org/10.5281/zenodo.23886954
+- **Comments:** 17 pages, 1 algorithm, 4 tables. Code, logs and certification records: https://doi.org/10.5281/zenodo.23886954
 - **MSC classes:** 11Y11 (Primary), 11A51, 11Y16
 - **License:** arXiv.org perpetual, non-exclusive license is sufficient; CC BY 4.0 if you prefer maximal reuse.
 - **Report number / Journal ref / DOI:** leave empty (the Zenodo DOI is for the code archive, not the article).
