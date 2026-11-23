@@ -1,3 +1,5 @@
+> **Update, 23 Nov 2026.** The partial theorems below (m = 3; uniform offsets; generic position) and the open m = 4 stratum are superseded by a general theorem, proved in Appendix A of `paper/clc.tex` (v1.3): for m ≥ 2 no product of pairwise non-proportional linear forms with positive slopes satisfies the two divisibility systems identically. Proof: at σ = max σ_j every factor is ≥ 1, so n(σ) = 1 forces all σ_j equal; then at τ_i for the largest slope the other factors lie strictly in (−1, 1), so |n(τ_i)| < 1 ≠ 1.
+
 # Obstructions to Carmichael–Lucas-Carmichael numbers
 
 *Working notes, July 2026. Repo: `~/Claude/Math` (verification code in
